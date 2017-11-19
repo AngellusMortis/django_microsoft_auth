@@ -15,6 +15,7 @@ idna==2.6                 # via requests
 mccabe==0.6.1             # via flake8
 oauthlib==2.0.6           # via requests-oauthlib
 pip-tools==1.10.1
+pkginfo==1.4.1            # via twine
 pluggy==0.5.2             # via tox
 py==1.5.2                 # via pytest, tox
 pycodestyle==2.3.1        # via flake8
@@ -24,9 +25,12 @@ pytest-django==3.1.2
 pytest==3.2.5
 pytz==2017.3              # via django
 requests-oauthlib==0.8.0
+requests-toolbelt==0.8.0  # via twine
 requests==2.18.4
 six==1.11.0               # via pip-tools, tox
 tox==2.9.1
+tqdm==4.19.4              # via twine
+twine==1.9.1
 urllib3==1.22             # via requests
 versioneer==0.18
 virtualenv==15.1.0        # via tox
