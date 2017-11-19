@@ -1,0 +1,24 @@
+from django.middleware.csrf import get_token
+from django.utils.translation import ugettext_lazy as _
+from django.utils.safestring import mark_safe
+
+from .client import MicrosoftClient
+from .conf import config
+
+
+def microsoft(request):
+    """ Adds global template variables for microsoft_auth """
+    login_type = None
+    if config.MICROSOFT_AUTH_LOGIN_TYPE == 'o365':
+        login_type = _('Office 365')
+    elif config.MICROSOFT_AUTH_LOGIN_TYPE == 'xbl':
+        login_type = _('Xbox Live')
+    else:
+        login_type = _('Microsoft')
+
+    # initialize Microsoft client using CSRF token as state variable
+    microsoft = MicrosoftClient(state=get_token(request))
+    return {
+        'microsoft_login_enabled': config.MICROSOFT_AUTH_LOGIN_ENABLED,
+        'microsoft_authorization_url': mark_safe(microsoft.authorization_url()[0]),
+        'microsoft_login_type_text': login_type}
