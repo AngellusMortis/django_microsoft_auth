@@ -1,0 +1,3 @@
+[run]
+omit =
+    microsoft_auth/_version.py
