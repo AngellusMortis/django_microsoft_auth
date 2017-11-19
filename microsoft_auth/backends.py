@@ -1,10 +1,8 @@
-import logging
-
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
 
 from .client import MicrosoftClient
-from .conf import config
+from .conf import LOGIN_TYPE_XBL
 from .models import MicrosoftAccount, XboxLiveAccount
 
 User = get_user_model()
@@ -14,10 +12,13 @@ class MicrosoftAuthenticationBackend(ModelBackend):
     """ Authentication backend to authenticate a user against their Microsoft
         Uses Microsoft's Graph OAuth and XBL servers to authentiate. """
 
+    config = None
+    microsoft = None
     profile_url = 'https://graph.microsoft.com/v1.0/me'
 
     def __init__(self, user=None):
-        self.logger = logging.getLogger(__name__)
+        from .conf import config
+        self.config = config
         self.microsoft = MicrosoftClient()
 
     def authenticate(self, request, code=None):
@@ -40,7 +41,7 @@ class MicrosoftAuthenticationBackend(ModelBackend):
                     self.microsoft.valid_scopes(token['scope']):
 
                 # authenticate Xbox Live user
-                if config.MICROSOFT_AUTH_LOGIN_TYPE == 'xbl':
+                if self.config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_XBL:
                     xbox_token = self.microsoft.fetch_xbox_token()
 
                     if 'Token' in xbox_token:
@@ -59,6 +60,7 @@ class MicrosoftAuthenticationBackend(ModelBackend):
         """ Retrieves existing Django user or creates
                 a new one from Xbox Live profile data """
         user = None
+        xbox_user = None
 
         try:
             xbox_user = \
@@ -68,38 +70,46 @@ class MicrosoftAuthenticationBackend(ModelBackend):
                 xbox_user.gamertag = data['gtg']
                 xbox_user.save()
         except XboxLiveAccount.DoesNotExist:
-            # create new Xbox Live Account
-            xbox_user = XboxLiveAccount(
-                xbox_id=data['xid'],
-                gamertag=data['gtg'])
-            xbox_user.save()
+            if self.config.MICROSOFT_AUTH_AUTO_CREATE:
+                # create new Xbox Live Account
+                xbox_user = XboxLiveAccount(
+                    xbox_id=data['xid'],
+                    gamertag=data['gtg'])
+                xbox_user.save()
 
         # verify Xbox Live Account is linked to Django User
         if xbox_user is not None:
             if xbox_user.user is None:
                 # create new Django user (Xbox Live endpoint provides no data)
-                user = User(username=None)
+                user = User(username=xbox_user.gamertag)
                 user.save()
 
                 xbox_user.user = user
                 xbox_user.save()
 
             user = xbox_user.user
+
+        if self.config.MICROSOFT_AUTH_XBL_SYNC_USERNAME:
+            if user.username != xbox_user.gamertag:
+                user.username = xbox_user.gamertag
+                user.save()
         return user
 
     def _get_or_create_microsoft_user(self, data):
         """ Retrieves existing Django user or creates
                 a new one from Microsoft profile data """
         user = None
+        microsoft_user = None
 
         try:
             microsoft_user = \
                 MicrosoftAccount.objects.get(microsoft_id=data['id'])
         except MicrosoftAccount.DoesNotExist:
-            # create new Microsoft Account
-            microsoft_user = MicrosoftAccount(
-                microsoft_id=data['id'])
-            microsoft_user.save()
+            if self.config.MICROSOFT_AUTH_AUTO_CREATE:
+                # create new Microsoft Account
+                microsoft_user = MicrosoftAccount(
+                    microsoft_id=data['id'])
+                microsoft_user.save()
 
         # verify Microsoft Account is linked to Django User
         if microsoft_user is not None:
@@ -109,14 +119,14 @@ class MicrosoftAuthenticationBackend(ModelBackend):
                     user = User.objects.get(email=data['userPrincipalName'])
 
                     if user.first_name == '' and user.last_name == '':
-                        user.first_name = data['givenName']
-                        user.last_name = data['surname']
+                        user.first_name = data.get('givenName', '')
+                        user.last_name = data.get('surname', '')
                         user.save()
                 except User.DoesNotExist:
                     user = User(
-                        username=None,
-                        first_name=data['givenName'],
-                        last_name=data['surname'],
+                        username=data['id'],
+                        first_name=data.get('givenName', ''),
+                        last_name=data.get('surname', ''),
                         email=data['userPrincipalName'])
                     user.save()
 

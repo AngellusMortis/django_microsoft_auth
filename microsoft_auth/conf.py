@@ -25,14 +25,20 @@ from django.utils.translation import ugettext_lazy as _
     MICROSOFT_AUTH_CONFIG_CLASS is the only microsoft_auth setting not present
     here. See bottom of file for more on it.
 """
+
+LOGIN_TYPE_MA = 'ma'
+LOGIN_TYPE_O365 = 'o365'
+LOGIN_TYPE_XBL = 'xbl'
+
 DEFAULT_CONFIG = {
     'defaults': OrderedDict([
         ('MICROSOFT_AUTH_LOGIN_ENABLED', (
             True,
             _('Whether or not Microsoft OAuth login is enabled'),
-            bool)),
+            bool
+        )),
         ('MICROSOFT_AUTH_LOGIN_TYPE', (
-            'ma',
+            LOGIN_TYPE_MA,
             _("""Type of Microsoft login to use.
                 Microsoft Accounts is normal Microsoft login.
                 Office 365 Accounts are for microsoftonline logins through
@@ -40,17 +46,31 @@ DEFAULT_CONFIG = {
                     Accounts get redirected to separate login screen).
                 Xbox Live Accounts use Microsoft Accounts and then also
                     authenticate against Xbox Live to retrieve Gamertag."""),
-            'microsoft_choices')),
+            'microsoft_choices'
+        )),
         ('MICROSOFT_AUTH_CLIENT_ID', (
             '',
             _('Microsoft OAuth Client ID, see'
               'https://apps.dev.microsoft.com/ for more'),
-            str)),
+            str
+        )),
         ('MICROSOFT_AUTH_CLIENT_SECRET', (
             '',
             _('Microsoft OAuth Client Secret, see'
               'https://apps.dev.microsoft.com/ for more'),
-            str))
+            str
+        )),
+        ('MICROSOFT_AUTH_AUTO_CREATE', (
+            True,
+            _('Autocreate user that attempt to login if they do not '
+              'already exist?'),
+            bool
+        )),
+        ('MICROSOFT_AUTH_XBL_SYNC_USERNAME', (
+            False,
+            _('Automatically sync the username from the Xbox Live Gamertag?'),
+            bool
+        )),
     ]),
     'fieldsets': OrderedDict([
         ('Microsoft Login', (

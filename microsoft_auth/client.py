@@ -4,6 +4,7 @@ import requests
 from django.contrib.sites.models import Site
 from django.urls import reverse
 from requests_oauthlib import OAuth2Session
+from .conf import LOGIN_TYPE_O365, LOGIN_TYPE_XBL
 
 
 class MicrosoftClient(OAuth2Session):
@@ -44,7 +45,7 @@ class MicrosoftClient(OAuth2Session):
         path = reverse('microsoft:auth-callback')
         scope = ' '.join(self.SCOPE_MICROSOFT)
 
-        if self.config.MICROSOFT_AUTH_LOGIN_TYPE == 'xbl':
+        if self.config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_XBL:
             scope = ' '.join(self.SCOPE_XBL)
 
         super().__init__(
@@ -57,7 +58,7 @@ class MicrosoftClient(OAuth2Session):
     def authorization_url(self):
         """ Generates Microsoft/Xbox or a Office 365 Authorization URL """
         auth_url = self.ma_authorization
-        if self.config.MICROSOFT_AUTH_LOGIN_TYPE == 'o365':
+        if self.config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_O365:
             auth_url = self.o365_authorization
 
         return super() \
@@ -167,7 +168,7 @@ class MicrosoftClient(OAuth2Session):
         """ Validates response scopes based on MICROSOFT_AUTH_LOGIN_TYPE """
         scopes = set(scopes)
         required_scopes = None
-        if self.config.MICROSOFT_AUTH_LOGIN_TYPE == 'xbl':
+        if self.config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_XBL:
             required_scopes = set(self.SCOPE_XBL)
         else:
             required_scopes = set(self.SCOPE_MICROSOFT)

@@ -21,6 +21,15 @@ class AuthenticateCallbackView(View):
         https://developer.microsoft.com/en-us/graph/docs/get-started/rest
     """
 
+    messages = {
+        'bad_state': _('An invalid state variable was provided. '
+                       'Please refresh the page and try again later.'),
+        'missing_code': _('No authentication code was provided from '
+                          'Microsoft. Please try again.'),
+        'login_failed': _('Failed to authenticate you for an unknown reason. '
+                          'Please try again later.'),
+    }
+
     # manually mark methods csrf_exempt to handle CSRF processing ourselves
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -51,40 +60,32 @@ class AuthenticateCallbackView(View):
                     valid_csrf = True
 
         if not valid_csrf:
-            context['message'] = {
-                'error': 'bad_state',
-                'error_description':
-                    _('An invalid state variable was provided. '
-                      'Please refresh the page and try again later.')}
-
-        # handle error message from Microsoft
-        if 'error' in request.POST:
-            context['message'] = {
-                'error': request.POST['error'],
-                'error_description': request.POST['error_description']}
-        # validate existance of Microsoft authentication code
-        elif 'code' not in request.POST:
-            context['message'] = {
-                'error': 'missing_code',
-                'error_description':
-                    _('No authentication code was provided from Microsoft. '
-                      'Please try again.')}
+            context['message'] = {'error': 'bad_state'}
         else:
-            # authenticate user using Microsoft code
-            user = authenticate(request, code=request.POST['code'])
-            if user is None:
-                # this should not fail at this point except for network error
-                # while retrieving profile or database error adding new user
+            # handle error message from Microsoft
+            if 'error' in request.POST:
                 context['message'] = {
-                    'error': 'login_failed',
-                    'error_description':
-                        _('Failed to authenticate you for an unknown reason. '
-                          'Please try again later.')}
+                    'error': request.POST['error'],
+                    'error_description': request.POST['error_description']}
+            # validate existance of Microsoft authentication code
+            elif 'code' not in request.POST:
+                context['message'] = {'error': 'missing_code'}
             else:
-                login(request, user)
+                # authenticate user using Microsoft code
+                user = authenticate(request, code=request.POST['code'])
+                if user is None:
+                    # this should not fail at this point except for network
+                    # error while retrieving profile or database error
+                    # adding new user
+                    context['message'] = {'error': 'login_failed'}
+                else:
+                    login(request, user)
 
         status_code = 200
         if 'error' in context['message']:
+            if 'error_description' not in context['message']:
+                context['message']['error_description'] = \
+                    self.messages[context['message']['error']]
             status_code = 400
 
         context['message'] = mark_safe(json.dumps(context['message']))

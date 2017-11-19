@@ -5,6 +5,7 @@ from urllib.parse import parse_qs, urlparse
 
 from django.test import override_settings
 from microsoft_auth.client import MicrosoftClient
+from microsoft_auth.conf import LOGIN_TYPE_O365, LOGIN_TYPE_XBL
 
 from . import TestCase
 
@@ -59,7 +60,7 @@ class ClientTests(TestCase):
         auth_client = MicrosoftClient()
         self.assertEqual(expected_scopes, auth_client.scope)
 
-    @override_settings(MICROSOFT_AUTH_LOGIN_TYPE='xbl')
+    @override_settings(MICROSOFT_AUTH_LOGIN_TYPE=LOGIN_TYPE_XBL)
     def test_xbox_scopes(self):
         expected_scopes = ' '.join(MicrosoftClient.SCOPE_XBL)
 
@@ -85,7 +86,7 @@ class ClientTests(TestCase):
 
     @override_settings(
         MICROSOFT_AUTH_CLIENT_ID=CLIENT_ID,
-        MICROSOFT_AUTH_LOGIN_TYPE='o365'
+        MICROSOFT_AUTH_LOGIN_TYPE=LOGIN_TYPE_O365
     )
     def test_authorization_url_with_o365(self):
         base_url = MicrosoftClient.o365_authorization
@@ -220,7 +221,7 @@ class ClientTests(TestCase):
         auth_client = MicrosoftClient()
         self.assertFalse(auth_client.valid_scopes(scopes))
 
-    @override_settings(MICROSOFT_AUTH_LOGIN_TYPE='xbl')
+    @override_settings(MICROSOFT_AUTH_LOGIN_TYPE=LOGIN_TYPE_XBL)
     def test_valid_scopes_xbox(self):
         scopes = MicrosoftClient.SCOPE_XBL
 
