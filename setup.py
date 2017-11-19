@@ -12,7 +12,9 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = [
-    # TODO: put package requirements here
+    'django>=1.11,<2.0',
+    'requests==2.18.4',
+    'requests-oauthlib==0.8.0',
 ]
 
 setup_requirements = [
@@ -33,7 +35,7 @@ setup(
     author="Christopher Bailey",
     author_email='cbailey@mort.is',
     url='https://github.com/AngellusMortis/django_microsoft_auth',
-    packages=find_packages(include=['django_microsoft_auth']),
+    packages=find_packages(include=['microsoft_auth']),
     include_package_data=True,
     install_requires=requirements,
     license="MIT license",

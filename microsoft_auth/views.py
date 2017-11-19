@@ -3,16 +3,14 @@ import re
 
 from django.contrib.auth import authenticate, login
 from django.contrib.sites.models import Site
-from django.middleware.csrf import (CSRF_TOKEN_LENGTH, REASON_BAD_TOKEN,
-                                    _compare_salted_tokens, get_token)
+from django.middleware.csrf import (CSRF_TOKEN_LENGTH, _compare_salted_tokens,
+                                    get_token)
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-
-from .conf import config
 
 
 class AuthenticateCallbackView(View):

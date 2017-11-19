@@ -1,15 +1,17 @@
-from importlib import import_module
 from collections import OrderedDict
+from importlib import import_module
 
 from django.conf import settings
+from django.test.signals import setting_changed
 from django.utils.translation import ugettext_lazy as _
 
 """ List of all possible default configs for microsoft_auth
 
     DEFAULT_CONFIG['defaults'] and DEFAULT_CONFIG['fieldsets'] are in a format
-    usable by django-constance (https://django-constance.readthedocs.io/en/latest/)
-    so these values can be directly added to the CONSTANCE_CONFIG and
-    CONSTANCE_CONFIG_FIELDSETS in your global settings
+    usable by django-constance
+    (https://django-constance.readthedocs.io/en/latest/) so these values can
+    be directly added to the CONSTANCE_CONFIG and CONSTANCE_CONFIG_FIELDSETS
+    in your global settings
 
     django-constance will also require the following field definition:
 
@@ -59,6 +61,33 @@ DEFAULT_CONFIG = {
     ])
 }
 
+
+class SimpleConfig:
+    def __init__(self, config=None):
+        self._defaults = {}
+        if config:
+            self.add_default_config(config)
+
+    def add_default_config(self, config):
+        if config['defaults']:
+            tmp_dict = {}
+            for key, value in config['defaults'].items():
+                tmp_dict[key] = value[0]
+            self._defaults.update(tmp_dict)
+
+    def __getattr__(self, attr):
+        val = None
+
+        try:
+            # Check if present in user settings
+            val = getattr(settings, attr)
+        except AttributeError:
+            # Fall back to defaults
+            val = self._defaults[attr]
+
+        return val
+
+
 """ Override MICROSOFT_AUTH_CONFIG_CLASS to inject your own custom dynamic
     settings class into microsoft_auth. Useful if you want to manage config
     using a dynamic settings manager such as django-constance
@@ -66,11 +95,30 @@ DEFAULT_CONFIG = {
     Optionally the class can have an 'add_default_config' method to add the
     above DEFAULT_CONFIG to config manager
 """
-if hasattr(settings, 'MICROSOFT_AUTH_CONFIG_CLASS'):
-    module, _, obj = settings.MICROSOFT_AUTH_CONFIG_CLASS.rpartition('.')
-    conf = import_module(module)
-    config = getattr(conf, obj)
-    if hasattr(config, 'add_default_config'):
-        config.add_default_config(DEFAULT_CONFIG)
-else:
-    config = settings
+config = None
+
+
+def init_settings():
+    global config
+    if hasattr(settings, 'MICROSOFT_AUTH_CONFIG_CLASS') and \
+            settings.MICROSOFT_AUTH_CONFIG_CLASS is not None:
+        module, _, obj = settings.MICROSOFT_AUTH_CONFIG_CLASS.rpartition('.')
+        conf = import_module(module)
+        config = getattr(conf, obj)
+        if hasattr(config, 'add_default_config'):
+            config.add_default_config(DEFAULT_CONFIG)
+    else:
+        config = SimpleConfig(DEFAULT_CONFIG)
+
+
+init_settings()
+
+
+def reload_settings(*args, **kwargs):
+    global config
+    setting, _ = kwargs['setting'], kwargs['value']  # noqa
+    if setting.startswith('MICROSOFT_AUTH_'):
+        init_settings()
+
+
+setting_changed.connect(reload_settings)

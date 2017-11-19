@@ -78,7 +78,7 @@ Ready to contribute? Here's how to set up `django_microsoft_auth` for local deve
 
 5. When you're done making changes, check that your changes pass flake8 and the tests, including testing other Python versions with tox::
 
-    $ flake8 django_microsoft_auth tests
+    $ flake8 microsoft_auth tests
     $ python setup.py test or py.test
     $ tox
 

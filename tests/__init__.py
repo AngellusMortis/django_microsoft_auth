@@ -1,3 +1,5 @@
-# -*- coding: utf-8 -*-
+from django.test import TestCase as BaseTestCase
 
-"""Unit test package for django_microsoft_auth."""
+
+class TestCase(BaseTestCase):
+    pass
