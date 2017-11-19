@@ -7,6 +7,8 @@ from os import path
 
 from setuptools import find_packages, setup
 
+import versioneer
+
 BASE_DIR = path.abspath(path.dirname(__file__))
 
 with open(path.join(BASE_DIR, 'README.rst')) as readme_file:
@@ -27,7 +29,8 @@ setup_requirements = [
 
 setup(
     name='django_microsoft_auth',
-    version='0.1.0',
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
     description="Simple app to enable Microsoft Account, Office 365 and Xbox Live authentcation as a Django authentcation backend.",
     long_description=readme + '\n\n' + history,
     author="Christopher Bailey",
