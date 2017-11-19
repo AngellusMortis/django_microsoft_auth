@@ -5,8 +5,6 @@ from django.contrib.sites.models import Site
 from django.urls import reverse
 from requests_oauthlib import OAuth2Session
 
-from .conf import config
-
 
 class MicrosoftClient(OAuth2Session):
     """ Simple Microsoft OAuth2 Client to authenticate them
@@ -27,31 +25,39 @@ class MicrosoftClient(OAuth2Session):
     token_url = \
         'https://login.microsoftonline.com/common/oauth2/v2.0/token'
 
+    xbox_token_url = 'https://user.auth.xboxlive.com/user/authenticate'
+    profile_url = 'https://xsts.auth.xboxlive.com/xsts/authorize'
+
     xbox_token = {}
+
+    config = None
 
     # required OAuth scopes
     SCOPE_XBL = ['XboxLive.signin', 'XboxLive.offline_access']
     SCOPE_MICROSOFT = ['User.Read']
 
     def __init__(self, state=None, *args, **kwargs):
+        from .conf import config
+        self.config = config
+
         domain = Site.objects.get_current().domain
         path = reverse('microsoft:auth-callback')
         scope = ' '.join(self.SCOPE_MICROSOFT)
 
-        if config.MICROSOFT_AUTH_LOGIN_TYPE == 'xbl':
+        if self.config.MICROSOFT_AUTH_LOGIN_TYPE == 'xbl':
             scope = ' '.join(self.SCOPE_XBL)
 
         super().__init__(
-            config.MICROSOFT_AUTH_CLIENT_ID,
+            self.config.MICROSOFT_AUTH_CLIENT_ID,
             scope=scope,
             state=state,
-            redirect_uri=f'https://{domain}{path}',
+            redirect_uri='https://{0}{1}'.format(domain, path),
             *args, **kwargs)
 
     def authorization_url(self):
         """ Generates Microsoft/Xbox or a Office 365 Authorization URL """
         auth_url = self.ma_authorization
-        if config.MICROSOFT_AUTH_LOGIN_TYPE == 'o365':
+        if self.config.MICROSOFT_AUTH_LOGIN_TYPE == 'o365':
             auth_url = self.o365_authorization
 
         return super() \
@@ -60,9 +66,10 @@ class MicrosoftClient(OAuth2Session):
     def fetch_token(self, **kwargs):
         """ Fetchs OAuth2 Token with given kwargs"""
         return super() \
-            .fetch_token(self.token_url,
-                         client_secret=config.MICROSOFT_AUTH_CLIENT_SECRET,
-                         **kwargs)
+            .fetch_token(
+                self.token_url,
+                client_secret=self.config.MICROSOFT_AUTH_CLIENT_SECRET,
+                **kwargs)
 
     def fetch_xbox_token(self):
         """ Fetches Xbox Live Auth token.
@@ -84,7 +91,7 @@ class MicrosoftClient(OAuth2Session):
         # Content-type MUST be json for Xbox Live
         headers = {
             'Content-type': 'application/json',
-            'Accept': 'application/json'
+            'Accept': 'application/json',
         }
         params = {
             'RelyingParty': 'http://auth.xboxlive.com',
@@ -92,11 +99,14 @@ class MicrosoftClient(OAuth2Session):
             'Properties': {
                 'AuthMethod': 'RPS',
                 'SiteName': 'user.auth.xboxlive.com',
-                'RpsTicket': 'd={}'.format(self.token['access_token'])}}
+                'RpsTicket': 'd={}'.format(self.token['access_token']),
+            },
+        }
         response = requests.post(
-            'https://user.auth.xboxlive.com/user/authenticate',
+            self.xbox_token_url,
             data=json.dumps(params),
-            headers=headers)
+            headers=headers
+        )
 
         if response.status_code == 200:
             self.xbox_token = response.json()
@@ -133,18 +143,21 @@ class MicrosoftClient(OAuth2Session):
             # Content-type MUST be json for Xbox Live
             headers = {
                 'Content-type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
             }
             params = {
                 'RelyingParty': 'http://xboxlive.com',
                 'TokenType': 'JWT',
                 'Properties': {
                     'UserTokens': [self.xbox_token['Token']],
-                    'SandboxId': 'RETAIL'}}
+                    'SandboxId': 'RETAIL'
+                },
+            }
             response = requests.post(
-                'https://xsts.auth.xboxlive.com/xsts/authorize',
+                self.profile_url,
                 data=json.dumps(params),
-                headers=headers)
+                headers=headers
+            )
 
             if response.status_code == 200:
                 return response.json()['DisplayClaims']['xui'][0]
@@ -154,7 +167,7 @@ class MicrosoftClient(OAuth2Session):
         """ Validates response scopes based on MICROSOFT_AUTH_LOGIN_TYPE """
         scopes = set(scopes)
         required_scopes = None
-        if config.MICROSOFT_AUTH_LOGIN_TYPE == 'xbl':
+        if self.config.MICROSOFT_AUTH_LOGIN_TYPE == 'xbl':
             required_scopes = set(self.SCOPE_XBL)
         else:
             required_scopes = set(self.SCOPE_MICROSOFT)

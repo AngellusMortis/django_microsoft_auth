@@ -3,28 +3,26 @@
 
 """The setup script."""
 
-from setuptools import setup, find_packages
+from os import path
 
-with open('README.rst') as readme_file:
+from setuptools import find_packages, setup
+
+BASE_DIR = path.abspath(path.dirname(__file__))
+
+with open(path.join(BASE_DIR, 'README.rst')) as readme_file:
     readme = readme_file.read()
 
-with open('HISTORY.rst') as history_file:
+with open(path.join(BASE_DIR, 'HISTORY.rst')) as history_file:
     history = history_file.read()
 
-requirements = [
-    'django>=1.11,<2.0',
-    'requests==2.18.4',
-    'requests-oauthlib==0.8.0',
-]
+with open(path.join(BASE_DIR, 'requirements.in')) as f:
+    requirements = f.read().split('\n')
+
+with open(path.join(BASE_DIR, 'test-requirements.in')) as f:
+    test_requirements = f.read().split('\n')
 
 setup_requirements = [
     'pytest-runner',
-    # TODO(AngellusMortis): put setup requirements (distutils extensions, etc.) here
-]
-
-test_requirements = [
-    'pytest',
-    # TODO: put package test requirements here
 ]
 
 setup(
@@ -46,9 +44,8 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
-        "Programming Language :: Python :: 2",
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
     ],

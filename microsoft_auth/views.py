@@ -36,7 +36,7 @@ class AuthenticateCallbackView(View):
 
         domain = Site.objects.get_current().domain
         context = {
-            'base_url': f'https://{domain}/',
+            'base_url': 'https://{0}/'.format(domain),
             'message': {}}
 
         # validates state using Django CSRF system

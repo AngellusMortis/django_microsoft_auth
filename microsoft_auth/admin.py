@@ -10,10 +10,6 @@ User = get_user_model()
 # override admin site template
 admin.site.login_template = 'microsoft/admin_login.html'
 
-# comment this out before making any new migrations
-# move custom User model from microsoft_auth back to default auth in admin site
-# User._meta.app_label = 'auth'
-
 # djangoql support
 extra_base = []
 if apps.is_installed('djangoql'):

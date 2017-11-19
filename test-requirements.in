@@ -1,0 +1,7 @@
+coverage
+flake8
+pip-tools
+pytest
+pytest-cov
+pytest-django
+tox
