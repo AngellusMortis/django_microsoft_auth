@@ -17,6 +17,14 @@ Django Microsoft Authentication Backend
     :target: https://pyup.io/repos/github/AngellusMortis/django_microsoft_auth/
     :alt: Updates
 
+.. image:: https://api.codeclimate.com/v1/badges/ea41b61fa3a1e22e92e9/maintainability
+   :target: https://codeclimate.com/github/AngellusMortis/django_microsoft_auth/maintainability
+   :alt: Maintainability
+
+.. image:: https://api.codeclimate.com/v1/badges/ea41b61fa3a1e22e92e9/test_coverage
+   :target: https://codeclimate.com/github/AngellusMortis/django_microsoft_auth/test_coverage
+   :alt: Test Coverage
+
 
 Simple app to enable Microsoft Account, Office 365 and Xbox Live authentcation as a Django authentcation backend.
 
