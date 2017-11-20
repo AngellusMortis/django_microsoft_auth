@@ -36,6 +36,69 @@ class AuthenticateCallbackView(View):
         return super() \
             .dispatch(request, *args, **kwargs)
 
+    def get_context_data(self, **kwargs):
+        print(kwargs)
+        domain = Site.objects.get_current().domain
+        self.context = {
+            'base_url': 'https://{0}/'.format(domain),
+            'message': {}}
+
+        # validates state using Django CSRF system
+        self._check_csrf(kwargs.get('state'))
+
+        # validates response from Microsoft
+        self._check_microsoft_response(
+            kwargs.get('error'), kwargs.get('error_description'))
+
+        # validates the code param and logs user in
+        self._authenticate(kwargs.get('code'))
+
+        # populates error_description if it does not exist yet
+        if 'error' in self.context['message'] and \
+                'error_description' not in self.context['message']:
+            self.context['message']['error_description'] = \
+                self.messages[self.context['message']['error']]
+
+        self.context['message'] = mark_safe(
+            json.dumps(self.context['message']))
+        return self.context
+
+    def _check_csrf(self, state):
+        valid_csrf = False
+        if state is not None:
+            # validate format of CSRF token
+            if re.search('[a-zA-Z0-9]', state) and \
+                    len(state) == CSRF_TOKEN_LENGTH:
+                # validate CSRF token
+                if _compare_salted_tokens(state, get_token(self.request)):
+                    valid_csrf = True
+
+        if not valid_csrf:
+            self.context['message'] = {'error': 'bad_state'}
+
+    def _check_microsoft_response(self, error, error_description):
+        if 'error' not in self.context['message']:
+            if error is not None:
+                self.context['message'] = {
+                    'error': error,
+                    'error_description': error_description,
+                }
+
+    def _authenticate(self, code):
+        if 'error' not in self.context['message']:
+            if code is None:
+                self.context['message'] = {'error': 'missing_code'}
+            else:
+                # authenticate user using Microsoft code
+                user = authenticate(self.request, code=code)
+                if user is None:
+                    # this should not fail at this point except for network
+                    # error while retrieving profile or database error
+                    # adding new user
+                    self.context['message'] = {'error': 'login_failed'}
+                else:
+                    login(self.request, user)
+
     def post(self, request):
         """ main callback for Microsoft to call
 
@@ -43,52 +106,11 @@ class AuthenticateCallbackView(View):
             returns simple HTML page with Javascript that will post a message
             to parent window with details of result """
 
-        domain = Site.objects.get_current().domain
-        context = {
-            'base_url': 'https://{0}/'.format(domain),
-            'message': {}}
-
-        # validates state using Django CSRF system
-        valid_csrf = False
-        if 'state' in request.POST:
-            request_token = request.POST['state']
-            # validate format of CSRF token
-            if re.search('[a-zA-Z0-9]', request_token) and \
-                    len(request_token) == CSRF_TOKEN_LENGTH:
-                # validate CSRF token
-                if _compare_salted_tokens(request_token, get_token(request)):
-                    valid_csrf = True
-
-        if not valid_csrf:
-            context['message'] = {'error': 'bad_state'}
-        else:
-            # handle error message from Microsoft
-            if 'error' in request.POST:
-                context['message'] = {
-                    'error': request.POST['error'],
-                    'error_description': request.POST['error_description']}
-            # validate existance of Microsoft authentication code
-            elif 'code' not in request.POST:
-                context['message'] = {'error': 'missing_code'}
-            else:
-                # authenticate user using Microsoft code
-                user = authenticate(request, code=request.POST['code'])
-                if user is None:
-                    # this should not fail at this point except for network
-                    # error while retrieving profile or database error
-                    # adding new user
-                    context['message'] = {'error': 'login_failed'}
-                else:
-                    login(request, user)
+        context = self.get_context_data(**request.POST.dict())
 
         status_code = 200
         if 'error' in context['message']:
-            if 'error_description' not in context['message']:
-                context['message']['error_description'] = \
-                    self.messages[context['message']['error']]
             status_code = 400
-
-        context['message'] = mark_safe(json.dumps(context['message']))
 
         return render(
             request, 'microsoft/auth_callback.html',
