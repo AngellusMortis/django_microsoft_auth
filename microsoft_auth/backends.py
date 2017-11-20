@@ -32,6 +32,7 @@ class MicrosoftAuthenticationBackend(ModelBackend):
             https://developer.microsoft.com/en-us/graph/docs/get-started/rest
         """
 
+        user = None
         if code is not None:
             # fetch OAuth token
             token = self.microsoft.fetch_token(code=code)
@@ -39,32 +40,60 @@ class MicrosoftAuthenticationBackend(ModelBackend):
             # validate permission scopes
             if 'access_token' in token and \
                     self.microsoft.valid_scopes(token['scope']):
+                user = self._authenticate_user()
 
-                # authenticate Xbox Live user
-                if self.config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_XBL:
-                    xbox_token = self.microsoft.fetch_xbox_token()
+        return user
 
-                    if 'Token' in xbox_token:
-                        response = self.microsoft.get_xbox_profile()
-                        return self._get_or_create_xbox_user(response)
-                # authenticate Microsoft/Office 365 User
-                else:
-                    response = self.microsoft.get(self.profile_url)
-                    if response.status_code == 200:
-                        response = response.json()
-                        if 'error' not in response:
-                            return self._get_or_create_microsoft_user(response)
+    def _authenticate_user(self):
+        if self.config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_XBL:
+            return self._authenticate_xbox_user()
+        else:
+            return self._authenticate_microsoft_user()
+
+    def _authenticate_xbox_user(self):
+        xbox_token = self.microsoft.fetch_xbox_token()
+
+        if 'Token' in xbox_token:
+            response = self.microsoft.get_xbox_profile()
+            return self._get_user_from_xbox(response)
         return None
 
-    def _get_or_create_xbox_user(self, data):
+    def _authenticate_microsoft_user(self):
+        response = self.microsoft.get(self.profile_url)
+        if response.status_code == 200:
+            response = response.json()
+            if 'error' not in response:
+                return self._get_user_from_microsoft(response)
+        return None
+
+    def _get_user_from_xbox(self, data):
         """ Retrieves existing Django user or creates
-                a new one from Xbox Live profile data """
+            a new one from Xbox Live profile data """
         user = None
+        xbox_user = self._get_xbox_user(data)
+
+        if xbox_user is not None:
+            if xbox_user.user is None:
+                user = User(username=xbox_user.gamertag)
+                user.save()
+
+                xbox_user.user = user
+                xbox_user.save()
+
+            user = xbox_user.user
+
+            if self.config.MICROSOFT_AUTH_XBL_SYNC_USERNAME:
+                if user.username != xbox_user.gamertag:
+                    user.username = xbox_user.gamertag
+                    user.save()
+
+        return user
+
+    def _get_xbox_user(self, data):
         xbox_user = None
 
         try:
-            xbox_user = \
-                XboxLiveAccount.objects.get(xbox_id=data['xid'])
+            xbox_user = XboxLiveAccount.objects.get(xbox_id=data['xid'])
             # update Gamertag since they can change over time
             if xbox_user.gamertag != data['gtg']:
                 xbox_user.gamertag = data['gtg']
@@ -77,41 +106,14 @@ class MicrosoftAuthenticationBackend(ModelBackend):
                     gamertag=data['gtg'])
                 xbox_user.save()
 
-        # verify Xbox Live Account is linked to Django User
-        if xbox_user is not None:
-            if xbox_user.user is None:
-                # create new Django user (Xbox Live endpoint provides no data)
-                user = User(username=xbox_user.gamertag)
-                user.save()
+        return xbox_user
 
-                xbox_user.user = user
-                xbox_user.save()
-
-            user = xbox_user.user
-
-        if self.config.MICROSOFT_AUTH_XBL_SYNC_USERNAME:
-            if user.username != xbox_user.gamertag:
-                user.username = xbox_user.gamertag
-                user.save()
-        return user
-
-    def _get_or_create_microsoft_user(self, data):
+    def _get_user_from_microsoft(self, data):
         """ Retrieves existing Django user or creates
-                a new one from Microsoft profile data """
+            a new one from Xbox Live profile data """
         user = None
-        microsoft_user = None
+        microsoft_user = self._get_microsoft_user(data)
 
-        try:
-            microsoft_user = \
-                MicrosoftAccount.objects.get(microsoft_id=data['id'])
-        except MicrosoftAccount.DoesNotExist:
-            if self.config.MICROSOFT_AUTH_AUTO_CREATE:
-                # create new Microsoft Account
-                microsoft_user = MicrosoftAccount(
-                    microsoft_id=data['id'])
-                microsoft_user.save()
-
-        # verify Microsoft Account is linked to Django User
         if microsoft_user is not None:
             if microsoft_user.user is None:
                 try:
@@ -134,4 +136,20 @@ class MicrosoftAuthenticationBackend(ModelBackend):
                 microsoft_user.save()
 
             user = microsoft_user.user
+
         return user
+
+    def _get_microsoft_user(self, data):
+        microsoft_user = None
+
+        try:
+            microsoft_user = \
+                MicrosoftAccount.objects.get(microsoft_id=data['id'])
+        except MicrosoftAccount.DoesNotExist:
+            if self.config.MICROSOFT_AUTH_AUTO_CREATE:
+                # create new Microsoft Account
+                microsoft_user = MicrosoftAccount(
+                    microsoft_id=data['id'])
+                microsoft_user.save()
+
+        return microsoft_user
