@@ -73,19 +73,14 @@ class MicrosoftAuthenticationBackend(ModelBackend):
         xbox_user = self._get_xbox_user(data)
 
         if xbox_user is not None:
-            if xbox_user.user is None:
-                user = User(username=xbox_user.gamertag)
-                user.save()
-
-                xbox_user.user = user
-                xbox_user.save()
+            self._verify_xbox_user(xbox_user)
 
             user = xbox_user.user
 
-            if self.config.MICROSOFT_AUTH_XBL_SYNC_USERNAME:
-                if user.username != xbox_user.gamertag:
-                    user.username = xbox_user.gamertag
-                    user.save()
+            if self.config.MICROSOFT_AUTH_XBL_SYNC_USERNAME and \
+                    user.username != xbox_user.gamertag:
+                user.username = xbox_user.gamertag
+                user.save()
 
         return user
 
@@ -108,6 +103,14 @@ class MicrosoftAuthenticationBackend(ModelBackend):
 
         return xbox_user
 
+    def _verify_xbox_user(self, xbox_user):
+        if xbox_user.user is None:
+            user = User(username=xbox_user.gamertag)
+            user.save()
+
+            xbox_user.user = user
+            xbox_user.save()
+
     def _get_user_from_microsoft(self, data):
         """ Retrieves existing Django user or creates
             a new one from Xbox Live profile data """
@@ -115,25 +118,7 @@ class MicrosoftAuthenticationBackend(ModelBackend):
         microsoft_user = self._get_microsoft_user(data)
 
         if microsoft_user is not None:
-            if microsoft_user.user is None:
-                try:
-                    # create new Django user from provided data
-                    user = User.objects.get(email=data['userPrincipalName'])
-
-                    if user.first_name == '' and user.last_name == '':
-                        user.first_name = data.get('givenName', '')
-                        user.last_name = data.get('surname', '')
-                        user.save()
-                except User.DoesNotExist:
-                    user = User(
-                        username=data['id'],
-                        first_name=data.get('givenName', ''),
-                        last_name=data.get('surname', ''),
-                        email=data['userPrincipalName'])
-                    user.save()
-
-                microsoft_user.user = user
-                microsoft_user.save()
+            self._verify_microsoft_user(microsoft_user, data)
 
             user = microsoft_user.user
 
@@ -153,3 +138,24 @@ class MicrosoftAuthenticationBackend(ModelBackend):
                 microsoft_user.save()
 
         return microsoft_user
+
+    def _verify_microsoft_user(self, microsoft_user, data):
+        if microsoft_user.user is None:
+            try:
+                # create new Django user from provided data
+                user = User.objects.get(email=data['userPrincipalName'])
+
+                if user.first_name == '' and user.last_name == '':
+                    user.first_name = data.get('givenName', '')
+                    user.last_name = data.get('surname', '')
+                    user.save()
+            except User.DoesNotExist:
+                user = User(
+                    username=data['id'],
+                    first_name=data.get('givenName', ''),
+                    last_name=data.get('surname', ''),
+                    email=data['userPrincipalName'])
+                user.save()
+
+            microsoft_user.user = user
+            microsoft_user.save()
