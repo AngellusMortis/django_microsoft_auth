@@ -104,11 +104,3 @@ Before you submit a pull request, check that it meets these guidelines:
 3. The pull request should work for Python 3.4, 3.5, and 3.6. Check
    https://travis-ci.org/AngellusMortis/django_microsoft_auth/pull_requests
    and make sure that the tests pass for all supported Python versions.
-
-Tips
-----
-
-To run a subset of tests::
-
-$ py.test tests.test_django_microsoft_auth
-
