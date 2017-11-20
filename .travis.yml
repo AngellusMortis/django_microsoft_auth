@@ -17,9 +17,14 @@ install: pip install -U tox-travis
 script: tox
 
 before_script:
+  - if [[ $TRAVIS_PYTHON_VERSION == 3.6 ]];
+  - then
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
-  - if [[ $TRAVIS_PYTHON_VERSION == 3.6 ]]; then ./cc-test-reporter before-build; fi
+  - fi
 
 after_script:
-  - if [[ $TRAVIS_PYTHON_VERSION == 3.6 ]]; then./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == 3.6 ]];
+  - then
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - fi
