@@ -64,16 +64,11 @@ class AuthenticateCallbackView(View):
         return self.context
 
     def _check_csrf(self, state):
-        valid_csrf = False
-        if state is not None:
-            # validate format of CSRF token
-            if re.search('[a-zA-Z0-9]', state) and \
-                    len(state) == CSRF_TOKEN_LENGTH:
-                # validate CSRF token
-                if _compare_salted_tokens(state, get_token(self.request)):
-                    valid_csrf = True
-
-        if not valid_csrf:
+        # validate state parameter
+        if state is None or \
+          not re.search('[a-zA-Z0-9]', state) or \
+          not len(state) == CSRF_TOKEN_LENGTH or \
+          not _compare_salted_tokens(state, get_token(self.request)):
             self.context['message'] = {'error': 'bad_state'}
 
     def _check_microsoft_response(self, error, error_description):
