@@ -1,0 +1,3 @@
+exclude_paths:
+- "versioneer.py"
+- "microsoft_auth/_version.py"
