@@ -14,6 +14,7 @@ INSTALLED_APPS = [
 
     'microsoft_auth',
     'tests',
+    'djangoql',  # optional
 ]
 
 DATABASES = {

@@ -9,6 +9,7 @@ chardet==3.0.4            # via requests
 click==6.7                # via pip-tools
 coverage==4.4.2
 django==1.11.7
+djangoql==0.8.9
 first==2.0.1              # via pip-tools
 flake8==3.5.0
 idna==2.6                 # via requests
@@ -17,6 +18,7 @@ oauthlib==2.0.6           # via requests-oauthlib
 pip-tools==1.10.1
 pkginfo==1.4.1            # via twine
 pluggy==0.5.2             # via tox
+ply==3.10                 # via djangoql
 py==1.5.2                 # via pytest, tox
 pycodestyle==2.3.1        # via flake8
 pyflakes==1.6.0           # via flake8
