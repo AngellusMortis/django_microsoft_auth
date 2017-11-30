@@ -15,7 +15,7 @@ flake8==3.5.0
 idna==2.6                 # via requests
 mccabe==0.6.1             # via flake8
 oauthlib==2.0.6           # via requests-oauthlib
-pip-tools==1.10.2
+pip-tools==1.11.0
 pkginfo==1.4.1            # via twine
 pluggy==0.6.0             # via tox
 ply==3.10                 # via djangoql
