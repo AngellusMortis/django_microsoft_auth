@@ -7,8 +7,6 @@ env:
 language: python
 python:
   - 3.6
-  - 3.5
-  - 3.4
 
 env:
   - TOX_ENV=py34-111
