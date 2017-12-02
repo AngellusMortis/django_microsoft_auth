@@ -10,38 +10,24 @@ python:
   - 3.5
   - 3.4
 
-# TODO: update when django 2.0 releases
-# language: python
-# python: 3.5
-# env:
-#   - TOX_ENV=py27-18
-#   - TOX_ENV=py27-19
-#   - TOX_ENV=py27-110
-#   - TOX_ENV=py32-18
-#   - TOX_ENV=py33-18
-#   - TOX_ENV=py34-18
-#   - TOX_ENV=py34-19
-#   - TOX_ENV=py34-110
-#   - TOX_ENV=py35-18
-#   - TOX_ENV=py35-19
-#   - TOX_ENV=py35-110
-# # command to install dependencies
-# install:
-#   - pip install tox
-# # command to run tests
-# script:
-#   - tox -e $TOX_ENV
+env:
+  - TOX_ENV=py34-111
+  - TOX_ENV=py34-20
+  - TOX_ENV=py35-111
+  - TOX_ENV=py35-20
+  - TOX_ENV=py36-111
+  - TOX_ENV=py36-20
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install: pip install -U tox-travis
 
 # command to run tests, e.g. python setup.py test
-script: tox
+script: tox -e $TOX_ENV
 
 before_script:
-  - if [[ $TRAVIS_PYTHON_VERSION == 3.6 ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter; fi
-  - if [[ $TRAVIS_PYTHON_VERSION == 3.6 ]]; then chmod +x ./cc-test-reporter; fi
-  - if [[ $TRAVIS_PYTHON_VERSION == 3.6 ]]; then ./cc-test-reporter before-build; fi
+  - if [[ $TOX_ENV == "py36-20" ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter; fi
+  - if [[ $TOX_ENV == "py36-20" ]]; then chmod +x ./cc-test-reporter; fi
+  - if [[ $TOX_ENV == "py36-20" ]]; then ./cc-test-reporter before-build; fi
 
 after_script:
-  - if [[ $TRAVIS_PYTHON_VERSION == 3.6 ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
+  - if [[ $TOX_ENV == "py36-20" ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
