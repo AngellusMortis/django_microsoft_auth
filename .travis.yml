@@ -6,6 +6,8 @@ env:
     - CC_TEST_REPORTER_ID=a6c808a99cff3b7f3aa5942cca8d168018b41e5df80a8b3d24831327c7deff2e
 language: python
 python:
+  - 3.4
+  - 3.5
   - 3.6
 
 env:
