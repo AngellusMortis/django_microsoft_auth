@@ -21,6 +21,8 @@ install: pip install -U tox-travis
 script: tox -e $TOX_ENV
 
 before_script:
+  - echo $TRAVIS_PYTHON_VERSION
+  - echo $DJANGO_VERSION
   - export TOX_ENV="py${TRAVIS_PYTHON_VERSION/./}-${DJANGO_VERSION/./}"
   - if [[ $TOX_ENV == "py36-20" ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter; fi
   - if [[ $TOX_ENV == "py36-20" ]]; then chmod +x ./cc-test-reporter; fi
