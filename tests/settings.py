@@ -45,3 +45,14 @@ TEMPLATES = [
         },
     },
 ]
+
+MIDDLEWARE = [
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+]
+
+USE_I18N = True
+
+USE_L10N = True
+
+LANGUAGE_CODE = 'en-us'

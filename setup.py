@@ -5,6 +5,7 @@
 
 from os import path
 
+from pip.req import parse_requirements
 from setuptools import find_packages, setup
 
 import versioneer
@@ -17,11 +18,11 @@ with open(path.join(BASE_DIR, 'README.rst')) as readme_file:
 with open(path.join(BASE_DIR, 'HISTORY.rst')) as history_file:
     history = history_file.read()
 
-with open(path.join(BASE_DIR, 'requirements.in')) as f:
-    requirements = f.read().split('\n')
+reqs = parse_requirements('requirements.in', session='fake')
+requirements = [str(req.req) for req in reqs]
 
-with open(path.join(BASE_DIR, 'test-requirements.in')) as f:
-    test_requirements = f.read().split('\n')
+test_reqs = parse_requirements('dev-requirements.in', session='fake')
+test_requirements = [str(req.req) for req in test_reqs]
 
 setup_requirements = [
     'pytest-runner',
