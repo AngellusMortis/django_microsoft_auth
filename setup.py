@@ -53,6 +53,7 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Framework :: Django :: 1.11',
+        'Framework :: Django :: 2.0',
     ],
     test_suite='tests',
     tests_require=test_requirements,
