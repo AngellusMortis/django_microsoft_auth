@@ -1,5 +1,7 @@
 from .conf import config
 
+app_name = 'microsoft_auth'
+
 urlpatterns = []
 
 if config.MICROSOFT_AUTH_LOGIN_ENABLED:

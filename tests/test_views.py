@@ -19,12 +19,12 @@ class ViewsTests(TestCase):
         self.user = User.objects.create(username='test')
 
     def test_authenticate_callback_bad_method(self):
-        response = self.client.get(reverse('microsoft:auth-callback'))
+        response = self.client.get(reverse('microsoft_auth:auth-callback'))
 
         self.assertEqual(405, response.status_code)
 
     def test_authenticate_callback_no_params(self):
-        response = self.client.post(reverse('microsoft:auth-callback'))
+        response = self.client.post(reverse('microsoft_auth:auth-callback'))
         message = json.loads(response.context['message'])
 
         self.assertEqual(400, response.status_code)
@@ -36,9 +36,9 @@ class ViewsTests(TestCase):
     @patch('microsoft_auth.views._compare_salted_tokens')
     def test_authenticate_callback_bad_csrf_format(self, mock_compare):
         response = self.client.post(
-            reverse('microsoft:auth-callback'),
+            reverse('microsoft_auth:auth-callback'),
             {'state': 'test'}
-        )
+            )
         message = json.loads(response.context['message'])
 
         self.assertFalse(mock_compare.called)
@@ -51,7 +51,7 @@ class ViewsTests(TestCase):
     @patch('microsoft_auth.views._compare_salted_tokens')
     def test_authenticate_callback_bad_csrf_length(self, mock_compare):
         response = self.client.post(
-            reverse('microsoft:auth-callback'),
+            reverse('microsoft_auth:auth-callback'),
             {'state': '001464'}
         )
         message = json.loads(response.context['message'])
@@ -68,7 +68,7 @@ class ViewsTests(TestCase):
         mock_compare.return_value = False
 
         response = self.client.post(
-            reverse('microsoft:auth-callback'),
+            reverse('microsoft_auth:auth-callback'),
             {'state': CSRF_TOKEN}
         )
         message = json.loads(response.context['message'])
@@ -85,7 +85,7 @@ class ViewsTests(TestCase):
         mock_compare.return_value = True
 
         response = self.client.post(
-            reverse('microsoft:auth-callback'),
+            reverse('microsoft_auth:auth-callback'),
             {'state': CSRF_TOKEN}
         )
         message = json.loads(response.context['message'])
@@ -102,7 +102,7 @@ class ViewsTests(TestCase):
         mock_compare.return_value = True
 
         response = self.client.post(
-            reverse('microsoft:auth-callback'),
+            reverse('microsoft_auth:auth-callback'),
             {
                 'state': CSRF_TOKEN,
                 'error': TEST_ERROR,
@@ -125,7 +125,7 @@ class ViewsTests(TestCase):
         mock_auth.return_value = None
 
         response = self.client.post(
-            reverse('microsoft:auth-callback'),
+            reverse('microsoft_auth:auth-callback'),
             {
                 'state': CSRF_TOKEN,
                 'code': 'test_code'
@@ -149,7 +149,7 @@ class ViewsTests(TestCase):
         mock_auth.return_value = self.user
 
         response = self.client.post(
-            reverse('microsoft:auth-callback'),
+            reverse('microsoft_auth:auth-callback'),
             {
                 'state': CSRF_TOKEN,
                 'code': 'test_code'

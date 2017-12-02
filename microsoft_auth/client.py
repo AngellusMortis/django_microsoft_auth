@@ -42,7 +42,7 @@ class MicrosoftClient(OAuth2Session):
         self.config = config
 
         domain = Site.objects.get_current().domain
-        path = reverse('microsoft:auth-callback')
+        path = reverse('microsoft_auth:auth-callback')
         scope = ' '.join(self.SCOPE_MICROSOFT)
 
         if self.config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_XBL:
