@@ -21,12 +21,10 @@ install: pip install -U tox-travis
 script: tox -e $TOX_ENV
 
 before_script:
-  - echo $TRAVIS_PYTHON_VERSION
-  - echo $DJANGO_VERSION
-  - export TOX_ENV="py${TRAVIS_PYTHON_VERSION/./}-${DJANGO_VERSION/./}"
-  - if [[ $TOX_ENV == "py36-20" ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter; fi
-  - if [[ $TOX_ENV == "py36-20" ]]; then chmod +x ./cc-test-reporter; fi
-  - if [[ $TOX_ENV == "py36-20" ]]; then ./cc-test-reporter before-build; fi
+  - export TOX_ENV="py$TRAVIS_PYTHON_VERSION-dj$DJANGO_VERSION"
+  - if [[ $TOX_ENV == "py3.6-dj2.0" ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter; fi
+  - if [[ $TOX_ENV == "py3.6-dj2.0" ]]; then chmod +x ./cc-test-reporter; fi
+  - if [[ $TOX_ENV == "py3.6-dj2.0" ]]; then ./cc-test-reporter before-build; fi
 
 after_script:
-  - if [[ $TOX_ENV == "py36-20" ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
+  - if [[ $TOX_ENV == "py3.6-dj2.0" ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
