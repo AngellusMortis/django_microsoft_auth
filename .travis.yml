@@ -18,7 +18,7 @@ env:
 install: pip install -U tox-travis
 
 # command to run tests, e.g. python setup.py test
-script: tox -e py${TRAVIS_PYTHON_VERSION/./}-${DJANGO_VERSION/./}
+script: tox -e "py${TRAVIS_PYTHON_VERSION/./}-${DJANGO_VERSION/./}"
 
 before_script:
   - if [[ $TRAVIS_PYTHON_VERSION == "3.6" && $DJANGO_VERSION == "2.0" ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter; fi
@@ -27,3 +27,5 @@ before_script:
 
 after_script:
   - if [[ $TRAVIS_PYTHON_VERSION == "3.6" && $DJANGO_VERSION == "2.0" ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
+
+sudo: false
