@@ -9,23 +9,19 @@ python:
   - 3.6
 
 env:
-  - TOX_ENV=py34-111
-  - TOX_ENV=py34-20
-  - TOX_ENV=py35-111
-  - TOX_ENV=py35-20
-  - TOX_ENV=py36-111
-  - TOX_ENV=py36-20
+  - DJANGO_VERION=1.11
+  - DJANGO_VERION=2.0
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install: pip install -U tox-travis
 
 # command to run tests, e.g. python setup.py test
-script: tox -e $TOX_ENV
+script: tox -e py${TRAVIS_PYTHON_VERSION/./}-${DJANGO_VERSION/./}
 
 before_script:
-  - if [[ $TOX_ENV == "py36-20" ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter; fi
-  - if [[ $TOX_ENV == "py36-20" ]]; then chmod +x ./cc-test-reporter; fi
-  - if [[ $TOX_ENV == "py36-20" ]]; then ./cc-test-reporter before-build; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == "3.6" && $DJANGO_VERSION == "2.0" ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == "3.6" && $DJANGO_VERSION == "2.0" ]]; then chmod +x ./cc-test-reporter; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == "3.6" && $DJANGO_VERSION == "2.0" ]]; then ./cc-test-reporter before-build; fi
 
 after_script:
-  - if [[ $TOX_ENV == "py36-20" ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == "3.6" && $DJANGO_VERSION == "2.0" ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
