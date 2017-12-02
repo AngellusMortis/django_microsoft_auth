@@ -11,8 +11,8 @@ python:
   - 3.6
 
 env:
-  - DJANGO_VERION=1.11
-  - DJANGO_VERION=2.0
+  - DJANGO_VERSION=1.11
+  - DJANGO_VERSION=2.0
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install: pip install -U tox-travis
