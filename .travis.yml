@@ -36,10 +36,10 @@ before_script:
   - PY_VERSION=${PY_VERSION/-dev/}
   - PY_VERSION=${PY_VERSION/pypy/py}
   - export TOX_ENV="py$PY_VERSION-dj$DJANGO_VERSION"
-  - if [[ $TOX_ENV == "py36-dj20" ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter; fi
-  - if [[ $TOX_ENV == "py36-dj20" ]]; then chmod +x ./cc-test-reporter; fi
-  - if [[ $TOX_ENV == "py36-dj20" ]]; then ./cc-test-reporter before-build; fi
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
 
 after_success:
-  - if [[ $TOX_ENV == "py36-dj20" ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
-  - if [[ $TOX_ENV == "py36-dj20" ]]; then coveralls; fi
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - coveralls
