@@ -5,9 +5,15 @@ Django Microsoft Authentication Backend
 
 .. image:: https://img.shields.io/pypi/v/django_microsoft_auth.svg
     :target: https://pypi.python.org/pypi/django_microsoft_auth
+    :alt: PyPi
 
+.. image:: https://img.shields.io/pypi/pyversions/django_microsoft_auth.svg
+    :target: https://pypi.python.org/pypi/django_microsoft_auth
+    :alt: Python Versions
+ 
 .. image:: https://img.shields.io/travis/AngellusMortis/django_microsoft_auth.svg
     :target: https://travis-ci.org/AngellusMortis/django_microsoft_auth
+    :alt: Travis CI
 
 .. image:: https://readthedocs.org/projects/django-microsoft-auth/badge/?version=latest
     :target: https://django-microsoft-auth.readthedocs.io/en/latest/?badge=latest
@@ -16,6 +22,10 @@ Django Microsoft Authentication Backend
 .. image:: https://pyup.io/repos/github/AngellusMortis/django_microsoft_auth/shield.svg
     :target: https://pyup.io/repos/github/AngellusMortis/django_microsoft_auth/
     :alt: Updates
+
+.. image:: https://coveralls.io/repos/github/AngellusMortis/django_microsoft_auth/badge.svg?branch=master
+    :target: https://coveralls.io/github/AngellusMortis/django_microsoft_auth?branch=master
+    :alt: Coverage
 
 .. image:: https://api.codeclimate.com/v1/badges/ea41b61fa3a1e22e92e9/maintainability
    :target: https://codeclimate.com/github/AngellusMortis/django_microsoft_auth/maintainability
