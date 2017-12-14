@@ -9,6 +9,8 @@ python:
   - 3.4
   - 3.5
   - 3.6
+  - 3.7-dev
+  - pypy3
 
 env:
   - DJANGO_VERSION=1.11
@@ -22,9 +24,10 @@ script: tox -e $TOX_ENV
 
 before_script:
   - export TOX_ENV="py$TRAVIS_PYTHON_VERSION-dj$DJANGO_VERSION"
-  - if [[ $TOX_ENV == "py3.6-dj2.0" ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter; fi
-  - if [[ $TOX_ENV == "py3.6-dj2.0" ]]; then chmod +x ./cc-test-reporter; fi
+  - if [[ $TOX_ENV == "py36-dj2.0" ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter; fi
+  - if [[ $TOX_ENV == "py36-dj2.0" ]]; then chmod +x ./cc-test-reporter; fi
   - if [[ $TOX_ENV == "py3.6-dj2.0" ]]; then ./cc-test-reporter before-build; fi
 
-after_script:
-  - if [[ $TOX_ENV == "py3.6-dj2.0" ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
+after_success:
+  - if [[ $TOX_ENV == "py36-dj2.0" ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
+  - if [[ $TOX_ENV == "py36-dj2.0" ]]; then coveralls; fi
