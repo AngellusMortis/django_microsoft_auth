@@ -23,7 +23,9 @@ install: pip install -U tox-travis
 script: tox -e $TOX_ENV
 
 before_script:
-  - export TOX_ENV="py$TRAVIS_PYTHON_VERSION-dj$DJANGO_VERSION"
+  - PY_VERSION=${TRAVIS_PYTHON_VERSION/./}
+  - PY_VERSION=${PY_VERSION/-dev/}
+  - export TOX_ENV="py$PY_VERSION-dj$DJANGO_VERSION"
   - if [[ $TOX_ENV == "py36-dj2.0" ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter; fi
   - if [[ $TOX_ENV == "py36-dj2.0" ]]; then chmod +x ./cc-test-reporter; fi
   - if [[ $TOX_ENV == "py3.6-dj2.0" ]]; then ./cc-test-reporter before-build; fi
