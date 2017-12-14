@@ -6,17 +6,17 @@ env:
     - CC_TEST_REPORTER_ID=a6c808a99cff3b7f3aa5942cca8d168018b41e5df80a8b3d24831327c7deff2e
 language: python
 python:
-  - 3.4
-  - 3.5
-  - 3.6
-  - 3.7-dev
-  - pypy3
+  - '3.4'
+  - '3.5'
+  - '3.6'
+  - '3.7-dev'
+  - 'pypy3'
 matrix:
     allow_failures:
-        python: 3.7-dev
+        python: '3.7-dev'
 env:
-  - DJANGO_VERSION=1.11
-  - DJANGO_VERSION=2.0
+  - DJANGO_VERSION=111
+  - DJANGO_VERSION=20
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install: pip install -U tox-travis
@@ -29,10 +29,10 @@ before_script:
   - PY_VERSION=${PY_VERSION/-dev/}
   - PY_VERSION=${PY_VERSION/pypy/py}
   - export TOX_ENV="py$PY_VERSION-dj$DJANGO_VERSION"
-  - if [[ $TOX_ENV == "py36-dj2.0" ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter; fi
-  - if [[ $TOX_ENV == "py36-dj2.0" ]]; then chmod +x ./cc-test-reporter; fi
-  - if [[ $TOX_ENV == "py3.6-dj2.0" ]]; then ./cc-test-reporter before-build; fi
+  - if [[ $TOX_ENV == "py36-dj20" ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter; fi
+  - if [[ $TOX_ENV == "py36-dj20" ]]; then chmod +x ./cc-test-reporter; fi
+  - if [[ $TOX_ENV == "py36-dj20" ]]; then ./cc-test-reporter before-build; fi
 
 after_success:
-  - if [[ $TOX_ENV == "py36-dj2.0" ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
-  - if [[ $TOX_ENV == "py36-dj2.0" ]]; then coveralls; fi
+  - if [[ $TOX_ENV == "py36-dj20" ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
+  - if [[ $TOX_ENV == "py36-dj20" ]]; then coveralls; fi
