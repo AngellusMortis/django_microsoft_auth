@@ -25,6 +25,7 @@ script: tox -e $TOX_ENV
 before_script:
   - PY_VERSION=${TRAVIS_PYTHON_VERSION/./}
   - PY_VERSION=${PY_VERSION/-dev/}
+  - PY_VERSION=${PY_VERSION/pypy/py}
   - export TOX_ENV="py$PY_VERSION-dj$DJANGO_VERSION"
   - if [[ $TOX_ENV == "py36-dj2.0" ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter; fi
   - if [[ $TOX_ENV == "py36-dj2.0" ]]; then chmod +x ./cc-test-reporter; fi
