@@ -1,8 +1,8 @@
 {
     "version": "2",
-    "excluded_patterns": [
+    "exclude_patterns": [
         "versioneer.py",
-        "microsoft_auth/_version.py",
+        "**/_version.py",
         "config",
         "db",
         "dist",
