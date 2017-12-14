@@ -12,3 +12,12 @@ exclude_paths:
 - "**/tests"
 - "**/vendor"
 - "**/*.d.ts"
+plugins:
+    pep8:
+        enabled: true
+engines:
+    duplication:
+        enabled: true
+        config:
+            lanuages:
+                - python: 
