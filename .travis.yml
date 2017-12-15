@@ -1,9 +1,5 @@
 # Config file for automatic testing at travis-ci.org
 # This file will be regenerated if you run travis_pypi_setup.py
-
-env:
-  global:
-    - CC_TEST_REPORTER_ID=8f2c35e042bf8023f65b749698b4ce4ac9a679d3f2fe83cc32a6d31e676da8a6
 language: python
 python:
   - '3.4'
@@ -12,6 +8,8 @@ python:
   - '3.7-dev'
   - 'pypy3'
 env:
+  global:
+    - CC_TEST_REPORTER_ID=9331f307ce08c235307dc7cd7724ff21c2be2252f757d2437f5d9e271270a4ef
   - DJANGO_VERSION=111
   - DJANGO_VERSION=20
 matrix:
