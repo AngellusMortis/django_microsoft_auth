@@ -3,7 +3,7 @@
 
 env:
   global:
-    - CC_TEST_REPORTER_ID=a6c808a99cff3b7f3aa5942cca8d168018b41e5df80a8b3d24831327c7deff2e
+    - CC_TEST_REPORTER_ID=8f2c35e042bf8023f65b749698b4ce4ac9a679d3f2fe83cc32a6d31e676da8a6
 language: python
 python:
   - '3.4'
@@ -24,7 +24,7 @@ matrix:
 
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
-install: 
+install:
   - pip install -U tox-travis
   - pip install -U coveralls
 
@@ -36,10 +36,10 @@ before_script:
   - PY_VERSION=${PY_VERSION/-dev/}
   - PY_VERSION=${PY_VERSION/pypy/py}
   - export TOX_ENV="py$PY_VERSION-dj$DJANGO_VERSION"
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
-  - ./cc-test-reporter before-build
+  - if [[ $TOX_ENV == "py36-dj20" ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter; fi
+  - if [[ $TOX_ENV == "py36-dj20" ]]; then chmod +x ./cc-test-reporter; fi
+  - if [[ $TOX_ENV == "py36-dj20" ]]; then ./cc-test-reporter before-build; fi
 
 after_success:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - - if [[ $TOX_ENV == "py36-dj20" ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
   - coveralls
