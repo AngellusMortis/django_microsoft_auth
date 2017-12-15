@@ -1,5 +1,10 @@
 {
     "version": "2",
+    "checks": {
+        "method-complexity": {
+            "enabled": false
+        }
+    },
     "exclude_patterns": [
         "versioneer.py",
         "**/_version.py",
