@@ -4,7 +4,7 @@
 #
 #    pip-compile --output-file dev-requirements.txt dev-requirements.in requirements.in
 #
-attrs==17.3.0             # via pytest
+attrs==17.4.0             # via pytest
 certifi==2017.11.5        # via requests
 chardet==3.0.4            # via requests
 click==6.7                # via pip-tools
