@@ -4,7 +4,7 @@
 #
 #    pip-compile --output-file requirements.txt requirements.in
 #
-certifi==2017.11.5        # via requests
+certifi==2018.1.18        # via requests
 chardet==3.0.4            # via requests
 django==2.0
 idna==2.6                 # via requests
