@@ -16,7 +16,7 @@ first==2.0.1              # via pip-tools
 flake8==3.5.0
 idna==2.6                 # via requests
 mccabe==0.6.1             # via flake8
-oauthlib==2.0.6           # via requests-oauthlib
+oauthlib==2.0.7           # via requests-oauthlib
 pip-tools==1.11.0
 pkginfo==1.4.1            # via twine
 pluggy==0.6.0             # via pytest, tox
