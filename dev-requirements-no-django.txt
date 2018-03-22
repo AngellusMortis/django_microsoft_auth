@@ -36,4 +36,4 @@ tqdm==4.19.5              # via twine
 twine==1.9.1
 urllib3==1.22             # via requests
 versioneer==0.18
-virtualenv==15.1.0        # via tox
+virtualenv==15.2.0        # via tox
