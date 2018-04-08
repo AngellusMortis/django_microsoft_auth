@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from microsoft_auth.models import MicrosoftAccount, XboxLiveAccount
 
 from . import TestCase
@@ -17,3 +18,10 @@ class ModelsTests(TestCase):
         a.save()
 
         self.assertEqual(USER_ID, str(a))
+
+    def test_username_with_spaces(self):
+        User = get_user_model()
+
+        u = User(username='Test username')
+        u.set_unusable_password()
+        u.full_clean()
