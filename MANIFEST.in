@@ -12,5 +12,7 @@ recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
 
 recursive-include docs *.rst conf.py Makefile make.bat *.jpg *.png *.gif
+recursive-include microsoft_auth/templates *.html
+recursive-include microsoft_auth/static *.css *.js *.jpg *.png *.gif
 include versioneer.py
 include microsoft_auth/_version.py
