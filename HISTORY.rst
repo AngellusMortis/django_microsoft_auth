@@ -2,6 +2,14 @@
 History
 =======
 
+1.0.6 (2018-4-8)
+----------------
+* Added patched username validator to allow spaces for usernames for Xbox Live Gamertags
+
+1.0.5 (2018-4-8)
+----------------
+* Added missing templates and static files to MANIFEST
+
 1.0.4 (2017-12-2)
 -----------------
 
