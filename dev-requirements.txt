@@ -18,7 +18,7 @@ idna==2.6                 # via requests
 mccabe==0.6.1             # via flake8
 more-itertools==4.1.0     # via pytest
 oauthlib==2.0.7           # via requests-oauthlib
-pip-tools==1.11.0
+pip-tools==2.0.2
 pkginfo==1.4.2            # via twine
 pluggy==0.6.0             # via pytest, tox
 ply==3.11                 # via djangoql
