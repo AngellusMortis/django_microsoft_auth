@@ -34,7 +34,7 @@ requests-toolbelt==0.8.0  # via twine
 requests==2.18.4
 six==1.11.0               # via more-itertools, pip-tools, pytest, tox
 tox==3.0.0
-tqdm==4.21.0              # via twine
+tqdm==4.23.2              # via twine
 twine==1.11.0
 urllib3==1.22             # via requests
 versioneer==0.18
