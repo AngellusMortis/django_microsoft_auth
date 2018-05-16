@@ -38,7 +38,7 @@ tqdm==4.21.0              # via twine
 twine==1.11.0
 urllib3==1.22             # via requests
 versioneer==0.18
-virtualenv==15.2.0        # via tox
+virtualenv==16.0.0        # via tox
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools                # via pip-tools, pytest, twine
