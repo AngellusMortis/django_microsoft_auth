@@ -7,7 +7,7 @@
 chardet==3.0.4            # via requests
 Django==2.0.4
 idna==2.6                 # via requests
-oauthlib==2.0.7           # via requests-oauthlib
+oauthlib==2.1.0           # via requests-oauthlib
 pytz==2018.3              # via django
 requests-oauthlib==0.8.0
 requests==2.18.4
