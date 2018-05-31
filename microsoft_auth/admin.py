@@ -22,7 +22,7 @@ base_user_admin = extra_base + [BaseUserAdmin]
 
 # unregister User mode if it is already registered
 if admin.site.is_registered(User):
-        admin.site.unregister(User)
+    admin.site.unregister(User)
 
 
 @admin.register(MicrosoftAccount)
