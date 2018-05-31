@@ -1,14 +1,15 @@
 {% load i18n %}
+
 <html>
-    <body>
-        <p>{% trans "This window should automatically close. If it does not, it should be save to close after a few seconds." %}</p>
-        <pre>{{ message }}</pre>
-        <script>
-            document.addEventListener("DOMContentLoaded", function(event) {
-                // post message to parent window
-                window.opener.postMessage({{ message }}, "{{ base_url }}");
-                window.close();
-            });
-        </script>
-    </body>
+  <body>
+    <p>{% trans "This window should automatically close. If it does not, it should be save to close after a few seconds." %}</p>
+    <pre>{{ message }}</pre>
+    <script>
+      document.addEventListener("DOMContentLoaded", function(event) {
+        // post message to parent window
+        window.opener.postMessage({{ message }}, "{{ base_url }}");
+        window.close();
+      });
+    </script>
+  </body>
 </html>
