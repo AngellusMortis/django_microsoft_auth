@@ -14,7 +14,7 @@ djangoql==0.8.9
 docopt==0.6.2             # via coveralls
 first==2.0.1              # via pip-tools
 flake8==3.5.0
-idna==2.6                 # via requests
+idna==2.7                 # via requests
 mccabe==0.6.1             # via flake8
 oauthlib==2.0.6           # via requests-oauthlib
 pip-tools==1.11.0
