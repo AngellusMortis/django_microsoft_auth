@@ -31,7 +31,7 @@ pytest==3.5.0
 pytz==2018.3              # via django
 requests-oauthlib==0.8.0
 requests-toolbelt==0.8.0  # via twine
-requests==2.18.4
+requests==2.19.1
 six==1.11.0               # via more-itertools, pip-tools, pytest, tox
 tox==3.0.0
 tqdm==4.21.0              # via twine
