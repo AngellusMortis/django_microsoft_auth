@@ -22,12 +22,12 @@ class ClientTests(TestCase):
     def setUpClass(self):
         super(ClientTests, self).setUpClass()
 
-    def _get_auth_url(self, base_url):
+    def _get_auth_url(self, base_url, scopes=MicrosoftClient.SCOPE_MICROSOFT):
         args = {
             'response_type': 'code',
             'client_id': CLIENT_ID,
             'redirect_uri': REDIRECT_URI,
-            'scope': ' '.join(MicrosoftClient.SCOPE_MICROSOFT),
+            'scope': ' '.join(scopes),
             'state': STATE,
             'response_mode': 'form_post'
         }
@@ -77,7 +77,7 @@ class ClientTests(TestCase):
 
     @override_settings(MICROSOFT_AUTH_CLIENT_ID=CLIENT_ID)
     def test_authorization_url(self):
-        base_url = MicrosoftClient.ma_authorization
+        base_url = MicrosoftClient._authorization_url
         expected_auth_url = self._get_auth_url(base_url)
 
         auth_client = MicrosoftClient(state=STATE)
@@ -89,12 +89,29 @@ class ClientTests(TestCase):
         MICROSOFT_AUTH_LOGIN_TYPE=LOGIN_TYPE_O365
     )
     def test_authorization_url_with_o365(self):
-        base_url = MicrosoftClient.o365_authorization
+        base_url = MicrosoftClient._authorization_url
         expected_auth_url = self._get_auth_url(base_url)
 
         auth_client = MicrosoftClient(state=STATE)
         self._assert_auth_url(
-            expected_auth_url, auth_client.authorization_url())
+            expected_auth_url,
+            auth_client.authorization_url(),
+        )
+
+    @override_settings(
+        MICROSOFT_AUTH_CLIENT_ID=CLIENT_ID,
+        MICROSOFT_AUTH_LOGIN_TYPE=LOGIN_TYPE_XBL
+    )
+    def test_authorization_url_with_xbl(self):
+        base_url = MicrosoftClient._xbox_authorization_url
+        expected_auth_url = self._get_auth_url(
+            base_url, scopes=MicrosoftClient.SCOPE_XBL)
+
+        auth_client = MicrosoftClient(state=STATE)
+        self._assert_auth_url(
+            expected_auth_url,
+            auth_client.authorization_url(),
+        )
 
     @patch('microsoft_auth.client.requests')
     def test_fetch_xbox_token(self, mock_requests):
@@ -131,7 +148,7 @@ class ClientTests(TestCase):
         auth_client.fetch_xbox_token()
 
         mock_requests.post.assert_called_with(
-            MicrosoftClient.xbox_token_url,
+            MicrosoftClient._xbox_token_url,
             data=expected_data,
             headers=expected_headers)
 
@@ -187,7 +204,7 @@ class ClientTests(TestCase):
         auth_client.get_xbox_profile()
 
         mock_requests.post.assert_called_with(
-            MicrosoftClient.profile_url,
+            MicrosoftClient._profile_url,
             data=expected_data,
             headers=expected_headers)
 

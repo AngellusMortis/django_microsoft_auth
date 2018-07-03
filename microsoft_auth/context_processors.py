@@ -3,15 +3,13 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
 from .client import MicrosoftClient
-from .conf import config, LOGIN_TYPE_O365, LOGIN_TYPE_XBL
+from .conf import config, LOGIN_TYPE_XBL
 
 
 def microsoft(request):
     """ Adds global template variables for microsoft_auth """
     login_type = None
-    if config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_O365:
-        login_type = _('Office 365')
-    elif config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_XBL:
+    if config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_XBL:
         login_type = _('Xbox Live')
     else:
         login_type = _('Microsoft')

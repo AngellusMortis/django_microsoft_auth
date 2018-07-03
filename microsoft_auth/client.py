@@ -4,7 +4,7 @@ import requests
 from django.contrib.sites.models import Site
 from django.urls import reverse
 from requests_oauthlib import OAuth2Session
-from .conf import LOGIN_TYPE_O365, LOGIN_TYPE_XBL
+from .conf import LOGIN_TYPE_XBL
 
 
 class MicrosoftClient(OAuth2Session):
@@ -19,15 +19,15 @@ class MicrosoftClient(OAuth2Session):
         https://developer.microsoft.com/en-us/graph/docs/get-started/rest
     """
 
-    o365_authorization = \
+    _authorization_url = \
         'https://login.microsoftonline.com/common/oauth2/v2.0/authorize'
-    ma_authorization = \
-        'https://login.live.com/oauth20_authorize.srf'
-    token_url = \
+    _token_url = \
         'https://login.microsoftonline.com/common/oauth2/v2.0/token'
 
-    xbox_token_url = 'https://user.auth.xboxlive.com/user/authenticate'
-    profile_url = 'https://xsts.auth.xboxlive.com/xsts/authorize'
+    _xbox_authorization_url = \
+        'https://login.live.com/oauth20_authorize.srf'
+    _xbox_token_url = 'https://user.auth.xboxlive.com/user/authenticate'
+    _profile_url = 'https://xsts.auth.xboxlive.com/xsts/authorize'
 
     xbox_token = {}
 
@@ -57,9 +57,9 @@ class MicrosoftClient(OAuth2Session):
 
     def authorization_url(self):
         """ Generates Microsoft/Xbox or a Office 365 Authorization URL """
-        auth_url = self.ma_authorization
-        if self.config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_O365:
-            auth_url = self.o365_authorization
+        auth_url = self._authorization_url
+        if self.config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_XBL:
+            auth_url = self._xbox_authorization_url
 
         return super() \
             .authorization_url(auth_url, response_mode='form_post')
@@ -68,7 +68,7 @@ class MicrosoftClient(OAuth2Session):
         """ Fetchs OAuth2 Token with given kwargs"""
         return super() \
             .fetch_token(
-                self.token_url,
+                self._token_url,
                 client_secret=self.config.MICROSOFT_AUTH_CLIENT_SECRET,
                 **kwargs)
 
@@ -104,7 +104,7 @@ class MicrosoftClient(OAuth2Session):
             },
         }
         response = requests.post(
-            self.xbox_token_url,
+            self._xbox_token_url,
             data=json.dumps(params),
             headers=headers
         )
@@ -155,7 +155,7 @@ class MicrosoftClient(OAuth2Session):
                 },
             }
             response = requests.post(
-                self.profile_url,
+                self._profile_url,
                 data=json.dumps(params),
                 headers=headers
             )
