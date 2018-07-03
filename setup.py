@@ -40,7 +40,9 @@ setup(
     name='django_microsoft_auth',
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
-    description="Simple app to enable Microsoft Account, Office 365 and Xbox Live authentcation as a Django authentcation backend.",
+    description=("Simple app to enable Microsoft Account, Office 365 "
+                 "Enterprise, Azure AD, and Xbox Live authentcation as a "
+                 "Django authentcation backend."),
     long_description=readme + '\n\n' + history,
     author="Christopher Bailey",
     author_email='cbailey@mort.is',
