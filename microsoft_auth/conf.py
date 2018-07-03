@@ -19,15 +19,15 @@ from django.utils.translation import ugettext_lazy as _
         'microsoft_choices': ['django.forms.fields.ChoiceField', {
             'widget': 'django.forms.Select',
             'choices': (('ma', 'Microsoft Accounts'),
-                        ('xbl', 'Xbox Live Accounts'),
-                        ('o365', 'Office 365 Accounts'))}]}
+                        ('xbl', 'Xbox Live Accounts'))}]}
 
     MICROSOFT_AUTH_CONFIG_CLASS is the only microsoft_auth setting not present
     here. See bottom of file for more on it.
 """
 
 LOGIN_TYPE_MA = 'ma'
-LOGIN_TYPE_O365 = 'o365'
+# compatibility
+LOGIN_TYPE_O365 = LOGIN_TYPE_MA
 LOGIN_TYPE_XBL = 'xbl'
 
 DEFAULT_CONFIG = {

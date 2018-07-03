@@ -56,7 +56,7 @@ class ContextProcessorsTests(TestCase):
         request = self.factory.get('/')
         context = microsoft(request)
 
-        self.assertEqual('Office 365', context.get('microsoft_login_type_text'))
+        self.assertEqual('Microsoft', context.get('microsoft_login_type_text'))
 
     @override_settings(MICROSOFT_AUTH_LOGIN_TYPE=LOGIN_TYPE_XBL)
     @patch('microsoft_auth.context_processors.MicrosoftClient')

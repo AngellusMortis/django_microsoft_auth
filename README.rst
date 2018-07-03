@@ -102,8 +102,12 @@ Quickstart
     ]
 
     # pick one
-    MICROSOFT_AUTH_LOGIN_TYPE = 'ma'  # Microsoft authentication
-    # MICROSOFT_AUTH_LOGIN_TYPE = 'o365'  # Enterprise Office 365 authentication
+
+    # Microsoft authentication
+    # include Microsoft Accounts, Office 365 Enterpirse and Azure AD accounts
+    MICROSOFT_AUTH_LOGIN_TYPE = 'ma'
+
+    # Xbox Live authentication
     # MICROSOFT_AUTH_LOGIN_TYPE = 'xbl'  # Xbox Live authentication
 
     MICROSOFT_AUTH_CLIENT_ID = 'your-client-id-from-apps.dev.microsoft.com'
