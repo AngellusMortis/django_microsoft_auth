@@ -5,9 +5,11 @@
 
 from os import path
 
-try: # for pip >= 10
+# for pip >= 10
+try:
     from pip._internal.req import parse_requirements
-except ImportError: # for pip <= 9.0.3
+# for pip <= 9.0.3
+except ImportError:
     from pip.req import parse_requirements
 from setuptools import find_packages, setup
 
@@ -21,15 +23,18 @@ with open(path.join(BASE_DIR, 'README.rst')) as readme_file:
 with open(path.join(BASE_DIR, 'HISTORY.rst')) as history_file:
     history = history_file.read()
 
-reqs = parse_requirements('requirements.in', session='fake')
-requirements = [str(req.req) for req in reqs]
+req_files = {
+    'dev': 'reqs/dev.in',
+    'ql': 'reqs/ql.in',
+    'requirements': 'reqs/requirements.in',
+    'setup': 'reqs/setup.in',
+    'test': 'reqs/test.in',
+}
 
-test_reqs = parse_requirements('dev-requirements.in', session='fake')
-test_requirements = [str(req.req) for req in test_reqs]
-
-setup_requirements = [
-    'pytest-runner',
-]
+requirements = {}
+for req, req_file in req_files.items():
+    reqs = parse_requirements(req_file, session='fake')
+    requirements[req] = [str(req.req) for req in reqs]
 
 setup(
     name='django_microsoft_auth',
@@ -42,7 +47,7 @@ setup(
     url='https://github.com/AngellusMortis/django_microsoft_auth',
     packages=find_packages(include=['microsoft_auth', 'microsoft_auth.*']),
     include_package_data=True,
-    install_requires=requirements,
+    install_requires=requirements['requirements'],
     license="MIT license",
     zip_safe=False,
     keywords='django_microsoft_auth',
@@ -59,6 +64,11 @@ setup(
         'Framework :: Django :: 2.0',
     ],
     test_suite='tests',
-    tests_require=test_requirements,
-    setup_requires=setup_requirements,
+    tests_require=requirements['test'],
+    setup_requires=requirements['setup'],
+    extras_require={
+        'dev': requirements['dev'],
+        'ql': requirements['ql'],
+        'test': requirements['test'],
+    }
 )

@@ -3,9 +3,7 @@ include CONTRIBUTING.rst
 include HISTORY.rst
 include LICENSE
 include README.rst
-include requirements.in
-include requirements-no-django.in
-include dev-requirements.in
+include reqs/*.in
 
 recursive-include tests *
 recursive-exclude * __pycache__

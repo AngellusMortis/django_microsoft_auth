@@ -68,7 +68,7 @@ Ready to contribute? Here's how to set up `django_microsoft_auth` for local deve
 
     $ mkvirtualenv django_microsoft_auth
     $ cd django_microsoft_auth/
-    $ python setup.py develop
+    $ pip install -e ".[dev]"
 
 4. Create a branch for local development::
 

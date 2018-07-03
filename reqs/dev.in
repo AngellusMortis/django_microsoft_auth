@@ -1,0 +1,6 @@
+-r test.in
+-r ql.in
+
+djangoql
+pip-tools
+twine
