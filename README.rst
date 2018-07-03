@@ -47,8 +47,8 @@ Python/Django support
 ---------------------
 
 `django_microsoft_auth` follows the same `support cycle as Django <https://www.djangoproject.com/download/#supported-versions>`_,
-with one exception: no Python 2 support. If you absoutely need Python 2.7 support,
-everything should largely already work, but you may need to patch
+with one exception: no Python 2 support. If you absoutely need Python 2.7
+support, everything should largely already work, but you may need to patch
 `microsoft_auth.admin` and/or other files to get it to work.
 
 Supported python versions:  3.4+
@@ -138,7 +138,8 @@ See `official docs <https://django-microsoft-auth.readthedocs.io/en/latest/>`_ f
 Credits
 -------
 
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
+This package was created with Cookiecutter_ and the
+`audreyr/cookiecutter-pypackage`_ project template.
 
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
