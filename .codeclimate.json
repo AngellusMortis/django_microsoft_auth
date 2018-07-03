@@ -11,6 +11,7 @@
         "config",
         "db",
         "dist",
+        "docs",
         "features",
         "**/node_modules",
         "script",
