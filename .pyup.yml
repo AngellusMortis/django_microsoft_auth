@@ -1,0 +1,7 @@
+requirements:
+  - requirements.txt:
+      # update all dependencies and pin them
+      update: insecure
+      pin: True
+  - tox-requirements.txt:
+      search: false
