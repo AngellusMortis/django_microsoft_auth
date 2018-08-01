@@ -6,7 +6,7 @@
 #
 certifi==2018.4.16        # via requests
 chardet==3.0.4            # via requests
-django==2.0.7
+django==2.1
 idna==2.7                 # via requests
 oauthlib==2.1.0           # via requests-oauthlib
 pytz==2018.5              # via django
