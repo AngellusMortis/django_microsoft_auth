@@ -4,7 +4,7 @@
 #
 #    pip-compile --output-file tox-requirements.txt reqs/requirements-no-django.in reqs/test.in reqs/ql.in
 #
-atomicwrites==1.1.5       # via pytest
+atomicwrites==1.2.0       # via pytest
 attrs==18.1.0             # via pytest
 certifi==2018.4.16        # via requests
 chardet==3.0.4            # via requests
