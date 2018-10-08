@@ -28,7 +28,7 @@ pytest==3.6.3
 requests-oauthlib==1.0.0
 requests==2.19.1
 six==1.11.0               # via more-itertools, pytest, tox
-tox==3.5.0
+tox==3.5.1
 urllib3==1.23             # via requests
 versioneer==0.18
 virtualenv==16.0.0        # via tox
