@@ -19,7 +19,7 @@ more-itertools==4.3.0     # via pytest
 oauthlib==2.1.0           # via requests-oauthlib
 pluggy==0.6.0             # via pytest, tox
 ply==3.11                 # via djangoql
-py==1.5.4                 # via pytest, tox
+py==1.7.0                 # via pytest, tox
 pycodestyle==2.4.0        # via flake8
 pyflakes==2.0.0           # via flake8
 pytest-cov==2.6.0
