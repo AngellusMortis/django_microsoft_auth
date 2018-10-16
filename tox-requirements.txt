@@ -17,7 +17,7 @@ idna==2.7                 # via requests
 mccabe==0.6.1             # via flake8
 more-itertools==4.3.0     # via pytest
 oauthlib==2.1.0           # via requests-oauthlib
-pluggy==0.6.0             # via pytest, tox
+pluggy==0.8.0             # via pytest, tox
 ply==3.11                 # via djangoql
 py==1.7.0                 # via pytest, tox
 pycodestyle==2.4.0        # via flake8
