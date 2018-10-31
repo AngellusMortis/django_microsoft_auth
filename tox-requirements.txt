@@ -31,4 +31,4 @@ six==1.11.0               # via more-itertools, pytest, tox
 tox==3.5.3
 urllib3==1.23             # via requests
 versioneer==0.18
-virtualenv==16.0.0        # via tox
+virtualenv==16.1.0        # via tox
