@@ -37,7 +37,7 @@ before_script:
   - PY_VERSION=${TRAVIS_PYTHON_VERSION/./}
   - PY_VERSION=${PY_VERSION/-dev/}
   - PY_VERSION=${PY_VERSION/pypy/py}
-  - PY_VERSION=${PY_VERSION/pypy-3.5-6.0/pypy3}
+  - PY_VERSION=${PY_VERSION/pypy35-6.0/pypy3}
   - export TOX_ENV="py$PY_VERSION-dj$DJANGO_VERSION"
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
