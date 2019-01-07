@@ -1,6 +1,8 @@
 # Config file for automatic testing at travis-ci.org
 # This file will be regenerated if you run travis_pypi_setup.py
 language: python
+sudo: required
+dist: xenial
 python:
   - '3.4'
   - '3.5'
