@@ -3,13 +3,6 @@
 language: python
 sudo: required
 dist: xenial
-python:
-  - '3.4'
-  - '3.5'
-  - '3.6'
-  - '3.7'
-  - '3.8-dev'
-  - 'pypy3'
 env:
   global:
     - CC_TEST_REPORTER_ID=9331f307ce08c235307dc7cd7724ff21c2be2252f757d2437f5d9e271270a4ef
@@ -17,6 +10,17 @@ env:
     - DJANGO_VERSION=111
     - DJANGO_VERSION=20
 matrix:
+  include:
+    - python: '3.4'
+    - python: '3.5'
+    - python: '3.6'
+    - python: '3.7'
+      sudo: required
+      dist: xenial
+    - python: '3.8-dev'
+      sudo: required
+      dist: xenial
+    - python: 'pypy3'
   fast_finish: true
   allow_failures:
     # TODO: Remove 3.7 from allow fail once TravisCI can do 3.7
