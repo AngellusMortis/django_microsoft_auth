@@ -1,13 +1,15 @@
 # Config file for automatic testing at travis-ci.org
 # This file will be regenerated if you run travis_pypi_setup.py
 language: python
+sudo: required
+dist: xenial
 python:
   - '3.4'
   - '3.5'
   - '3.6'
   - '3.7'
   - '3.8-dev'
-  - 'pypy3'
+  - 'pypy3.5-6.0'
 env:
   global:
     - CC_TEST_REPORTER_ID=9331f307ce08c235307dc7cd7724ff21c2be2252f757d2437f5d9e271270a4ef
@@ -17,12 +19,6 @@ env:
 matrix:
   fast_finish: true
   allow_failures:
-    # TODO: Remove 3.7 from allow fail once TravisCI can do 3.7
-    # https://github.com/travis-ci/travis-ci/issues/9815
-    - python: '3.7'
-      env: DJANGO_VERSION=111
-    - python: '3.7'
-      env: DJANGO_VERSION=20
     - python: '3.8-dev'
       env: DJANGO_VERSION=111
     - python: '3.8-dev'
@@ -41,6 +37,7 @@ before_script:
   - PY_VERSION=${TRAVIS_PYTHON_VERSION/./}
   - PY_VERSION=${PY_VERSION/-dev/}
   - PY_VERSION=${PY_VERSION/pypy/py}
+  - PY_VERSION=${PY_VERSION/py35-6.0/py3}
   - export TOX_ENV="py$PY_VERSION-dj$DJANGO_VERSION"
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
