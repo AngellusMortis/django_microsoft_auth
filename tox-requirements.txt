@@ -23,7 +23,7 @@ py==1.7.0                 # via pytest, tox
 pycodestyle==2.4.0        # via flake8
 pyflakes==2.0.0           # via flake8
 pytest-cov==2.6.1
-pytest-django==3.4.4
+pytest-django==3.4.5
 pytest==3.6.3
 requests-oauthlib==1.0.0
 requests==2.20.0
