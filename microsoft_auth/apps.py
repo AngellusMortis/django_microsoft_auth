@@ -59,4 +59,27 @@ def microsoft_auth_validator(app_configs, **kwargs):
                         id='microsoft_auth.W002',
                     )
                 )
+
+    if config.MICROSOFT_AUTH_LOGIN_ENABLED:
+        if config.MICROSOFT_AUTH_CLIENT_ID == '':
+            errors.append(
+                Warning(
+                    ('`MICROSOFT_AUTH_CLIENT_ID` is not configured'),
+                    hint=('`MICROSOFT_AUTH_LOGIN_ENABLED` is `True`, but '
+                          '`MICROSOFT_AUTH_CLIENT_ID` is empty. Microsoft '
+                          'auth will be disabled'),
+                    id='microsoft_auth.W003',
+                )
+            )
+        if config.MICROSOFT_AUTH_CLIENT_SECRET == '':
+            errors.append(
+                Warning(
+                    ('`MICROSOFT_AUTH_CLIENT_SECRET` is not configured'),
+                    hint=('`MICROSOFT_AUTH_LOGIN_ENABLED` is `True`, but '
+                          '`MICROSOFT_AUTH_CLIENT_SECRET` is empty. Microsoft '
+                          'auth will be disabled'),
+                    id='microsoft_auth.W004',
+                )
+            )
+
     return errors
