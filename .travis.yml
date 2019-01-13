@@ -24,13 +24,9 @@ matrix:
   fast_finish: true
   allow_failures:
     - python: '3.8-dev'
-      env: DJANGO_VERSION=111
-    - python: '3.8-dev'
       env: DJANGO_VERSION=20
     - python: '3.8-dev'
       env: DJANGO_VERSION=21
-    - python: '3.8-dev'
-      env: DJANGO_VERSION=111-ql
     - python: '3.8-dev'
       env: DJANGO_VERSION=20-ql
     - python: '3.8-dev'
@@ -41,6 +37,11 @@ matrix:
       env: DJANGO_VERSION=21
     - python: '3.4'
       env: DJANGO_VERSION=21-ql
+    # Django 1.11 will likely not be upgraded with support for 3.8
+    - python: '3.8-dev'
+      env: DJANGO_VERSION=111
+    - python: '3.8-dev'
+      env: DJANGO_VERSION=111-ql
 
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
