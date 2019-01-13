@@ -2,6 +2,15 @@
 History
 =======
 
+1.2.0 (2019-1-13)
+-----------------
+
+* Adds various checks and logging to validate setup to help with debugging
+* Adds support for `http://localhost` as a redirect URI base if `DEBUG` is
+  enabled
+* Fixes Javascript message passing if using a non-standard port (something
+  other than 80 or 443)
+
 1.1.0 (2018-7-3)
 ----------------
 * Removes o365 option. New authorization URL works well enough for both
