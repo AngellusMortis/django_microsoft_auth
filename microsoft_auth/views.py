@@ -12,6 +12,8 @@ from django.utils.translation import ugettext as _
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 
+from .conf import config
+
 
 class AuthenticateCallbackView(View):
     """ Authentication callback for Microsoft to call as part of OAuth2
@@ -37,10 +39,14 @@ class AuthenticateCallbackView(View):
             .dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        print(kwargs)
         domain = Site.objects.get_current().domain
+
+        scheme = 'https'
+        if config.DEBUG:
+            scheme = self.request.scheme
+
         self.context = {
-            'base_url': 'https://{0}/'.format(domain),
+            'base_url': '{0}://{1}/'.format(scheme, domain),
             'message': {}}
 
         # validates state using Django CSRF system
@@ -64,11 +70,15 @@ class AuthenticateCallbackView(View):
         return self.context
 
     def _check_csrf(self, state):
+        # CSRF validation does not work with http
+        if config.DEBUG and self.request.scheme == 'http':
+            return
+
         # validate state parameter
         if state is None or \
-          not re.search('[a-zA-Z0-9]', state) or \
-          not len(state) == CSRF_TOKEN_LENGTH or \
-          not _compare_salted_tokens(state, get_token(self.request)):
+                not re.search('[a-zA-Z0-9]', state) or \
+                not len(state) == CSRF_TOKEN_LENGTH or \
+                not _compare_salted_tokens(state, get_token(self.request)):
             self.context['message'] = {'error': 'bad_state'}
 
     def _check_microsoft_response(self, error, error_description):
