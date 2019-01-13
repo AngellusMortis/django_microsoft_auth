@@ -1,5 +1,5 @@
 Welcome to Django Microsoft Authentication Backend's documentation!
-======================================
+===================================================================
 
 Contents:
 

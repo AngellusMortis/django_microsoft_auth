@@ -14,7 +14,7 @@ To install Django Microsoft Authentication Backend, run this command in your ter
 
     $ pip install django_microsoft_auth
 
-This is the preferred method to install Django Microsoft Authentication Backend, as it will always install the most recent stable release. 
+This is the preferred method to install Django Microsoft Authentication Backend, as it will always install the most recent stable release.
 
 If you don't have `pip`_ installed, this `Python installation guide`_ can guide
 you through the process.
@@ -49,3 +49,9 @@ Once you have a copy of the source, you can install it with:
 
 .. _Github repo: https://github.com/AngellusMortis/django_microsoft_auth
 .. _tarball: https://github.com/AngellusMortis/django_microsoft_auth/tarball/master
+
+
+Setup
+-----
+
+See :doc:`/usage` for setup information.
