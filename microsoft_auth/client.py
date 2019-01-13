@@ -37,7 +37,7 @@ class MicrosoftClient(OAuth2Session):
     SCOPE_XBL = ['XboxLive.signin', 'XboxLive.offline_access']
     SCOPE_MICROSOFT = ['User.Read']
 
-    def __init__(self, state=None, *args, **kwargs):
+    def __init__(self, state=None, request=None, *args, **kwargs):
         from .conf import config
         self.config = config
 
@@ -48,11 +48,15 @@ class MicrosoftClient(OAuth2Session):
         if self.config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_XBL:
             scope = ' '.join(self.SCOPE_XBL)
 
+        scheme = 'https'
+        if config.DEBUG and request is not None:
+            scheme = request.scheme
+
         super().__init__(
             self.config.MICROSOFT_AUTH_CLIENT_ID,
             scope=scope,
             state=state,
-            redirect_uri='https://{0}{1}'.format(domain, path),
+            redirect_uri='{0}://{1}{2}'.format(scheme, domain, path),
             *args, **kwargs)
 
     def authorization_url(self):

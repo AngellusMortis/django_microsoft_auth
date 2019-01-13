@@ -38,7 +38,7 @@ def microsoft(request):
             )
 
     # initialize Microsoft client using CSRF token as state variable
-    microsoft = MicrosoftClient(state=get_token(request))
+    microsoft = MicrosoftClient(state=get_token(request), request=request)
     auth_url = microsoft.authorization_url()[0]
     return {
         'microsoft_login_enabled': config.MICROSOFT_AUTH_LOGIN_ENABLED,

@@ -19,7 +19,6 @@ class MicrosoftAuthenticationBackend(ModelBackend):
     def __init__(self, user=None):
         from .conf import config
         self.config = config
-        self.microsoft = MicrosoftClient()
 
     def authenticate(self, request, code=None):
         """
@@ -31,6 +30,8 @@ class MicrosoftAuthenticationBackend(ModelBackend):
             For more details:
             https://developer.microsoft.com/en-us/graph/docs/get-started/rest
         """
+
+        self.microsoft = MicrosoftClient(request=request)
 
         user = None
         if code is not None:

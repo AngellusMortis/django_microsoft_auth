@@ -91,7 +91,7 @@
 
       // verify the message is from us
       let origin = window.location.protocol + '//' + window.location
-        .hostname;
+        .host;
 
       if (event.origin === origin) {
         if (event.data.error) {
