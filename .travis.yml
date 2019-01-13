@@ -16,6 +16,10 @@ env:
   matrix:
     - DJANGO_VERSION=111
     - DJANGO_VERSION=20
+    - DJANGO_VERSION=21
+    - DJANGO_VERSION=111-ql
+    - DJANGO_VERSION=20-ql
+    - DJANGO_VERSION=21-ql
 matrix:
   fast_finish: true
   allow_failures:
@@ -23,6 +27,20 @@ matrix:
       env: DJANGO_VERSION=111
     - python: '3.8-dev'
       env: DJANGO_VERSION=20
+    - python: '3.8-dev'
+      env: DJANGO_VERSION=21
+    - python: '3.8-dev'
+      env: DJANGO_VERSION=111-ql
+    - python: '3.8-dev'
+      env: DJANGO_VERSION=20-ql
+    - python: '3.8-dev'
+      env: DJANGO_VERSION=21-ql
+  exclude:
+    # Django 2.1+ does not support Python 3.4
+    - python: '3.4'
+      env: DJANGO_VERSION=21
+    - python: '3.4'
+      env: DJANGO_VERSION=21-ql
 
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
