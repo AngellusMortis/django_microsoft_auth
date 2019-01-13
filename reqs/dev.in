@@ -1,6 +1,7 @@
 -r test.in
 -r ql.in
 
-djangoql
 pip-tools
+sphinx
+sphinx-rtd-theme
 twine

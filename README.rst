@@ -43,6 +43,15 @@ as a Django authentcation backend.
 * Free software: MIT license
 * Documentation: https://django-microsoft-auth.readthedocs.io.
 
+Features
+--------
+
+* Provides Django authentication backend to do Microsoft authentication
+  (including Microsoft accounts, Office 365 accounts and Azure AD accounts)
+  and Xbox Live authentication.
+
+* Provides Microsoft OAuth client to interfacing with Microsoft accounts
+
 Python/Django support
 ---------------------
 
@@ -51,90 +60,9 @@ with one exception: no Python 2 support. If you absoutely need Python 2.7
 support, everything should largely already work, but you may need to patch
 `microsoft_auth.admin` and/or other files to get it to work.
 
-Supported python versions:  3.4+
+Supported python versions:  3.4+ (for Django versions less than 2.1)
 
 Supported Django version: 1.11 LTS, 2.0+
-
-Quickstart
-----------
-
-1. Install `Django <https://docs.djangoproject.com/en/1.11/topics/install/>`_
-2. Install and configure the `Sites framework <https://docs.djangoproject.com/en/1.11/ref/contrib/sites/#enabling-the-sites-framework>`_
-    - Make sure you update the domain of `SITE_ID`, this is important and used
-      later. Easy way is to go `/admin/sites/site/1/change/` if you have the
-      admin site enabled.
-3. Create a `Microsoft OAuth Application <https://apps.dev.microsoft.com/>`_
-    * write down your client ID
-    * Generate an Application Secret, store this somewhere, you will need it
-      for later
-    * Add a `Web Platform` with `Allow Implicit Flow` and a valid Redirect
-      URL (this will probably be `https://<your-domain>/microsoft/auth-callback/`),
-      it **must be HTTPS** or the hostname must be `localhost`. `localhost` can
-      only be used if `DEBUG` is `True`.
-    * Add `User.Read` under `Delegated Permissions`
-4. Install package from PyPi::
-
-    pip install django_microsoft_auth
-
-5. Add the following to your `settings.py`::
-
-    INSTALLED_APPS = [
-        # other apps...
-        'django.contrib.sites',
-        'microsoft_auth',
-    ]
-
-    TEMPLATES = [
-        {
-            # other template settings...
-            'OPTIONS': {
-                'context_processors': [
-                    # other context_processors...
-                    'microsoft_auth.context_processors.microsoft',
-                ],
-            },
-        },
-    ]
-
-    AUTHENTICATION_BACKENDS = [
-        'microsoft_auth.backends.MicrosoftAuthenticationBackend',
-        'django.contrib.auth.backends.ModelBackend' # if you also want to use Django's authentication
-        # I recommend keeping this with at least one database superuser in case of unable to use others
-    ]
-
-    # pick one
-
-    # Microsoft authentication
-    # include Microsoft Accounts, Office 365 Enterpirse and Azure AD accounts
-    MICROSOFT_AUTH_LOGIN_TYPE = 'ma'
-
-    # Xbox Live authentication
-    # MICROSOFT_AUTH_LOGIN_TYPE = 'xbl'  # Xbox Live authentication
-
-    MICROSOFT_AUTH_CLIENT_ID = 'your-client-id-from-apps.dev.microsoft.com'
-    MICROSOFT_AUTH_CLIENT_SECRET = 'your-client-secret-from-apps.dev.microsoft.com'
-
-6. Add the following to your `urls.py`::
-
-    urlpatterns = [
-        # other urlpatterns...
-        path('microsoft/', include('microsoft_auth.urls', namespace='microsoft')),
-    ]
-
-7. Run migrations::
-
-    python manage.py migrate
-
-8. Start site and goto `/admin` to and logout if you are logged in.
-9. Login as `Microsoft/Office 365/Xbox Live` user. It will fail. This will
-   automatically create your new user.
-10. Login as a `Password` user with access to change user accounts.
-11. Go to `Admin -> Users` and edit your Microsoft user to have any permissions
-    you want as you normally.
-12. See `microsoft_auth/templates/microsoft/admin_login.html` for details
-    examples on making a Login form.
-
-See `official docs <https://django-microsoft-auth.readthedocs.io/en/latest/>`_ for more details on setup and configuration.
 
 Credits
 -------
