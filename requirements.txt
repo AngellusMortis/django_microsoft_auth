@@ -4,12 +4,12 @@
 #
 #    pip-compile --output-file requirements.txt reqs/requirements.in
 #
-certifi==2018.8.24        # via requests
+certifi==2018.11.29       # via requests
 chardet==3.0.4            # via requests
-django==2.1.2
-idna==2.7                 # via requests
+django==2.1.5
+idna==2.8                 # via requests
 oauthlib==2.1.0           # via requests-oauthlib
-pytz==2018.5              # via django
-requests-oauthlib==1.0.0
-requests==2.20.0
-urllib3==1.23             # via requests
+pytz==2018.9              # via django
+requests-oauthlib==1.1.0
+requests==2.21.0
+urllib3==1.24.1           # via requests

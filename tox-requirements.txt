@@ -6,30 +6,29 @@
 #
 atomicwrites==1.2.1       # via pytest
 attrs==18.2.0             # via pytest
-certifi==2018.8.24        # via requests
+certifi==2018.11.29       # via requests
 chardet==3.0.4            # via requests
-colorama==0.4.1           # via pytest
 coverage==4.5.2
 coveralls==1.5.1
 docopt==0.6.2             # via coveralls
 filelock==3.0.10          # via tox
 flake8==3.6.0
-idna==2.7                 # via requests
+idna==2.8                 # via requests
 mccabe==0.6.1             # via flake8
 more-itertools==5.0.0     # via pytest
 oauthlib==2.1.0           # via requests-oauthlib
-pluggy==0.6.0             # via pytest, tox
+pluggy==0.8.1             # via pytest, tox
 py==1.7.0                 # via pytest, tox
 pycodestyle==2.4.0        # via flake8
 pyflakes==2.0.0           # via flake8
 pytest-cov==2.6.1
 pytest-django==3.4.5
-pytest==3.6.3
-requests-oauthlib==1.0.0
-requests==2.20.0
+pytest==4.1.1
+requests-oauthlib==1.1.0
+requests==2.21.0
 six==1.12.0               # via more-itertools, pytest, tox
 toml==0.10.0              # via tox
-tox==3.6.1
-urllib3==1.23             # via requests
+tox==3.7.0
+urllib3==1.24.1           # via requests
 versioneer==0.18
 virtualenv==16.2.0        # via tox
