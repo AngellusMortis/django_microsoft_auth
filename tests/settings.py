@@ -14,8 +14,13 @@ INSTALLED_APPS = [
 
     'microsoft_auth',
     'tests',
-    'djangoql',  # optional
 ]
+
+try:
+    import djangoql  # noqa
+    INSTALLED_APPS.append('djangoql')
+except ImportError:
+    pass
 
 DATABASES = {
     'default': {
