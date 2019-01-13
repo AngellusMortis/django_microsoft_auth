@@ -69,7 +69,8 @@ Quickstart
       for later
     * Add a `Web Platform` with `Allow Implicit Flow` and a valid Redirect
       URL (this will probably be `https://<your-domain>/microsoft/auth-callback/`),
-      it **must be HTTPS** or the hostname must be `localhost`.
+      it **must be HTTPS** or the hostname must be `localhost`. `localhost` can
+      only be used if `DEBUG` is `True`.
     * Add `User.Read` under `Delegated Permissions`
 4. Install package from PyPi::
 
