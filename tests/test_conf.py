@@ -21,7 +21,8 @@ class ConfTests(TestCase):
         """ Tests all the default settings are initalized correctly """
 
         from microsoft_auth.conf import DEFAULT_CONFIG, config
-        for key, setting in DEFAULT_CONFIG['defaults'].items():
+
+        for key, setting in DEFAULT_CONFIG["defaults"].items():
             actual_setting = getattr(config, key)
             self.assertEqual(actual_setting, setting[0])
 
@@ -40,7 +41,7 @@ class ConfTests(TestCase):
         self.assertTrue(isinstance(config, SimpleConfig))
         self.assertFalse(isinstance(config, SimpleTestConfig))
 
-    @override_settings(MICROSOFT_AUTH_CONFIG_CLASS='tests.test_conf.test_conf')
+    @override_settings(MICROSOFT_AUTH_CONFIG_CLASS="tests.test_conf.test_conf")
     def test_custom_config_class(self):
         """ Tests MICROSOFT_AUTH_CONFIG_CLASS set to another class """
         from microsoft_auth.conf import config
@@ -48,7 +49,8 @@ class ConfTests(TestCase):
         self.assertTrue(isinstance(config, SimpleTestConfig))
 
     @override_settings(
-        MICROSOFT_AUTH_CONFIG_CLASS='tests.test_conf.no_default_test_conf')
+        MICROSOFT_AUTH_CONFIG_CLASS="tests.test_conf.no_default_test_conf"
+    )
     def test_custom_config_class_with_no_default(self):
         """ Tests MICROSOFT_AUTH_CONFIG_CLASS set to another class with no
             add_default_config option """

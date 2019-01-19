@@ -1,6 +1,6 @@
 from .conf import config
 
-app_name = 'microsoft_auth'
+app_name = "microsoft_auth"
 
 urlpatterns = []
 
@@ -9,7 +9,9 @@ if config.MICROSOFT_AUTH_LOGIN_ENABLED:
     from . import views
 
     urlpatterns = [
-        url(r'^auth-callback/$',
+        url(
+            r"^auth-callback/$",
             views.AuthenticateCallbackView.as_view(),
-            name='auth-callback'),
+            name="auth-callback",
+        )
     ]

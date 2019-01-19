@@ -25,60 +25,97 @@ from django.utils.translation import ugettext_lazy as _
     here. See bottom of file for more on it.
 """
 
-LOGIN_TYPE_MA = 'ma'
+LOGIN_TYPE_MA = "ma"
 # compatibility
 LOGIN_TYPE_O365 = LOGIN_TYPE_MA
-LOGIN_TYPE_XBL = 'xbl'
+LOGIN_TYPE_XBL = "xbl"
 
 DEFAULT_CONFIG = {
-    'defaults': OrderedDict([
-        ('MICROSOFT_AUTH_LOGIN_ENABLED', (
-            True,
-            _('Whether or not Microsoft OAuth login is enabled'),
-            bool
-        )),
-        ('MICROSOFT_AUTH_LOGIN_TYPE', (
-            LOGIN_TYPE_MA,
-            _("""Type of Microsoft login to use.
+    "defaults": OrderedDict(
+        [
+            (
+                "MICROSOFT_AUTH_LOGIN_ENABLED",
+                (
+                    True,
+                    _("Whether or not Microsoft OAuth login is enabled"),
+                    bool,
+                ),
+            ),
+            (
+                "MICROSOFT_AUTH_LOGIN_TYPE",
+                (
+                    LOGIN_TYPE_MA,
+                    _(
+                        """Type of Microsoft login to use.
                 Microsoft Accounts is normal Microsoft login.
                 Office 365 Accounts are for microsoftonline logins through
                     Office 365 groups and Microsoft Accounts (Microsoft
                     Accounts get redirected to separate login screen).
                 Xbox Live Accounts use Microsoft Accounts and then also
-                    authenticate against Xbox Live to retrieve Gamertag."""),
-            'microsoft_choices'
-        )),
-        ('MICROSOFT_AUTH_CLIENT_ID', (
-            '',
-            _('Microsoft OAuth Client ID, see'
-              'https://apps.dev.microsoft.com/ for more'),
-            str
-        )),
-        ('MICROSOFT_AUTH_CLIENT_SECRET', (
-            '',
-            _('Microsoft OAuth Client Secret, see'
-              'https://apps.dev.microsoft.com/ for more'),
-            str
-        )),
-        ('MICROSOFT_AUTH_AUTO_CREATE', (
-            True,
-            _('Autocreate user that attempt to login if they do not '
-              'already exist?'),
-            bool
-        )),
-        ('MICROSOFT_AUTH_XBL_SYNC_USERNAME', (
-            False,
-            _('Automatically sync the username from the Xbox Live Gamertag?'),
-            bool
-        )),
-    ]),
-    'fieldsets': OrderedDict([
-        ('Microsoft Login', (
-            'MICROSOFT_AUTH_LOGIN_ENABLED',
-            'MICROSOFT_AUTH_LOGIN_TYPE',
-            'MICROSOFT_AUTH_CLIENT_ID',
-            'MICROSOFT_AUTH_CLIENT_SECRET',))
-    ])
+                    authenticate against Xbox Live to retrieve Gamertag."""
+                    ),
+                    "microsoft_choices",
+                ),
+            ),
+            (
+                "MICROSOFT_AUTH_CLIENT_ID",
+                (
+                    "",
+                    _(
+                        "Microsoft OAuth Client ID, see"
+                        "https://apps.dev.microsoft.com/ for more"
+                    ),
+                    str,
+                ),
+            ),
+            (
+                "MICROSOFT_AUTH_CLIENT_SECRET",
+                (
+                    "",
+                    _(
+                        "Microsoft OAuth Client Secret, see"
+                        "https://apps.dev.microsoft.com/ for more"
+                    ),
+                    str,
+                ),
+            ),
+            (
+                "MICROSOFT_AUTH_AUTO_CREATE",
+                (
+                    True,
+                    _(
+                        "Autocreate user that attempt to login if they do not "
+                        "already exist?"
+                    ),
+                    bool,
+                ),
+            ),
+            (
+                "MICROSOFT_AUTH_XBL_SYNC_USERNAME",
+                (
+                    False,
+                    _(
+                        "Automatically sync the username from the Xbox Live "
+                        "Gamertag?"
+                    ),
+                    bool,
+                ),
+            ),
+        ]
+    ),
+    "fieldsets": OrderedDict(
+        [
+            (
+                "Microsoft Login",
+                (
+                    "MICROSOFT_AUTH_LOGIN_ENABLED",
+                    "MICROSOFT_AUTH_LOGIN_TYPE",
+                    "MICROSOFT_AUTH_CLIENT_ID",
+                    "MICROSOFT_AUTH_CLIENT_SECRET",
+                ),
+            )
+        ]
+    ),
 }
 
 
@@ -89,9 +126,9 @@ class SimpleConfig:
             self.add_default_config(config)
 
     def add_default_config(self, config):
-        if config['defaults']:
+        if config["defaults"]:
             tmp_dict = {}
-            for key, value in config['defaults'].items():
+            for key, value in config["defaults"].items():
                 tmp_dict[key] = value[0]
             self._defaults.update(tmp_dict)
 
@@ -120,12 +157,14 @@ config = None
 
 def init_settings():
     global config
-    if hasattr(settings, 'MICROSOFT_AUTH_CONFIG_CLASS') and \
-            settings.MICROSOFT_AUTH_CONFIG_CLASS is not None:
-        module, _, obj = settings.MICROSOFT_AUTH_CONFIG_CLASS.rpartition('.')
+    if (
+        hasattr(settings, "MICROSOFT_AUTH_CONFIG_CLASS")
+        and settings.MICROSOFT_AUTH_CONFIG_CLASS is not None
+    ):
+        module, _, obj = settings.MICROSOFT_AUTH_CONFIG_CLASS.rpartition(".")
         conf = import_module(module)
         config = getattr(conf, obj)
-        if hasattr(config, 'add_default_config'):
+        if hasattr(config, "add_default_config"):
             config.add_default_config(DEFAULT_CONFIG)
     else:
         config = SimpleConfig(DEFAULT_CONFIG)
@@ -136,8 +175,8 @@ init_settings()
 
 def reload_settings(*args, **kwargs):
     global config
-    setting, _ = kwargs['setting'], kwargs['value']  # noqa
-    if setting.startswith('MICROSOFT_AUTH_'):
+    setting, _ = kwargs["setting"], kwargs["value"]  # noqa
+    if setting.startswith("MICROSOFT_AUTH_"):
         init_settings()
 
 

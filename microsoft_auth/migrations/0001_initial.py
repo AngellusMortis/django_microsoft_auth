@@ -11,40 +11,71 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-    ]
+    dependencies = [migrations.swappable_dependency(settings.AUTH_USER_MODEL)]
 
     operations = [
         migrations.CreateModel(
-            name='MicrosoftAccount',
+            name="MicrosoftAccount",
             fields=[
-                ('id', models.AutoField(
-                    auto_created=True, primary_key=True,
-                    serialize=False, verbose_name='ID')),
-                ('microsoft_id', models.CharField(
-                    max_length=32, verbose_name='microsoft account id')),
-                ('user', models.OneToOneField(
-                    null=True, on_delete=django.db.models.deletion.CASCADE,
-                    related_name='microsoft_account',
-                    to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "microsoft_id",
+                    models.CharField(
+                        max_length=32, verbose_name="microsoft account id"
+                    ),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="microsoft_account",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='XboxLiveAccount',
+            name="XboxLiveAccount",
             fields=[
-                ('id', models.AutoField(
-                    auto_created=True, primary_key=True,
-                    serialize=False, verbose_name='ID')),
-                ('xbox_id', models.CharField(
-                    max_length=32, unique=True,
-                    verbose_name='xbox user id')),
-                ('gamertag', models.CharField(
-                    max_length=16, verbose_name='xbox live gamertag')),
-                ('user', models.OneToOneField(
-                    null=True, on_delete=django.db.models.deletion.CASCADE,
-                    related_name='xbox_live_account',
-                    to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "xbox_id",
+                    models.CharField(
+                        max_length=32, unique=True, verbose_name="xbox user id"
+                    ),
+                ),
+                (
+                    "gamertag",
+                    models.CharField(
+                        max_length=16, verbose_name="xbox live gamertag"
+                    ),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="xbox_live_account",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

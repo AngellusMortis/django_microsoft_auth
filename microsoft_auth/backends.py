@@ -14,10 +14,11 @@ class MicrosoftAuthenticationBackend(ModelBackend):
 
     config = None
     microsoft = None
-    profile_url = 'https://graph.microsoft.com/v1.0/me'
+    profile_url = "https://graph.microsoft.com/v1.0/me"
 
     def __init__(self, user=None):
         from .conf import config
+
         self.config = config
 
     def authenticate(self, request, code=None):
@@ -39,8 +40,9 @@ class MicrosoftAuthenticationBackend(ModelBackend):
             token = self.microsoft.fetch_token(code=code)
 
             # validate permission scopes
-            if 'access_token' in token and \
-                    self.microsoft.valid_scopes(token['scope']):
+            if "access_token" in token and self.microsoft.valid_scopes(
+                token["scope"]
+            ):
                 user = self._authenticate_user()
 
         return user
@@ -54,7 +56,7 @@ class MicrosoftAuthenticationBackend(ModelBackend):
     def _authenticate_xbox_user(self):
         xbox_token = self.microsoft.fetch_xbox_token()
 
-        if 'Token' in xbox_token:
+        if "Token" in xbox_token:
             response = self.microsoft.get_xbox_profile()
             return self._get_user_from_xbox(response)
         return None
@@ -63,7 +65,7 @@ class MicrosoftAuthenticationBackend(ModelBackend):
         response = self.microsoft.get(self.profile_url)
         if response.status_code == 200:
             response = response.json()
-            if 'error' not in response:
+            if "error" not in response:
                 return self._get_user_from_microsoft(response)
         return None
 
@@ -78,8 +80,10 @@ class MicrosoftAuthenticationBackend(ModelBackend):
 
             user = xbox_user.user
 
-            if self.config.MICROSOFT_AUTH_XBL_SYNC_USERNAME and \
-                    user.username != xbox_user.gamertag:
+            if (
+                self.config.MICROSOFT_AUTH_XBL_SYNC_USERNAME
+                and user.username != xbox_user.gamertag
+            ):
                 user.username = xbox_user.gamertag
                 user.save()
 
@@ -89,17 +93,17 @@ class MicrosoftAuthenticationBackend(ModelBackend):
         xbox_user = None
 
         try:
-            xbox_user = XboxLiveAccount.objects.get(xbox_id=data['xid'])
+            xbox_user = XboxLiveAccount.objects.get(xbox_id=data["xid"])
             # update Gamertag since they can change over time
-            if xbox_user.gamertag != data['gtg']:
-                xbox_user.gamertag = data['gtg']
+            if xbox_user.gamertag != data["gtg"]:
+                xbox_user.gamertag = data["gtg"]
                 xbox_user.save()
         except XboxLiveAccount.DoesNotExist:
             if self.config.MICROSOFT_AUTH_AUTO_CREATE:
                 # create new Xbox Live Account
                 xbox_user = XboxLiveAccount(
-                    xbox_id=data['xid'],
-                    gamertag=data['gtg'])
+                    xbox_id=data["xid"], gamertag=data["gtg"]
+                )
                 xbox_user.save()
 
         return xbox_user
@@ -129,13 +133,13 @@ class MicrosoftAuthenticationBackend(ModelBackend):
         microsoft_user = None
 
         try:
-            microsoft_user = \
-                MicrosoftAccount.objects.get(microsoft_id=data['id'])
+            microsoft_user = MicrosoftAccount.objects.get(
+                microsoft_id=data["id"]
+            )
         except MicrosoftAccount.DoesNotExist:
             if self.config.MICROSOFT_AUTH_AUTO_CREATE:
                 # create new Microsoft Account
-                microsoft_user = MicrosoftAccount(
-                    microsoft_id=data['id'])
+                microsoft_user = MicrosoftAccount(microsoft_id=data["id"])
                 microsoft_user.save()
 
         return microsoft_user
@@ -144,18 +148,19 @@ class MicrosoftAuthenticationBackend(ModelBackend):
         if microsoft_user.user is None:
             try:
                 # create new Django user from provided data
-                user = User.objects.get(email=data['userPrincipalName'])
+                user = User.objects.get(email=data["userPrincipalName"])
 
-                if user.first_name == '' and user.last_name == '':
-                    user.first_name = data.get('givenName', '')
-                    user.last_name = data.get('surname', '')
+                if user.first_name == "" and user.last_name == "":
+                    user.first_name = data.get("givenName", "")
+                    user.last_name = data.get("surname", "")
                     user.save()
             except User.DoesNotExist:
                 user = User(
-                    username=data['id'],
-                    first_name=data.get('givenName', ''),
-                    last_name=data.get('surname', ''),
-                    email=data['userPrincipalName'])
+                    username=data["id"],
+                    first_name=data.get("givenName", ""),
+                    last_name=data.get("surname", ""),
+                    email=data["userPrincipalName"],
+                )
                 user.save()
 
             microsoft_user.user = user

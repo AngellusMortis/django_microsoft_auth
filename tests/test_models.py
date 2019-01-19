@@ -3,7 +3,7 @@ from microsoft_auth.models import MicrosoftAccount, XboxLiveAccount
 
 from . import TestCase
 
-USER_ID = 'test_user_id'
+USER_ID = "test_user_id"
 
 
 class ModelsTests(TestCase):
@@ -22,6 +22,6 @@ class ModelsTests(TestCase):
     def test_username_with_spaces(self):
         User = get_user_model()
 
-        u = User(username='Test username')
+        u = User(username="Test username")
         u.set_unusable_password()
         u.full_clean()
