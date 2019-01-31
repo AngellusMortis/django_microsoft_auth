@@ -12,7 +12,7 @@ coverage==4.5.2
 coveralls==1.5.1
 docopt==0.6.2             # via coveralls
 filelock==3.0.10          # via tox
-flake8==3.7.2
+flake8==3.7.3
 idna==2.8                 # via requests
 mccabe==0.6.1             # via flake8
 more-itertools==5.0.0     # via pytest
