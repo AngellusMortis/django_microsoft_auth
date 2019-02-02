@@ -42,8 +42,8 @@ setup(
     cmdclass=versioneer.get_cmdclass(),
     description=(
         "Simple app to enable Microsoft Account, Office 365 "
-        "Enterprise, Azure AD, and Xbox Live authentcation as a "
-        "Django authentcation backend."
+        "Enterprise, Azure AD, and Xbox Live authentication as a "
+        "Django authentication backend."
     ),
     long_description=readme + "\n\n" + history,
     author="Christopher Bailey",
