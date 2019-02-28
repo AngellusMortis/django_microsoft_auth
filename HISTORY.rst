@@ -2,6 +2,11 @@
 History
 =======
 
+1.2.1 (2019-2-28)
+-----------------
+
+* Adds missing migration for changing `microsoft_id` from 32 to 36 length
+
 1.2.0 (2019-1-13)
 -----------------
 
