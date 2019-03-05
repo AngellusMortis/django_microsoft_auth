@@ -58,6 +58,25 @@ DEFAULT_CONFIG = {
                 ),
             ),
             (
+                "MICROSOFT_AUTH_TENANT_ID",
+                (
+                    "common",
+                    _(
+                        "Which Microsoft Tenant to use. Default is \"common\","
+                        "used for public apps."
+                    ),
+                    str,
+                ),
+            ),
+            (
+                "MICROSOFT_AUTH_SCOPE",
+                (
+                    "User.Read",
+                    _("Oauth scopes to request (Microsoft Account only)"),
+                    str,
+                ),
+            ),
+            (
                 "MICROSOFT_AUTH_CLIENT_ID",
                 (
                     "",
