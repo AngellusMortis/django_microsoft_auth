@@ -16,6 +16,7 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 
 from .conf import config
+from .utils import get_scheme
 
 
 class AuthenticateCallbackView(View):
@@ -49,9 +50,7 @@ class AuthenticateCallbackView(View):
     def get_context_data(self, **kwargs):
         domain = Site.objects.get_current().domain
 
-        scheme = "https"
-        if config.DEBUG:
-            scheme = self.request.scheme
+        scheme = get_scheme(self.request)
 
         self.context = {
             "base_url": "{0}://{1}/".format(scheme, domain),

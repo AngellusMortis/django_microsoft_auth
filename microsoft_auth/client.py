@@ -1,10 +1,13 @@
 import json
 
 import requests
+
 from django.contrib.sites.models import Site
 from django.urls import reverse
 from requests_oauthlib import OAuth2Session
+
 from .conf import LOGIN_TYPE_XBL
+from .utils import get_scheme
 
 
 class MicrosoftClient(OAuth2Session):
@@ -48,9 +51,7 @@ class MicrosoftClient(OAuth2Session):
         if self.config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_XBL:
             scope = " ".join(self.SCOPE_XBL)
 
-        scheme = "https"
-        if config.DEBUG and request is not None:
-            scheme = request.scheme
+        scheme = get_scheme(request, self.config)
 
         super().__init__(
             self.config.MICROSOFT_AUTH_CLIENT_ID,

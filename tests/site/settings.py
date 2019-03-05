@@ -2,6 +2,8 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+ALLOWED_HOSTS = ["*"]
+
 SECRET_KEY = "fake-key"
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -31,9 +33,11 @@ DATABASES = {
 
 SITE_ID = 1
 
-ROOT_URLCONF = "tests.urls"
+ROOT_URLCONF = "tests.site.urls"
 
 LANGUAGE_CODE = "en-us"
+
+STATIC_URL = "/static/"
 
 TEMPLATES = [
     {
@@ -52,8 +56,11 @@ TEMPLATES = [
 ]
 
 MIDDLEWARE = [
+    "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
 ]
 
 USE_I18N = True
@@ -61,3 +68,18 @@ USE_I18N = True
 USE_L10N = True
 
 LANGUAGE_CODE = "en-us"
+
+
+# DEBUG = True
+# TEMPLATES[0]["OPTIONS"]["context_processors"] += [
+#     "microsoft_auth.context_processors.microsoft"
+# ]
+
+# AUTHENTICATION_BACKENDS = [
+#     "microsoft_auth.backends.MicrosoftAuthenticationBackend",
+#     "django.contrib.auth.backends.ModelBackend",
+# ]
+
+# SITE_ID = 1
+
+# from .local import *
