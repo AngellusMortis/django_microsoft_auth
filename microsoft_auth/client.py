@@ -64,7 +64,7 @@ class MicrosoftClient(OAuth2Session):
     def authorization_url(self):
         """ Generates Microsoft/Xbox or a Office 365 Authorization URL """
         auth_url = self._authorization_url
-        tenant = self.config.get('MICROSOFT_AUTH_TENANT_ID', 'common')
+        tenant = self.config.MICROSOFT_AUTH_TENANT_ID
         auth_url = auth_url.replace('TENANT', tenant)
         if self.config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_XBL:
             auth_url = self._xbox_authorization_url
@@ -73,7 +73,7 @@ class MicrosoftClient(OAuth2Session):
 
     def fetch_token(self, **kwargs):
         """ Fetchs OAuth2 Token with given kwargs"""
-        tenant = self.config.get('MICROSOFT_AUTH_TENANT_ID', 'common')
+        tenant = self.config.MICROSOFT_AUTH_TENANT_ID
         url = self._token_url.replace('TENANT', tenant)
         return super().fetch_token(
             self._token_url,
