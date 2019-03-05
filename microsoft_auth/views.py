@@ -84,7 +84,7 @@ class AuthenticateCallbackView(View):
 
     def _check_csrf(self, state):
         # CSRF validation does not work with http
-        if config.DEBUG and self.request.scheme == "http":
+        if config.DEBUG and get_scheme(self.request) == "http":
             return
 
         # validate state parameter

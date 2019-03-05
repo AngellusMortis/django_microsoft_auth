@@ -19,19 +19,18 @@ def microsoft(request):
     else:
         login_type = _("Microsoft")
 
-    if config.DEBUG:
+    if config.DEBUG:  # pragma: no branch
         expected_domain = Site.objects.get_current().domain
         current_domain = request.get_host()
-        if expected_domain != current_domain:
+        if expected_domain != current_domain:  # pragma: no branch
             logger.warning(
                 "\n\nWARNING:\nThe domain configured for the sites framework "
                 "does not match the domain you are accessing Django with. "
                 "Microsoft authentication may not work.\n\n"
             )
 
-        if request.scheme == "http" and not current_domain.startswith(
-            "localhost"
-        ):
+        if (request.scheme == "http" and not  # pragma: no branch
+                current_domain.startswith("localhost")):
             logger.warning(
                 "\n\nWARNING:\nYou are not using HTTPS. Microsoft "
                 "authentication only works over HTTPS unless the hostname for "

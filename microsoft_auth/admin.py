@@ -12,7 +12,7 @@ admin.site.login_template = "microsoft/admin_login.html"
 
 # djangoql support
 extra_base = []
-if apps.is_installed("djangoql"):
+if apps.is_installed("djangoql"):  # pragma: no branch
     from djangoql.admin import DjangoQLSearchMixin
 
     extra_base = [DjangoQLSearchMixin]
@@ -21,7 +21,7 @@ base_admin = extra_base + [admin.ModelAdmin]
 base_user_admin = extra_base + [BaseUserAdmin]
 
 # unregister User mode if it is already registered
-if admin.site.is_registered(User):
+if admin.site.is_registered(User):  # pragma: no branch
     admin.site.unregister(User)
 
 

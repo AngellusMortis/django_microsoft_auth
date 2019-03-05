@@ -1,11 +1,9 @@
 from unittest.mock import Mock, patch
 
 from django.contrib.auth import authenticate, get_user_model
-from django.test import RequestFactory, override_settings
-from microsoft_auth.models import MicrosoftAccount, XboxLiveAccount
+from django.test import RequestFactory, TestCase, override_settings
 from microsoft_auth.conf import LOGIN_TYPE_XBL
-
-from . import TestCase
+from microsoft_auth.models import MicrosoftAccount, XboxLiveAccount
 
 CODE = "test_code"
 TOKEN = {"access_token": "test_token", "scope": ["test"]}
@@ -172,6 +170,33 @@ class MicrosoftBackendsTests(TestCase):
 
     @patch("microsoft_auth.backends.MicrosoftClient")
     def test_authenticate_existing_user_unlinked_user(self, mock_client):
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "id": self.unlinked_account.microsoft_id,
+            "userPrincipalName": self.unlinked_user.email,
+        }
+        mock_auth = Mock()
+        mock_auth.fetch_token.return_value = TOKEN
+        mock_auth.valid_scopes.return_value = True
+        mock_auth.get.return_value = mock_response
+        mock_client.return_value = mock_auth
+
+        user = authenticate(self.request, code=CODE)
+        self.unlinked_account.refresh_from_db()
+
+        self.assertIsNot(user, None)
+        self.assertEqual(user.id, self.unlinked_account.user.id)
+        self.assertEqual(self.unlinked_user.id, self.unlinked_account.user.id)
+
+    @patch("microsoft_auth.backends.MicrosoftClient")
+    def test_authenticate_existing_user_unlinked_user_no_autofille(
+        self, mock_client
+    ):
+        self.unlinked_user.first_name = "Test"
+        self.unlinked_user.last_name = "User"
+        self.unlinked_user.save()
+
         mock_response = Mock()
         mock_response.status_code = 200
         mock_response.json.return_value = {

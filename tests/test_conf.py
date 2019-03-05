@@ -1,7 +1,5 @@
-from django.test import override_settings
+from django.test import TestCase, override_settings
 from microsoft_auth.conf import SimpleConfig
-
-from . import TestCase
 
 
 class SimpleTestConfig(SimpleConfig):

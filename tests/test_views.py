@@ -1,11 +1,10 @@
+import json
 from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
+from django.test import TestCase, override_settings
 from django.urls import reverse
 from microsoft_auth.views import AuthenticateCallbackView
-import json
-
-from . import TestCase
 
 CSRF_TOKEN = "e4675ea8d28a41b8b416fe9ed1fb52b1e4675ea8d28a41b8b416fe9ed1fb52b1"
 TEST_ERROR = "test"
@@ -156,3 +155,19 @@ class ViewsTests(TestCase):
         self.assertEqual(200, response.status_code)
         self.assertEqual({}, message)
         mock_login.assert_called_with(response.wsgi_request, self.user)
+
+    @override_settings(DEBUG=True)
+    @patch("microsoft_auth.views._compare_salted_tokens")
+    def test_authenticate_callback_skip_csrf_debug(self, mock_compare):
+        response = self.client.post(
+            reverse("microsoft_auth:auth-callback"), {"state": "001464"}
+        )
+        message = json.loads(response.context["message"])
+
+        self.assertFalse(mock_compare.called)
+        self.assertEqual(400, response.status_code)
+        self.assertEqual("missing_code", message["error"])
+        self.assertEqual(
+            AuthenticateCallbackView.messages["missing_code"],
+            message["error_description"],
+        )

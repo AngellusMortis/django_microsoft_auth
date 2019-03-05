@@ -134,11 +134,10 @@ class SimpleConfig:
             self.add_default_config(config)
 
     def add_default_config(self, config):
-        if config["defaults"]:
-            tmp_dict = {}
-            for key, value in config["defaults"].items():
-                tmp_dict[key] = value[0]
-            self._defaults.update(tmp_dict)
+        tmp_dict = {}
+        for key, value in config["defaults"].items():
+            tmp_dict[key] = value[0]
+        self._defaults.update(tmp_dict)
 
     def __getattr__(self, attr):
         val = None
@@ -148,7 +147,10 @@ class SimpleConfig:
             val = getattr(settings, attr)
         except AttributeError:
             # Fall back to defaults
-            val = self._defaults[attr]
+            try:
+                val = self._defaults[attr]
+            except KeyError:
+                raise AttributeError
 
         return val
 

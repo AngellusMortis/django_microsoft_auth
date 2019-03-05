@@ -3,11 +3,9 @@ import urllib.parse
 from unittest.mock import Mock, patch
 from urllib.parse import parse_qs, urlparse
 
-from django.test import override_settings
+from django.test import TestCase, override_settings
 from microsoft_auth.client import MicrosoftClient
 from microsoft_auth.conf import LOGIN_TYPE_O365, LOGIN_TYPE_XBL
-
-from . import TestCase
 
 STATE = "test_state"
 CLIENT_ID = "test_client_id"

@@ -1,3 +1,4 @@
+tests/site/local.py
 .vscode
 test_site
 .pytest_cache

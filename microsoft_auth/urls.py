@@ -4,7 +4,7 @@ app_name = "microsoft_auth"
 
 urlpatterns = []
 
-if config.MICROSOFT_AUTH_LOGIN_ENABLED:
+if config.MICROSOFT_AUTH_LOGIN_ENABLED:  # pragma: no branch
     from django.conf.urls import url
     from . import views
 

@@ -30,9 +30,7 @@ def microsoft_auth_validator(app_configs, **kwargs):
             )
         )
 
-    try:
-        config.SITE_ID
-    except KeyError:
+    if not hasattr(config, "SITE_ID") or config.SITE_ID is None:
         errors.append(
             Critical(
                 "current site not configured",
@@ -69,7 +67,7 @@ def microsoft_auth_validator(app_configs, **kwargs):
                     )
                 )
 
-    if config.MICROSOFT_AUTH_LOGIN_ENABLED:
+    if config.MICROSOFT_AUTH_LOGIN_ENABLED:  # pragma: no branch
         if config.MICROSOFT_AUTH_CLIENT_ID == "":
             errors.append(
                 Warning(
