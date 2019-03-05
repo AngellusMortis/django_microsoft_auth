@@ -12,7 +12,7 @@ Django Microsoft Authentication Backend
     :alt: Python Versions
 
 .. image:: https://travis-ci.org/AngellusMortis/django_microsoft_auth.svg?branch=master
-    :target: https://travis-ci.org/AngellusMortis/django_microsoft_auth.svg?branch=master
+    :target: https://travis-ci.org/AngellusMortis/django_microsoft_auth/
     :alt: Travis CI
 
 .. image:: https://readthedocs.org/projects/django-microsoft-auth/badge/?version=latest
