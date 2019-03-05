@@ -5,7 +5,8 @@ History
 1.3.0 (2019-3-5)
 ----------------
 
-* Adds support for other tenant IDs for Microsoft authentication
+* Adds support for other tenant IDs for Microsoft
+  authentication (thanks aviv)
 
 1.2.1 (2019-2-28)
 -----------------
