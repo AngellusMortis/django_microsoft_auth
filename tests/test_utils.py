@@ -1,6 +1,7 @@
 from django.test import RequestFactory, TestCase, override_settings
-from microsoft_auth.utils import get_scheme
+
 from microsoft_auth.conf import config
+from microsoft_auth.utils import get_scheme
 
 
 class UtilsTests(TestCase):

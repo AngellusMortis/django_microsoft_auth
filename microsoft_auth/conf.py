@@ -59,11 +59,7 @@ DEFAULT_CONFIG = {
             ),
             (
                 "MICROSOFT_AUTH_TENANT_ID",
-                (
-                    "",
-                    "",
-                    str,
-                ),
+                ("common", _("Microsoft Office 365 Tenant ID"), str),
             ),
             (
                 "MICROSOFT_AUTH_CLIENT_ID",

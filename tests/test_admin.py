@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
+
 from microsoft_auth.models import MicrosoftAccount, XboxLiveAccount
 
 
@@ -26,19 +27,17 @@ class AdminTests(TestCase):
 
         self.client.get(reverse("admin:index"))
         self.client.get(
-            reverse(
-                "admin:auth_user_change", kwargs={"object_id": self.user.id}
-            )
+            reverse("admin:auth_user_change", args=(self.user.id,))
         )
         self.client.get(
             reverse(
                 "admin:microsoft_auth_microsoftaccount_change",
-                kwargs={"object_id": self.microsoft_account.id},
+                args=(self.microsoft_account.id,),
             )
         )
         self.client.get(
             reverse(
                 "admin:microsoft_auth_xboxliveaccount_change",
-                kwargs={"object_id": self.xbox_account.id},
+                args=(self.xbox_account.id,),
             )
         )

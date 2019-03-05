@@ -5,15 +5,17 @@
 
 from os import path
 
+from setuptools import find_packages, setup
+
+import versioneer
+
 # for pip >= 10
 try:
     from pip._internal.req import parse_requirements
 # for pip <= 9.0.3
 except ImportError:
     from pip.req import parse_requirements
-from setuptools import find_packages, setup
 
-import versioneer
 
 BASE_DIR = path.abspath(path.dirname(__file__))
 

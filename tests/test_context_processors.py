@@ -1,6 +1,7 @@
 from unittest.mock import Mock, patch
 
 from django.test import RequestFactory, TestCase, override_settings
+
 from microsoft_auth.conf import LOGIN_TYPE_O365, LOGIN_TYPE_XBL
 from microsoft_auth.context_processors import microsoft
 

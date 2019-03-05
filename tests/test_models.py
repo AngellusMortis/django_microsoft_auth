@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
+
 from microsoft_auth.models import MicrosoftAccount, XboxLiveAccount
 
 USER_ID = "test_user_id"

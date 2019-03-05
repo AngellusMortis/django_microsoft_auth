@@ -3,8 +3,8 @@ import sys
 
 from django.contrib.sites.models import Site
 from django.core.management import call_command
-from django.test import TransactionTestCase, override_settings, modify_settings
 from django.core.management.base import SystemCheckError
+from django.test import TransactionTestCase, modify_settings, override_settings
 
 
 @override_settings(

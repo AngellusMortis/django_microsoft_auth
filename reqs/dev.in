@@ -1,3 +1,4 @@
+-r lint.in
 -r test.in
 -r ql.in
 

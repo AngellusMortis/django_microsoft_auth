@@ -1,7 +1,6 @@
 import json
 
 import requests
-
 from django.contrib.sites.models import Site
 from django.urls import reverse
 from requests_oauthlib import OAuth2Session
@@ -22,10 +21,12 @@ class MicrosoftClient(OAuth2Session):
         https://developer.microsoft.com/en-us/graph/docs/get-started/rest
     """
 
-    _authorization_url = (
-        "https://login.microsoftonline.com/TENANT/oauth2/v2.0/authorize"
+    _authorization_url_no_tenant = (
+        "https://login.microsoftonline.com/{tenant}/oauth2/v2.0/authorize"
     )
-    _token_url = "https://login.microsoftonline.com/TENANT/oauth2/v2.0/token"
+    _token_url_no_tenant = (
+        "https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token"
+    )
 
     _xbox_authorization_url = "https://login.live.com/oauth20_authorize.srf"
     _xbox_token_url = "https://user.auth.xboxlive.com/user/authenticate"
@@ -62,11 +63,22 @@ class MicrosoftClient(OAuth2Session):
             **kwargs
         )
 
+    @property
+    def _authorization_url(self):
+        return self._authorization_url_no_tenant.format(
+            tenant=self.config.MICROSOFT_AUTH_TENANT_ID
+        )
+
+    @property
+    def _token_url(self):
+        return self._token_url_no_tenant.format(
+            tenant=self.config.MICROSOFT_AUTH_TENANT_ID
+        )
+
     def authorization_url(self):
         """ Generates Microsoft/Xbox or a Office 365 Authorization URL """
+
         auth_url = self._authorization_url
-        tenant = self.config.MICROSOFT_AUTH_TENANT_ID
-        auth_url = auth_url.replace("TENANT", tenant)
         if self.config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_XBL:
             auth_url = self._xbox_authorization_url
 
@@ -74,8 +86,7 @@ class MicrosoftClient(OAuth2Session):
 
     def fetch_token(self, **kwargs):
         """ Fetchs OAuth2 Token with given kwargs"""
-        tenant = self.config.MICROSOFT_AUTH_TENANT_ID
-        url = self._token_url.replace("TENANT", tenant)
+
         return super().fetch_token(  # pragma: no cover
             self._token_url,
             client_secret=self.config.MICROSOFT_AUTH_CLIENT_SECRET,
@@ -172,6 +183,7 @@ class MicrosoftClient(OAuth2Session):
 
     def valid_scopes(self, scopes):
         """ Validates response scopes based on MICROSOFT_AUTH_LOGIN_TYPE """
+
         scopes = set(scopes)
         required_scopes = None
         if self.config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_XBL:

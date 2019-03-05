@@ -1,9 +1,9 @@
 import logging
 
+from django.contrib.sites.models import Site
 from django.middleware.csrf import get_token
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.sites.models import Site
 
 from .client import MicrosoftClient
 from .conf import LOGIN_TYPE_XBL, config
@@ -29,8 +29,11 @@ def microsoft(request):
                 "Microsoft authentication may not work.\n\n"
             )
 
-        if (request.scheme == "http" and not  # pragma: no branch
-                current_domain.startswith("localhost")):
+        do_warning = (
+            request.scheme == "http"
+            and not current_domain.startswith("localhost")
+        )
+        if do_warning:  # pragma: no branch
             logger.warning(
                 "\n\nWARNING:\nYou are not using HTTPS. Microsoft "
                 "authentication only works over HTTPS unless the hostname for "

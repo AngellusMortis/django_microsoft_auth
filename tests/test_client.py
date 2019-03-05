@@ -4,6 +4,7 @@ from unittest.mock import Mock, patch
 from urllib.parse import parse_qs, urlparse
 
 from django.test import TestCase, override_settings
+
 from microsoft_auth.client import MicrosoftClient
 from microsoft_auth.conf import LOGIN_TYPE_O365, LOGIN_TYPE_XBL
 
@@ -72,10 +73,11 @@ class ClientTests(TestCase):
 
     @override_settings(MICROSOFT_AUTH_CLIENT_ID=CLIENT_ID)
     def test_authorization_url(self):
-        base_url = MicrosoftClient._authorization_url
+        auth_client = MicrosoftClient(state=STATE)
+
+        base_url = auth_client._authorization_url
         expected_auth_url = self._get_auth_url(base_url)
 
-        auth_client = MicrosoftClient(state=STATE)
         self._assert_auth_url(
             expected_auth_url, auth_client.authorization_url()
         )
@@ -85,10 +87,11 @@ class ClientTests(TestCase):
         MICROSOFT_AUTH_LOGIN_TYPE=LOGIN_TYPE_O365,
     )
     def test_authorization_url_with_o365(self):
-        base_url = MicrosoftClient._authorization_url
+        auth_client = MicrosoftClient(state=STATE)
+
+        base_url = auth_client._authorization_url
         expected_auth_url = self._get_auth_url(base_url)
 
-        auth_client = MicrosoftClient(state=STATE)
         self._assert_auth_url(
             expected_auth_url, auth_client.authorization_url()
         )
@@ -241,3 +244,37 @@ class ClientTests(TestCase):
 
         auth_client = MicrosoftClient()
         self.assertTrue(auth_client.valid_scopes(scopes))
+
+    def test_authorization_url_default(self):
+        auth_client = MicrosoftClient()
+
+        self.assertEqual(
+            auth_client._authorization_url,
+            "https://login.microsoftonline.com/common/oauth2/v2.0/authorize",
+        )
+
+    def test_token_url_default(self):
+        auth_client = MicrosoftClient()
+
+        self.assertEqual(
+            auth_client._token_url,
+            "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+        )
+
+    @override_settings(MICROSOFT_AUTH_TENANT_ID="test")
+    def test_authorization_url_tenant(self):
+        auth_client = MicrosoftClient()
+
+        self.assertEqual(
+            auth_client._authorization_url,
+            "https://login.microsoftonline.com/test/oauth2/v2.0/authorize",
+        )
+
+    @override_settings(MICROSOFT_AUTH_TENANT_ID="test")
+    def test_token_url_tenant(self):
+        auth_client = MicrosoftClient()
+
+        self.assertEqual(
+            auth_client._token_url,
+            "https://login.microsoftonline.com/test/oauth2/v2.0/token",
+        )

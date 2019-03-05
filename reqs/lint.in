@@ -1,0 +1,9 @@
+black
+doc8
+flake8
+flake8-bugbear
+flake8-builtins
+flake8-commas
+flake8-comprehensions
+isort
+sphinx
