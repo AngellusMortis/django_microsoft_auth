@@ -48,7 +48,7 @@ class AuthenticateCallbackView(View):
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        domain = Site.objects.get_current().domain
+        domain = Site.objects.get_current(self.request).domain
 
         scheme = get_scheme(self.request)
 
