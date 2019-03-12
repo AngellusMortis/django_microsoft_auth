@@ -77,6 +77,23 @@ DEFAULT_CONFIG = {
                 ),
             ),
             (
+                "MICROSOFT_AUTH_STORE_TOKEN",
+                (
+                    False,
+                    _(
+                        "Should we store the user's access token."
+                        "\n"
+                        "Note that the tokens are normaly short-lived, so you"
+                        "will also need to specify `offline_access` scope to"
+                        "get a refresh token. see"
+                        "https://docs.microsoft.com/en-us/azure/" +
+                        "active-directory/develop/v1-protocols-oauth-code" +
+                        "#refreshing-the-access-tokens"
+                    ),
+                    bool,
+                ),
+            ),
+            (
                 "MICROSOFT_AUTH_CLIENT_ID",
                 (
                     "",

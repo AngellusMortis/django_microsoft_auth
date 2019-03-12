@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
 
@@ -44,8 +46,20 @@ class MicrosoftAuthenticationBackend(ModelBackend):
                 token["scope"]
             ):
                 user = self._authenticate_user()
+                self._store_token_if_needed(user)
 
         return user
+
+    def _store_token_if_needed(self, user):
+        if self.config.MICROSOFT_AUTH_STORE_TOKEN and user is not None:
+            account = user.microsoft_account
+            account.token = token['access_token']
+            expires_at = token.get('expires_at')
+            if expires_at:
+                account.token_expires = datetime.datetime.fromtimestamp(
+                    expires_at)
+            account.refresh_token = token.get('refresh_token')
+            account.save()
 
     def _authenticate_user(self):
         if self.config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_XBL:

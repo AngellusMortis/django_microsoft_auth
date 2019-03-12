@@ -50,7 +50,10 @@ Features
   (including Microsoft accounts, Office 365 accounts and Azure AD accounts)
   and Xbox Live authentication.
 
-* Provides Microsoft OAuth client to interfacing with Microsoft accounts
+* Provides Microsoft OAuth client to interfacing with Microsoft accounts.
+
+* (Optionally) store tokens to allow accessing Microsoft services on behalf of
+  users.
 
 Python/Django support
 ---------------------

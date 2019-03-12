@@ -1,4 +1,5 @@
 import json
+import datetime
 
 import requests
 from django.contrib.sites.models import Site
@@ -80,6 +81,40 @@ class MicrosoftClient(OAuth2Session):
             client_secret=self.config.MICROSOFT_AUTH_CLIENT_SECRET,
             **kwargs
         )
+
+    def refresh_token(self, user):
+        account = user.microsoft_account
+
+        if not account.refresh_token:
+            return
+
+        tenant = self.config.MICROSOFT_AUTH_TENANT_ID
+        token_url = self._token_url.replace('TENANT', tenant)
+
+        body = {
+            'client_id': self.client_id,
+            'scope': self.scope,
+            'refresh_token': account.refresh_token,
+            'redirect_uri': self.redirect_uri,
+            'grant_type': 'refresh_token',
+            'client_secret': self.config.MICROSOFT_AUTH_CLIENT_SECRET,
+        }
+
+        r = self.post(
+            token_url,
+            data=body)
+
+        self._client.parse_request_body_response(r.text, scope=self.scope)
+
+        token_resp = self._client.token
+
+        account.token = token_resp['access_token']
+        expires_at = token_resp.get('expires_at')
+        if expires_at:
+            account.token_expires = datetime.datetime.fromtimestamp(expires_at)
+        if 'refresh_token' in token_resp:
+            account.refresh_token = token_resp.get('refresh_token')
+        account.save()
 
     def fetch_xbox_token(self):
         """ Fetches Xbox Live Auth token.
