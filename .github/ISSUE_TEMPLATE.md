@@ -1,6 +1,7 @@
 * Django Microsoft Authentication Backend version:
 * Python version:
 * Operating System:
+* Browser and version you are testing in:
 
 ### Description
 
