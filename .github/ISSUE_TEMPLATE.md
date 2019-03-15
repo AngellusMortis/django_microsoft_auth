@@ -2,6 +2,7 @@
 * Python version:
 * Operating System:
 * Browser and version you are testing in:
+* What browser plugins do you have installed that may interfere with cookies or Javascript:
 
 ### Description
 
