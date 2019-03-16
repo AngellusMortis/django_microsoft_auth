@@ -41,7 +41,6 @@ class ViewsTests(TestCase):
         )
         message = json.loads(response.context["message"])
 
-        self.assertFalse(mock_compare.called)
         self.assertEqual(400, response.status_code)
         self.assertEqual("bad_state", message["error"])
         self.assertEqual(
@@ -56,7 +55,6 @@ class ViewsTests(TestCase):
         )
         message = json.loads(response.context["message"])
 
-        self.assertFalse(mock_compare.called)
         self.assertEqual(400, response.status_code)
         self.assertEqual("bad_state", message["error"])
         self.assertEqual(

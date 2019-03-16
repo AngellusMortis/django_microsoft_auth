@@ -1,4 +1,5 @@
 import json
+import logging
 import re
 
 from django.contrib.auth import authenticate, login
@@ -17,6 +18,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .conf import config
 from .utils import get_scheme
+
+logger = logging.getLogger("django")
 
 
 class AuthenticateCallbackView(View):
@@ -87,13 +90,22 @@ class AuthenticateCallbackView(View):
         if config.DEBUG and self.request.scheme == "http":
             return
 
+        if state is None:
+            state = ""
+
+        csrf_token = get_token(self.request)
+        checks = (
+            re.search("[a-zA-Z0-9]", state),
+            len(state) == CSRF_TOKEN_LENGTH,
+            _compare_salted_tokens(state, csrf_token),
+        )
+
         # validate state parameter
-        if (
-            state is None
-            or not re.search("[a-zA-Z0-9]", state)
-            or not len(state) == CSRF_TOKEN_LENGTH
-            or not _compare_salted_tokens(state, get_token(self.request))
-        ):
+        if not all(checks):
+            logger.debug("State validation failed:")
+            logger.debug(f"state: {state}")
+            logger.debug(f"csrf_token: {csrf_token}")
+            logger.debug(f"checks: {checks}")
             self.context["message"] = {"error": "bad_state"}
 
     def _check_microsoft_response(self, error, error_description):
