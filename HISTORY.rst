@@ -2,6 +2,12 @@
 History
 =======
 
+1.3.2 (2019-3-16)
+-----------------
+
+* Changes state validation to use cryptographic signing now. State
+  validation should be signfincally more relaible now.
+
 1.3.1 (2019-3-16)
 -----------------
 
