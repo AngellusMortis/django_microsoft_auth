@@ -2,6 +2,11 @@
 History
 =======
 
+1.3.1 (2019-3-16)
+-----------------
+
+* Adds more logging around CSRF/State failures
+
 1.3.0 (2019-3-5)
 ----------------
 
