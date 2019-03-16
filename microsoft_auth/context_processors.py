@@ -7,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from .client import MicrosoftClient
 from .conf import LOGIN_TYPE_XBL, config
+from .utils import get_scheme
 
 logger = logging.getLogger("django")
 
@@ -24,20 +25,19 @@ def microsoft(request):
         current_domain = request.get_host()
         if expected_domain != current_domain:  # pragma: no branch
             logger.warning(
-                "\n\nWARNING:\nThe domain configured for the sites framework "
+                "\nWARNING:\nThe domain configured for the sites framework "
                 "does not match the domain you are accessing Django with. "
-                "Microsoft authentication may not work.\n\n"
+                "Microsoft authentication may not work.\n"
             )
 
-        do_warning = (
-            request.scheme == "http"
-            and not current_domain.startswith("localhost")
-        )
+        do_warning = get_scheme(
+            request
+        ) == "http" and not current_domain.startswith("localhost")
         if do_warning:  # pragma: no branch
             logger.warning(
-                "\n\nWARNING:\nYou are not using HTTPS. Microsoft "
+                "\nWARNING:\nYou are not using HTTPS. Microsoft "
                 "authentication only works over HTTPS unless the hostname for "
-                "your `redirect_uri` is `localhost`\n\n"
+                "your `redirect_uri` is `localhost`\n"
             )
 
     # initialize Microsoft client using CSRF token as state variable
