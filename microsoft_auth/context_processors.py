@@ -1,7 +1,7 @@
 import logging
 
 from django.contrib.sites.models import Site
-from django.core.signing import Signer
+from django.core.signing import TimestampSigner
 from django.middleware.csrf import get_token
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
@@ -42,7 +42,7 @@ def microsoft(request):
             )
 
     # initialize Microsoft client using CSRF token as state variable
-    signer = Signer()
+    signer = TimestampSigner()
     state = signer.sign(get_token(request))
     microsoft = MicrosoftClient(state=state, request=request)
     auth_url = microsoft.authorization_url()[0]

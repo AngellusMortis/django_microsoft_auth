@@ -2,6 +2,11 @@
 History
 =======
 
+1.3.3 (2019-3-16)
+-----------------
+
+* Adds expiration to state values (hardcoded 5 minutes)
+
 1.3.2 (2019-3-16)
 -----------------
 

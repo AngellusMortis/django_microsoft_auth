@@ -2,14 +2,18 @@ import json
 from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
-from django.core.signing import Signer
+from django.core.signing import TimestampSigner
 from django.test import TestCase
 from django.urls import reverse
 
 from microsoft_auth.views import AuthenticateCallbackView
 
-STATE = Signer().sign(
+STATE = TimestampSigner().sign(
     "e4675ea8d28a41b8b416fe9ed1fb52b1e4675ea8d28a41b8b416fe9ed1fb52b1"
+)
+EXPIRED_STATE = (
+    "e4675ea8d28a41b8b416fe9ed1fb52b1e4675ea8d28a41b8b416fe9ed1fb52b1:"
+    "1h5CgL:G-QiLZ3hetUPgrdpJlvAfXkZ2RQ"
 )
 TEST_ERROR = "test"
 TEST_ERROR_DESCRIPTION = "some_error"
@@ -66,6 +70,19 @@ class ViewsTests(TestCase):
     def test_authenticate_callback_bad_state(self):
         response = self.client.post(
             reverse("microsoft_auth:auth-callback"), {"state": STATE[:-1]}
+        )
+        message = json.loads(response.context["message"])
+
+        self.assertEqual(400, response.status_code)
+        self.assertEqual("bad_state", message["error"])
+        self.assertEqual(
+            AuthenticateCallbackView.messages["bad_state"],
+            message["error_description"],
+        )
+
+    def test_authenticate_callback_bad_state_expired(self):
+        response = self.client.post(
+            reverse("microsoft_auth:auth-callback"), {"state": EXPIRED_STATE}
         )
         message = json.loads(response.context["message"])
 

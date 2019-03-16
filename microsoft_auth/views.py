@@ -4,7 +4,7 @@ import re
 
 from django.contrib.auth import authenticate, login
 from django.contrib.sites.models import Site
-from django.core.signing import BadSignature, Signer
+from django.core.signing import BadSignature, SignatureExpired, TimestampSigner
 from django.middleware.csrf import CSRF_TOKEN_LENGTH
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
@@ -82,14 +82,18 @@ class AuthenticateCallbackView(View):
         return self.context
 
     def _check_csrf(self, state):
-        signer = Signer()
+        signer = TimestampSigner()
 
         if state is None:
             state = ""
 
         try:
-            state = signer.unsign(state)
+            state = signer.unsign(state, max_age=300)
         except BadSignature:
+            logger.debug("state has been tempered with")
+            state = ""
+        except SignatureExpired:
+            logger.debug("state has expired")
             state = ""
 
         checks = (
