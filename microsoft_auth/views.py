@@ -103,9 +103,9 @@ class AuthenticateCallbackView(View):
         # validate state parameter
         if not all(checks):
             logger.debug("State validation failed:")
-            logger.debug(f"state: {state}")
-            logger.debug(f"csrf_token: {csrf_token}")
-            logger.debug(f"checks: {checks}")
+            logger.debug("state: {}".format(state))
+            logger.debug("csrf_token: {}".format(csrf_token))
+            logger.debug("checks: {}".format(checks))
             self.context["message"] = {"error": "bad_state"}
 
     def _check_microsoft_response(self, error, error_description):
