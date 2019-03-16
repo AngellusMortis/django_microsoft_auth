@@ -4,11 +4,8 @@ import re
 
 from django.contrib.auth import authenticate, login
 from django.contrib.sites.models import Site
-from django.middleware.csrf import (
-    CSRF_TOKEN_LENGTH,
-    _compare_salted_tokens,
-    get_token,
-)
+from django.core.signing import BadSignature, Signer
+from django.middleware.csrf import CSRF_TOKEN_LENGTH
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.utils.safestring import mark_safe
@@ -16,7 +13,6 @@ from django.utils.translation import ugettext as _
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 
-from .conf import config
 from .utils import get_scheme
 
 logger = logging.getLogger("django")
@@ -86,25 +82,25 @@ class AuthenticateCallbackView(View):
         return self.context
 
     def _check_csrf(self, state):
-        # CSRF validation does not work with http
-        if config.DEBUG and self.request.scheme == "http":
-            return
+        signer = Signer()
 
         if state is None:
             state = ""
 
-        csrf_token = get_token(self.request)
+        try:
+            state = signer.unsign(state)
+        except BadSignature:
+            state = ""
+
         checks = (
             re.search("[a-zA-Z0-9]", state),
             len(state) == CSRF_TOKEN_LENGTH,
-            _compare_salted_tokens(state, csrf_token),
         )
 
         # validate state parameter
         if not all(checks):
             logger.debug("State validation failed:")
             logger.debug("state: {}".format(state))
-            logger.debug("csrf_token: {}".format(csrf_token))
             logger.debug("checks: {}".format(checks))
             self.context["message"] = {"error": "bad_state"}
 
