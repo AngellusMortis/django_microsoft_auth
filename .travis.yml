@@ -54,7 +54,7 @@ before_script:
   - test "$TOX_ENV" = "py37-dj21-extras" && ./cc-test-reporter before-build
 
 after_success:
-  - coveralls
+  - test "$TOX_ENV" = "py37-dj21-extras" && coveralls
 
 after_script:
   - test "$TOX_ENV" = "py37-dj21-extras" && ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
