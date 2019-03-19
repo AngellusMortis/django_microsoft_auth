@@ -1,8 +1,9 @@
 coverage
+coveralls
+django-constance[database]
 flake8
 pytest
 pytest-cov
 pytest-django
 tox
 versioneer
-coveralls

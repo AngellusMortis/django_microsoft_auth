@@ -69,6 +69,7 @@ USE_L10N = True
 
 LANGUAGE_CODE = "en-us"
 
+CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
 
 # DEBUG = True
 # TEMPLATES[0]["OPTIONS"]["context_processors"] += [

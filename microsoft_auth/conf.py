@@ -1,9 +1,11 @@
 from collections import OrderedDict
 from importlib import import_module
 
-from django.conf import settings
 from django.test.signals import setting_changed
 from django.utils.translation import ugettext_lazy as _
+
+constance_config = None
+settings = None
 
 """ List of all possible default configs for microsoft_auth
 
@@ -133,20 +135,29 @@ class SimpleConfig:
         tmp_dict = {}
         for key, value in config["defaults"].items():
             tmp_dict[key] = value[0]
+
         self._defaults.update(tmp_dict)
 
     def __getattr__(self, attr):
         val = None
 
-        try:
-            # Check if present in user settings
-            val = getattr(settings, attr)
-        except AttributeError:
-            # Fall back to defaults
+        # Check Constance first if it is installed
+        if constance_config:
             try:
-                val = self._defaults[attr]
-            except KeyError:
-                raise AttributeError
+                val = getattr(constance_config, attr)
+            except AttributeError:
+                pass
+
+        if val is None:
+            try:
+                # Check if present in user settings
+                val = getattr(settings, attr)
+            except AttributeError:
+                # Fall back to defaults
+                try:
+                    val = self._defaults[attr]
+                except KeyError:
+                    raise AttributeError
 
         return val
 
@@ -161,8 +172,23 @@ class SimpleConfig:
 config = None
 
 
-def init_settings():
-    global config
+def init_config():
+    global config, constance_config, settings
+
+    from django.conf import settings as django_settings
+
+    settings = django_settings
+
+    # set constance config global
+    if "constance" in settings.INSTALLED_APPS:
+        from constance import config as constance_config
+        from constance.signals import config_updated
+
+        config_updated.connect(reload_settings)
+    else:
+        constance_config = None
+
+    # retrieve and set config class
     if (
         hasattr(settings, "MICROSOFT_AUTH_CONFIG_CLASS")
         and settings.MICROSOFT_AUTH_CONFIG_CLASS is not None
@@ -175,15 +201,20 @@ def init_settings():
     else:
         config = SimpleConfig(DEFAULT_CONFIG)
 
+    return config
 
-init_settings()
+
+init_config()
 
 
 def reload_settings(*args, **kwargs):
     global config
-    setting, _ = kwargs["setting"], kwargs["value"]  # noqa
+
+    setting = kwargs.get("setting", kwargs.get("key"))
+
+    # only reinitialize config if settings changed
     if setting.startswith("MICROSOFT_AUTH_"):
-        init_settings()
+        init_config()
 
 
 setting_changed.connect(reload_settings)

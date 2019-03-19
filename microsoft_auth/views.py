@@ -89,10 +89,10 @@ class AuthenticateCallbackView(View):
 
         try:
             state = signer.unsign(state, max_age=300)
-        except BadSignature:
+        except BadSignature:  # pragma: no branch
             logger.debug("state has been tempered with")
             state = ""
-        except SignatureExpired:
+        except SignatureExpired:  # pragma: no cover
             logger.debug("state has expired")
             state = ""
 
