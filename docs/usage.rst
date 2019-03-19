@@ -106,3 +106,50 @@ Quickstart
     you want as you normally.
 12. See `microsoft_auth/templates/microsoft/admin_login.html` for details
     examples on making a Login form.
+
+
+Migrating from 1.0 to 2.0
+-------------------------
+
+`django_microsoft_auth` v2.0 changed the scopes that are used to retrieve user
+data to fall inline with OpenID Connect standards. The old `User.read` scope is
+now deprecated and `openid email profile` scopes are required by default.
+
+This means the user ID that is returned from Microsoft has changed. To prevent
+any possible data loss, out of the box, `django_microsoft_auth` will
+essentially make it so you cannot log in with Microsoft auth to access any
+users that are linked with a v1 Microsoft auth account.
+
+You set `MICROSOFT_AUTH_AUTO_REPLACE_ACCOUNTS` to `True` to enable the behavior
+that will automatically replace a paired Microsoft Account on a user with the
+newly created one returned from Microsoft. This can potientally result is
+orhpaned data if you have a related object references to `MicrosoftAccount`
+instead of the user. It is recommend you stay on 1.3.x until you can manually
+migrate this data.
+
+Once these account have been migrated, you can safely delete any remaining
+v1 Microsoft Accounts.
+
+Sliencing `Scope has changed` warnings
+--------------------------------------
+
+If you stay on 1.3.x for a bit and you start getting
+`Scope has changed from "User.Read" to "User.Read email profile openid".`, you
+can slience this warning by setting an env variable for
+`OAUTHLIB_RELAX_TOKEN_SCOPE` before starting Django.
+
+Bash
+
+```bash
+$ export OAUTHLIB_RELAX_TOKEN_SCOPE=true
+$ python manage.py runserver
+```
+
+PowerShell
+
+```powershell
+> $env:OAUTHLIB_RELAX_TOKEN_SCOPE=$TRUE
+> python manage.py runserver
+```
+
+You should however upgrade to 2.0 once you can.
