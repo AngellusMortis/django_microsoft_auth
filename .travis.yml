@@ -31,6 +31,9 @@ matrix:
     # Django 1.11 will likely not be upgraded with support for 3.8
     - python: "3.8-dev"
       env: DJANGO_VERSION=111
+  include:
+    - python: "3.7"
+      env: DJANGO_VERSION=21-extra
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
