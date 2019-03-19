@@ -71,6 +71,17 @@ class ClientTests(TestCase):
         auth_client = MicrosoftClient()
         self.assertEqual(REDIRECT_URI, auth_client.redirect_uri)
 
+    @override_settings(MICROSOFT_AUTH_CLIENT_ID=CLIENT_ID)
+    def test_authorization_url(self):
+        auth_client = MicrosoftClient(state=STATE)
+
+        base_url = auth_client.openid_config["authorization_endpoint"]
+        expected_auth_url = self._get_auth_url(base_url)
+
+        self._assert_auth_url(
+            expected_auth_url, auth_client.authorization_url()
+        )
+
     @override_settings(
         MICROSOFT_AUTH_CLIENT_ID=CLIENT_ID,
         MICROSOFT_AUTH_LOGIN_TYPE=LOGIN_TYPE_XBL,
