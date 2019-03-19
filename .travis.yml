@@ -51,7 +51,7 @@ before_script:
   - export TOX_ENV="py$PY_VERSION-dj$DJANGO_VERSION"
   - if [[ "$TOX_ENV" = "py37-dj21-extras" ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter; fi
   - if [[ "$TOX_ENV" = "py37-dj21-extras" ]]; then chmod +x ./cc-test-reporter; fi
-  - tif [[ "$TOX_ENV" = "py37-dj21-extras" ]]; then ./cc-test-reporter before-build; fi
+  - if [[ "$TOX_ENV" = "py37-dj21-extras" ]]; then ./cc-test-reporter before-build; fi
 
 after_success:
   - if [[ "$TOX_ENV" = "py37-dj21-extras" ]]; then coveralls; fi
