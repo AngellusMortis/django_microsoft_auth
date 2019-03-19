@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from .conf import config, LOGIN_TYPE_MA, LOGIN_TYPE_XBL
+from .conf import LOGIN_TYPE_MA, LOGIN_TYPE_XBL, config
 from .models import MicrosoftAccount, XboxLiveAccount
 
 __all__ = [

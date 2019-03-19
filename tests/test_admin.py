@@ -3,8 +3,7 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from microsoft_auth.admin import _register_admins
-from microsoft_auth.conf import LOGIN_TYPE_XBL, LOGIN_TYPE_MA
-
+from microsoft_auth.conf import LOGIN_TYPE_MA, LOGIN_TYPE_XBL
 from microsoft_auth.models import MicrosoftAccount, XboxLiveAccount
 
 
