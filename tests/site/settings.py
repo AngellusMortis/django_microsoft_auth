@@ -71,16 +71,20 @@ LANGUAGE_CODE = "en-us"
 
 CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
 
-DEBUG = True
-TEMPLATES[0]["OPTIONS"]["context_processors"] += [
-    "microsoft_auth.context_processors.microsoft"
-]
+#####
+# Do not commit these uncommented, they are for development purposes only
+#####
 
-AUTHENTICATION_BACKENDS = [
-    "microsoft_auth.backends.MicrosoftAuthenticationBackend",
-    "django.contrib.auth.backends.ModelBackend",
-]
+# DEBUG = True
+# TEMPLATES[0]["OPTIONS"]["context_processors"] += [
+#     "microsoft_auth.context_processors.microsoft"
+# ]
 
-SITE_ID = 1
+# AUTHENTICATION_BACKENDS = [
+#     "microsoft_auth.backends.MicrosoftAuthenticationBackend",
+#     "django.contrib.auth.backends.ModelBackend",
+# ]
 
-from .local import *
+# SITE_ID = 1
+
+# from .local import *

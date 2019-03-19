@@ -28,8 +28,6 @@ settings = None
 """
 
 LOGIN_TYPE_MA = "ma"
-# compatibility
-LOGIN_TYPE_O365 = LOGIN_TYPE_MA
 LOGIN_TYPE_XBL = "xbl"
 
 DEFAULT_CONFIG = {
@@ -134,12 +132,12 @@ DEFAULT_CONFIG = {
                 ),
             ),
             (
-                "MICROSOFT_AUTH_AUTO_MIGRATE_OPENID",
+                "MICROSOFT_AUTH_AUTO_REPLACE_ACCOUNTS",
                 (
                     False,
                     _(
-                        "Automatically migrate Microsoft Account objects and "
-                        "paired users with OpenID Connect data"
+                        "Automatically replace an existing Microsoft Account "
+                        "paired to a user when authenticating"
                     ),
                     bool,
                 ),

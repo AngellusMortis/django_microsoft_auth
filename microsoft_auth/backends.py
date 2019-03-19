@@ -1,11 +1,14 @@
-from django.db.utils import IntegrityError
+import logging
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
+from django.db.utils import IntegrityError
 
 from .client import MicrosoftClient
 from .conf import LOGIN_TYPE_XBL
 from .models import MicrosoftAccount, XboxLiveAccount
 
+logger = logging.getLogger("django")
 User = get_user_model()
 
 
@@ -123,9 +126,8 @@ class MicrosoftAuthenticationBackend(ModelBackend):
         microsoft_user = self._get_microsoft_user(data)
 
         if microsoft_user is not None:
-            self._verify_microsoft_user(microsoft_user, data)
-
-            user = microsoft_user.user
+            print(microsoft_user.user)
+            user = self._verify_microsoft_user(microsoft_user, data)
 
         return user
 
@@ -145,18 +147,14 @@ class MicrosoftAuthenticationBackend(ModelBackend):
         return microsoft_user
 
     def _verify_microsoft_user(self, microsoft_user, data):
-        first_name, last_name = data["name"].split(" ", 1)
+        user = microsoft_user.user
 
-        if microsoft_user.user is None:
+        if user is None:
+            first_name, last_name = data["name"].split(" ", 1)
+
             try:
                 # create new Django user from provided data
                 user = User.objects.get(email=data["email"])
-
-                if user.microsoft_account is not None:
-                    if self.config.MICROSOFT_AUTH_AUTO_MIGRATE_OPENID:
-                        user.microsoft_account.delete()
-                        user.microsoft_account = None
-                        user.save()
 
                 if user.first_name == "" and user.last_name == "":
                     first_name, last_name = data["name"].split(" ", 1)
@@ -172,5 +170,26 @@ class MicrosoftAuthenticationBackend(ModelBackend):
                 )
                 user.save()
 
+            existing_account = self._get_existing_microsoft_account(user)
+            if existing_account is not None:
+                if self.config.MICROSOFT_AUTH_AUTO_REPLACE_ACCOUNTS:
+                    existing_account.user = None
+                    existing_account.save()
+                else:
+                    logger.warn(
+                        "User {} already has linked Microsoft account".format(
+                            user.email
+                        )
+                    )
+                    return None
+
             microsoft_user.user = user
             microsoft_user.save()
+
+        return user
+
+    def _get_existing_microsoft_account(self, user):
+        try:
+            return MicrosoftAccount.objects.get(user=user)
+        except MicrosoftAccount.DoesNotExist:
+            return None
