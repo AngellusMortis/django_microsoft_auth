@@ -125,7 +125,6 @@ class MicrosoftAuthenticationBackend(ModelBackend):
         microsoft_user = self._get_microsoft_user(data)
 
         if microsoft_user is not None:
-            print(microsoft_user.user)
             user = self._verify_microsoft_user(microsoft_user, data)
 
         return user
@@ -149,14 +148,16 @@ class MicrosoftAuthenticationBackend(ModelBackend):
         user = microsoft_user.user
 
         if user is None:
-            first_name, last_name = data["name"].split(" ", 1)
+            fullname = data.get("name")
+            first_name, last_name = "", ""
+            if fullname is not None:
+                first_name, last_name = data["name"].split(" ", 1)
 
             try:
                 # create new Django user from provided data
                 user = User.objects.get(email=data["email"])
 
                 if user.first_name == "" and user.last_name == "":
-                    first_name, last_name = data["name"].split(" ", 1)
                     user.first_name = first_name
                     user.last_name = last_name
                     user.save()

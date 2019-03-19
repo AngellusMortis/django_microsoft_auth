@@ -221,6 +221,30 @@ class MicrosoftBackendsTests(TestCase):
         self.assertEqual(expected_last_name, self.unlinked_user.last_name)
 
     @patch("microsoft_auth.backends.MicrosoftClient")
+    def test_authenticate_existing_user_unlinked_user_no_name(
+        self, mock_client
+    ):
+        self.unlinked_user.save()
+
+        mock_auth = Mock()
+        mock_auth.fetch_token.return_value = TOKEN
+        mock_auth.valid_scopes.return_value = True
+        mock_auth.get_claims.return_value = {
+            "sub": self.unlinked_account.microsoft_id,
+            "email": self.unlinked_user.email,
+            "preferred_username": EMAIL,
+        }
+
+        mock_client.return_value = mock_auth
+
+        user = authenticate(self.request, code=CODE)
+        self.unlinked_account.refresh_from_db()
+
+        self.assertIsNot(user, None)
+        self.assertEqual(user.id, self.unlinked_account.user.id)
+        self.assertEqual(self.unlinked_user.id, self.unlinked_account.user.id)
+
+    @patch("microsoft_auth.backends.MicrosoftClient")
     def test_authenticate_existing_user_missing_name(self, mock_client):
         mock_auth = Mock()
         mock_auth.fetch_token.return_value = TOKEN
