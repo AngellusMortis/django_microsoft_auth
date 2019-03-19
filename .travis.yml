@@ -4,12 +4,12 @@ language: python
 sudo: required
 dist: xenial
 python:
-  - '3.4'
-  - '3.5'
-  - '3.6'
-  - '3.7'
-  - '3.8-dev'
-  - 'pypy3.5-6.0'
+  - "3.4"
+  - "3.5"
+  - "3.6"
+  - "3.7"
+  - "3.8-dev"
+  - "pypy3.5-6.0"
 env:
   global:
     - CC_TEST_REPORTER_ID=9331f307ce08c235307dc7cd7724ff21c2be2252f757d2437f5d9e271270a4ef
@@ -17,32 +17,20 @@ env:
     - DJANGO_VERSION=111
     - DJANGO_VERSION=20
     - DJANGO_VERSION=21
-    - DJANGO_VERSION=111-ql
-    - DJANGO_VERSION=20-ql
-    - DJANGO_VERSION=21-ql
 matrix:
   fast_finish: true
   allow_failures:
-    - python: '3.8-dev'
+    - python: "3.8-dev"
       env: DJANGO_VERSION=20
-    - python: '3.8-dev'
+    - python: "3.8-dev"
       env: DJANGO_VERSION=21
-    - python: '3.8-dev'
-      env: DJANGO_VERSION=20-ql
-    - python: '3.8-dev'
-      env: DJANGO_VERSION=21-ql
   exclude:
     # Django 2.1+ does not support Python 3.4
-    - python: '3.4'
+    - python: "3.4"
       env: DJANGO_VERSION=21
-    - python: '3.4'
-      env: DJANGO_VERSION=21-ql
     # Django 1.11 will likely not be upgraded with support for 3.8
-    - python: '3.8-dev'
+    - python: "3.8-dev"
       env: DJANGO_VERSION=111
-    - python: '3.8-dev'
-      env: DJANGO_VERSION=111-ql
-
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
@@ -58,12 +46,12 @@ before_script:
   - PY_VERSION=${PY_VERSION/pypy/py}
   - PY_VERSION=${PY_VERSION/py35-6.0/py3}
   - export TOX_ENV="py$PY_VERSION-dj$DJANGO_VERSION"
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
-  - ./cc-test-reporter before-build
+  - test "$TOX_ENV" = "py37-dj21-extras" && curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - test "$TOX_ENV" = "py37-dj21-extras" && chmod +x ./cc-test-reporter
+  - test "$TOX_ENV" = "py37-dj21-extras" && ./cc-test-reporter before-build
 
 after_success:
   - coveralls
 
 after_script:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - test "$TOX_ENV" = "py37-dj21-extras" && ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT

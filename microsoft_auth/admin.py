@@ -22,9 +22,9 @@ admin.site.login_template = "microsoft/admin_login.html"
 # djangoql support
 extra_base = []
 if apps.is_installed("djangoql"):  # pragma: no branch
-    from djangoql.admin import DjangoQLSearchMixin  # pragma: no cover
+    from djangoql.admin import DjangoQLSearchMixin
 
-    extra_base = [DjangoQLSearchMixin]  # pragma: no cover
+    extra_base = [DjangoQLSearchMixin]
 
 base_admin = extra_base + [admin.ModelAdmin]
 base_user_admin = extra_base + [BaseUserAdmin]
