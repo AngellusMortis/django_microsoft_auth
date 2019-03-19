@@ -7,7 +7,7 @@ History
 
 * Replaces deprecated Microsoft auth scopes with proper OpenID Connect ones
     * WARNING: Breaking change. New scopes provide a new user id. See
-      `migration docs <https://django-microsoft-auth.readthedocs.io/en/latest/usage.html>`_
+      `migration docs <https://django-microsoft-auth.readthedocs.io/en/latest/usage.html#migrating-from-1-0-to-2-0>`_
       for details.
 * Pulls authorization/token URLs directly from Microsoft
 * Adds id token validation
