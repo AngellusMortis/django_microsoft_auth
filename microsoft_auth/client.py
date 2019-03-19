@@ -1,12 +1,19 @@
 import json
+import logging
 
 import requests
 from django.contrib.sites.models import Site
 from django.urls import reverse
+from django.utils.functional import cached_property
 from requests_oauthlib import OAuth2Session
+import jwt
+from jwt.algorithms import RSAAlgorithm
 
 from .conf import LOGIN_TYPE_XBL
 from .utils import get_scheme
+
+
+logger = logging.getLogger("django")
 
 
 class MicrosoftClient(OAuth2Session):
@@ -21,12 +28,7 @@ class MicrosoftClient(OAuth2Session):
         https://developer.microsoft.com/en-us/graph/docs/get-started/rest
     """
 
-    _authorization_url_no_tenant = (
-        "https://login.microsoftonline.com/{tenant}/oauth2/v2.0/authorize"
-    )
-    _token_url_no_tenant = (
-        "https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token"
-    )
+    _config_url = "https://login.microsoftonline.com/{tenant}/v2.0/.well-known/openid-configuration"
 
     _xbox_authorization_url = "https://login.live.com/oauth20_authorize.srf"
     _xbox_token_url = "https://user.auth.xboxlive.com/user/authenticate"
@@ -38,12 +40,14 @@ class MicrosoftClient(OAuth2Session):
 
     # required OAuth scopes
     SCOPE_XBL = ["XboxLive.signin", "XboxLive.offline_access"]
-    SCOPE_MICROSOFT = ["User.Read"]
+    SCOPE_MICROSOFT = ["openid", "email", "profile"]
 
     def __init__(self, state=None, request=None, *args, **kwargs):
         from .conf import config
 
         self.config = config
+
+        extra_scopes = self.config.MICROSOFT_AUTH_EXTRA_SCOPES
 
         domain = Site.objects.get_current().domain
         path = reverse("microsoft_auth:auth-callback")
@@ -51,6 +55,8 @@ class MicrosoftClient(OAuth2Session):
 
         if self.config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_XBL:
             scope = " ".join(self.SCOPE_XBL)
+
+        scope = "{} {}".format(scope, extra_scopes).strip()
 
         scheme = get_scheme(request, self.config)
 
@@ -63,22 +69,61 @@ class MicrosoftClient(OAuth2Session):
             **kwargs
         )
 
-    @property
-    def _authorization_url(self):
-        return self._authorization_url_no_tenant.format(
+    @cached_property
+    def openid_config(self):
+        config_url = self._config_url.format(
             tenant=self.config.MICROSOFT_AUTH_TENANT_ID
         )
+        response = self.get(config_url)
 
-    @property
-    def _token_url(self):
-        return self._token_url_no_tenant.format(
-            tenant=self.config.MICROSOFT_AUTH_TENANT_ID
-        )
+        if response.ok:
+            return response.json()
+        return None
+
+    @cached_property
+    def jwks(self):
+        response = self.get(self.openid_config["jwks_uri"])
+
+        if response.ok:
+            return response.json()["keys"]
+        return []
+
+    def get_claims(self):
+        if self.token is None:
+            return None
+
+        token = self.token["id_token"].encode("utf8")
+
+        kid = jwt.get_unverified_header(token)["kid"]
+        public_key = None
+        for key in self.jwks:
+            if kid == key["kid"]:
+                jwk = key
+                break
+
+        if jwk is None:
+            logger.warn("could not find public key for id_token")
+            return None
+
+        public_key = RSAAlgorithm.from_jwk(json.dumps(jwk))
+
+        try:
+            claims = jwt.decode(
+                token,
+                public_key,
+                algoithm="RS256",
+                audience=self.config.MICROSOFT_AUTH_CLIENT_ID,
+            )
+        except jwt.PyJWTError as e:
+            logger.warn("could verify id_token sig: {}".format(e))
+            return None
+
+        return claims
 
     def authorization_url(self):
         """ Generates Microsoft/Xbox or a Office 365 Authorization URL """
 
-        auth_url = self._authorization_url
+        auth_url = self.openid_config["authorization_endpoint"]
         if self.config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_XBL:
             auth_url = self._xbox_authorization_url
 
@@ -88,7 +133,7 @@ class MicrosoftClient(OAuth2Session):
         """ Fetchs OAuth2 Token with given kwargs"""
 
         return super().fetch_token(  # pragma: no cover
-            self._token_url,
+            self.openid_config["token_endpoint"],
             client_secret=self.config.MICROSOFT_AUTH_CLIENT_SECRET,
             **kwargs
         )

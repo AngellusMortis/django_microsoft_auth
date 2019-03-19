@@ -1,3 +1,4 @@
+from django.db.utils import IntegrityError
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
 
@@ -14,7 +15,6 @@ class MicrosoftAuthenticationBackend(ModelBackend):
 
     config = None
     microsoft = None
-    profile_url = "https://graph.microsoft.com/v1.0/me"
 
     def __init__(self, user=None):
         from .conf import config
@@ -62,11 +62,11 @@ class MicrosoftAuthenticationBackend(ModelBackend):
         return None
 
     def _authenticate_microsoft_user(self):
-        response = self.microsoft.get(self.profile_url)
-        if response.status_code == 200:
-            response = response.json()
-            if "error" not in response:
-                return self._get_user_from_microsoft(response)
+        claims = self.microsoft.get_claims()
+
+        if claims is not None:
+            return self._get_user_from_microsoft(claims)
+
         return None
 
     def _get_user_from_xbox(self, data):
@@ -134,32 +134,41 @@ class MicrosoftAuthenticationBackend(ModelBackend):
 
         try:
             microsoft_user = MicrosoftAccount.objects.get(
-                microsoft_id=data["id"]
+                microsoft_id=data["sub"]
             )
         except MicrosoftAccount.DoesNotExist:
             if self.config.MICROSOFT_AUTH_AUTO_CREATE:
                 # create new Microsoft Account
-                microsoft_user = MicrosoftAccount(microsoft_id=data["id"])
+                microsoft_user = MicrosoftAccount(microsoft_id=data["sub"])
                 microsoft_user.save()
 
         return microsoft_user
 
     def _verify_microsoft_user(self, microsoft_user, data):
+        first_name, last_name = data["name"].split(" ", 1)
+
         if microsoft_user.user is None:
             try:
                 # create new Django user from provided data
-                user = User.objects.get(email=data["userPrincipalName"])
+                user = User.objects.get(email=data["email"])
+
+                if user.microsoft_account is not None:
+                    if self.config.MICROSOFT_AUTH_AUTO_MIGRATE_OPENID:
+                        user.microsoft_account.delete()
+                        user.microsoft_account = None
+                        user.save()
 
                 if user.first_name == "" and user.last_name == "":
-                    user.first_name = data.get("givenName", "")
-                    user.last_name = data.get("surname", "")
+                    first_name, last_name = data["name"].split(" ", 1)
+                    user.first_name = first_name
+                    user.last_name = last_name
                     user.save()
             except User.DoesNotExist:
                 user = User(
-                    username=data["id"],
-                    first_name=data.get("givenName", ""),
-                    last_name=data.get("surname", ""),
-                    email=data["userPrincipalName"],
+                    username=data["preferred_username"][:150],
+                    first_name=first_name,
+                    last_name=last_name,
+                    email=data["email"],
                 )
                 user.save()
 

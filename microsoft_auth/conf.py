@@ -119,6 +119,31 @@ DEFAULT_CONFIG = {
                     bool,
                 ),
             ),
+            (
+                "MICROSOFT_AUTH_EXTRA_SCOPES",
+                (
+                    "",
+                    _(
+                        "Extra OAuth scopes for authentication. Required "
+                        "scopes are always provided ('User.read' for "
+                        "Microsoft Auth and 'XboxLive.signin "
+                        "XboxLive.offline_access' for Xbox). Scopes are space "
+                        "delimited"
+                    ),
+                    str,
+                ),
+            ),
+            (
+                "MICROSOFT_AUTH_AUTO_MIGRATE_OPENID",
+                (
+                    False,
+                    _(
+                        "Automatically migrate Microsoft Account objects and "
+                        "paired users with OpenID Connect data"
+                    ),
+                    bool,
+                ),
+            ),
         ]
     ),
     "fieldsets": OrderedDict(
@@ -128,8 +153,11 @@ DEFAULT_CONFIG = {
                 (
                     "MICROSOFT_AUTH_LOGIN_ENABLED",
                     "MICROSOFT_AUTH_LOGIN_TYPE",
+                    "MICROSOFT_AUTH_TENANT_ID",
                     "MICROSOFT_AUTH_CLIENT_ID",
                     "MICROSOFT_AUTH_CLIENT_SECRET",
+                    "MICROSOFT_AUTH_REGISTER_INACTIVE_ADMIN",
+                    "MICROSOFT_AUTH_EXTRA_SCOPES",
                 ),
             )
         ]
