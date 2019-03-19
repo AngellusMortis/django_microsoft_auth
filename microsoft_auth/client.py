@@ -1,17 +1,16 @@
 import json
 import logging
 
+import jwt
 import requests
 from django.contrib.sites.models import Site
 from django.urls import reverse
 from django.utils.functional import cached_property
-from requests_oauthlib import OAuth2Session
-import jwt
 from jwt.algorithms import RSAAlgorithm
+from requests_oauthlib import OAuth2Session
 
 from .conf import LOGIN_TYPE_XBL
 from .utils import get_scheme
-
 
 logger = logging.getLogger("django")
 
@@ -28,7 +27,7 @@ class MicrosoftClient(OAuth2Session):
         https://developer.microsoft.com/en-us/graph/docs/get-started/rest
     """
 
-    _config_url = "https://login.microsoftonline.com/{tenant}/v2.0/.well-known/openid-configuration"
+    _config_url = "https://login.microsoftonline.com/{tenant}/v2.0/.well-known/openid-configuration"  # noqa
 
     _xbox_authorization_url = "https://login.live.com/oauth20_authorize.srf"
     _xbox_token_url = "https://user.auth.xboxlive.com/user/authenticate"

@@ -1,7 +1,6 @@
 from unittest.mock import Mock, patch
 
 from django.contrib.auth import authenticate, get_user_model
-from django.db.utils import IntegrityError
 from django.test import RequestFactory, TestCase, override_settings
 
 from microsoft_auth.conf import LOGIN_TYPE_XBL

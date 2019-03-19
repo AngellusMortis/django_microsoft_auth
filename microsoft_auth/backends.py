@@ -2,7 +2,6 @@ import logging
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
-from django.db.utils import IntegrityError
 
 from .client import MicrosoftClient
 from .conf import LOGIN_TYPE_XBL
