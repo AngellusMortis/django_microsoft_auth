@@ -1,6 +1,9 @@
 from django.contrib.auth import get_user_model
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
+
+from microsoft_auth.admin import _register_admins
+from microsoft_auth.conf import LOGIN_TYPE_XBL, LOGIN_TYPE_MA
 
 from microsoft_auth.models import MicrosoftAccount, XboxLiveAccount
 
@@ -21,14 +24,59 @@ class AdminTests(TestCase):
 
         self.client.force_login(self.user)
 
-    def test_admin_classes(self):
-        """ Admin Classes cannot really be tested with Selenium, so just make
-        sure they load """
+    @override_settings(
+        MICROSOFT_AUTH_LOGIN_TYPE=LOGIN_TYPE_MA,
+        MICROSOFT_AUTH_REGISTER_INACTIVE_ADMIN=False,
+    )
+    def test_admin_classes_microsoft_auth(self):
+        """ Verify only Microsoft Auth classes are injected """
+
+        _register_admins()
 
         self.client.get(reverse("admin:index"))
         self.client.get(
             reverse("admin:auth_user_change", args=(self.user.id,))
         )
+
+        self.client.get(
+            reverse(
+                "admin:microsoft_auth_microsoftaccount_change",
+                args=(self.microsoft_account.id,),
+            )
+        )
+
+    @override_settings(
+        MICROSOFT_AUTH_LOGIN_TYPE=LOGIN_TYPE_XBL,
+        MICROSOFT_AUTH_REGISTER_INACTIVE_ADMIN=False,
+    )
+    def test_admin_classes_xbox(self):
+        """ Verify only Xbox classes are injected """
+
+        _register_admins()
+
+        self.client.get(reverse("admin:index"))
+        self.client.get(
+            reverse("admin:auth_user_change", args=(self.user.id,))
+        )
+
+        self.client.get(
+            reverse(
+                "admin:microsoft_auth_xboxliveaccount_change",
+                args=(self.xbox_account.id,),
+            )
+        )
+
+    @override_settings(MICROSOFT_AUTH_REGISTER_INACTIVE_ADMIN=True)
+    def test_admin_classes_both(self):
+        """ Verify both admin classes are injected """
+
+        _register_admins()
+
+        self.client.get(reverse("admin:index"))
+        self.client.get(
+            reverse("admin:auth_user_change", args=(self.user.id,))
+        )
+
         self.client.get(
             reverse(
                 "admin:microsoft_auth_microsoftaccount_change",

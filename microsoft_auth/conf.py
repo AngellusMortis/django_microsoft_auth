@@ -107,6 +107,18 @@ DEFAULT_CONFIG = {
                     bool,
                 ),
             ),
+            (
+                "MICROSOFT_AUTH_REGISTER_INACTIVE_ADMIN",
+                (
+                    False,
+                    _(
+                        "Automatically register admin class for auth type "
+                        "that is not active (Xbox when Microsoft Auth is "
+                        "enabled and Microsoft Auth when Xbox is enabled)"
+                    ),
+                    bool,
+                ),
+            ),
         ]
     ),
     "fieldsets": OrderedDict(
