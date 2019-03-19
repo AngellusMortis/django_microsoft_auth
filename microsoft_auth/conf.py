@@ -123,7 +123,7 @@ DEFAULT_CONFIG = {
                     "",
                     _(
                         "Extra OAuth scopes for authentication. Required "
-                        "scopes are always provided ('openid email profile' "
+                        "scopes are always provided ('openid email' "
                         "for Microsoft Auth and 'XboxLive.signin "
                         "XboxLive.offline_access' for Xbox). Scopes are space "
                         "delimited"

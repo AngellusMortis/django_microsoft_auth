@@ -2,6 +2,11 @@
 History
 =======
 
+2.0.1 (2019-3-19)
+-----------------
+
+* Removes `profile` from required scopes
+
 2.0.0 (2019-3-19)
 -----------------
 
@@ -11,6 +16,12 @@ History
       for details.
 * Pulls authorization/token URLs directly from Microsoft
 * Adds id token validation
+* Admin pages for the auth type that is not enable is disabled by default now.
+  They can be re-enabled with `MICROSOFT_AUTH_REGISTER_INACTIVE_ADMIN = True`
+* Extra scopes can be provieded via the `MICROSOFT_AUTH_EXTRA_SCOPES` setting
+  (space delimited). These scopes are *added* to the default required scopes
+  (`openid email` for Microsoft Auth and
+  `XboxLive.signin XboxLive.offline_access` for Xbox Live auth)
 
 1.3.3 (2019-3-16)
 -----------------
