@@ -49,12 +49,12 @@ before_script:
   - PY_VERSION=${PY_VERSION/pypy/py}
   - PY_VERSION=${PY_VERSION/py35-6.0/py3}
   - export TOX_ENV="py$PY_VERSION-dj$DJANGO_VERSION"
-  - test "$TOX_ENV" = "py37-dj21-extras" && curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - test "$TOX_ENV" = "py37-dj21-extras" && chmod +x ./cc-test-reporter
-  - test "$TOX_ENV" = "py37-dj21-extras" && ./cc-test-reporter before-build
+  - if [[ "$TOX_ENV" = "py37-dj21-extras" ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter; fi
+  - if [[ "$TOX_ENV" = "py37-dj21-extras" ]]; then chmod +x ./cc-test-reporter; fi
+  - tif [[ "$TOX_ENV" = "py37-dj21-extras" ]]; then ./cc-test-reporter before-build; fi
 
 after_success:
-  - test "$TOX_ENV" = "py37-dj21-extras" && coveralls
+  - if [[ "$TOX_ENV" = "py37-dj21-extras" ]]; then coveralls; fi
 
 after_script:
-  - test "$TOX_ENV" = "py37-dj21-extras" && ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - if [[ "$TOX_ENV" = "py37-dj21-extras" ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
