@@ -118,8 +118,8 @@ DEFAULT_CONFIG = {
             _(
                 """Callable hook to call after authenticating a user on the
                 `microsoft_auth.backends.MicrosoftAuthenticationBackend`. The
-                only parameter will be a object of type
-                `oauthlib.oauth2.rfc6749.tokens.OAuth2Token`"""
+                parameters will be `(User: user,
+                oauthlib.oauth2.rfc6749.tokens.OAuth2Token: token)`"""
             ),
             str,
         ),

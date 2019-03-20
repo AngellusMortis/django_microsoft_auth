@@ -49,7 +49,7 @@ class MicrosoftAuthenticationBackend(ModelBackend):
                 user = self._authenticate_user()
 
         if user is not None:
-            self._call_hook()
+            self._call_hook(user)
 
         return user
 
@@ -198,11 +198,11 @@ class MicrosoftAuthenticationBackend(ModelBackend):
         except MicrosoftAccount.DoesNotExist:
             return None
 
-    def _call_hook(self):
+    def _call_hook(self, user):
         if self.config.MICROSOFT_AUTH_TOKEN_HOOK != "":
             hook_path = self.config.MICROSOFT_AUTH_TOKEN_HOOK
             module_path, function_name = hook_path.rsplit(".", 1)
             module = importlib.import_module(module_path)
             function = getattr(module, function_name)
 
-            function(self.microsoft.token)
+            function(user, self.microsoft.token)
