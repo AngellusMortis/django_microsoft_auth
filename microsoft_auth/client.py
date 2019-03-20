@@ -48,7 +48,7 @@ class MicrosoftClient(OAuth2Session):
 
         extra_scopes = self.config.MICROSOFT_AUTH_EXTRA_SCOPES
 
-        domain = Site.objects.get_current().domain
+        domain = Site.objects.get_current(request).domain
         path = reverse("microsoft_auth:auth-callback")
         scope = " ".join(self.SCOPE_MICROSOFT)
 

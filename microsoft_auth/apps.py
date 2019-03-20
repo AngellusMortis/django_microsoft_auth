@@ -1,6 +1,7 @@
 from django.apps import AppConfig, apps
 from django.core.checks import Critical, Warning, register
 from django.db.utils import OperationalError
+from django.core.exceptions import ImproperlyConfigured
 
 
 class MicrosoftAuthConfig(AppConfig):
@@ -30,42 +31,32 @@ def microsoft_auth_validator(app_configs, **kwargs):
             )
         )
 
-    if not hasattr(config, "SITE_ID") or config.SITE_ID is None:
+    try:
+        current_site = Site.objects.get_current()
+    except ImproperlyConfigured:
+        pass
+    except OperationalError:
         errors.append(
-            Critical(
-                "current site not configured",
-                hint=(
-                    "`django.contrib.sites` requires a `SITE_ID` setting "
-                    "to be set"
-                ),
-                id="microsoft_auth.E002",
+            Warning(
+                "`django.contrib.sites` migrations not ran",
+                id="microsoft_auth.W001",
             )
         )
     else:
-        try:
-            current_site = Site.objects.get_current()
-        except OperationalError:
+        if str(current_site) == "example.com":
             errors.append(
                 Warning(
-                    "`django.contrib.sites` migrations not ran",
-                    id="microsoft_auth.W001",
+                    (
+                        "current site is still `example.com`, Microsoft "
+                        "auth might not work"
+                    ),
+                    hint=(
+                        "Microsoft/Xbox auth uses OAuth, which requires "
+                        "a real redirect URI to come back to"
+                    ),
+                    id="microsoft_auth.W002",
                 )
             )
-        else:
-            if str(current_site) == "example.com":
-                errors.append(
-                    Warning(
-                        (
-                            "current site is still `example.com`, Microsoft "
-                            "auth might not work"
-                        ),
-                        hint=(
-                            "Microsoft/Xbox auth uses OAuth, which requires "
-                            "a real redirect URI to come back to"
-                        ),
-                        id="microsoft_auth.W002",
-                    )
-                )
 
     if config.MICROSOFT_AUTH_LOGIN_ENABLED:  # pragma: no branch
         if config.MICROSOFT_AUTH_CLIENT_ID == "":

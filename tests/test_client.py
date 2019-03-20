@@ -3,7 +3,8 @@ import urllib.parse
 from unittest.mock import Mock, patch
 from urllib.parse import parse_qs, urlparse
 
-from django.test import TestCase, override_settings
+from django.test import RequestFactory, TestCase, override_settings
+from django.contrib.sites.models import Site
 
 from microsoft_auth.client import MicrosoftClient
 from microsoft_auth.conf import LOGIN_TYPE_XBL
@@ -20,6 +21,9 @@ class ClientTests(TestCase):
     @classmethod
     def setUpClass(self):
         super(ClientTests, self).setUpClass()
+
+    def setUp(self):
+        self.factory = RequestFactory()
 
     def _get_auth_url(self, base_url, scopes=MicrosoftClient.SCOPE_MICROSOFT):
         args = {
@@ -230,3 +234,21 @@ class ClientTests(TestCase):
 
         auth_client = MicrosoftClient()
         self.assertTrue(auth_client.valid_scopes(scopes))
+
+    @override_settings(
+        SITE_ID=None, ALLOWED_HOSTS=["example.com", "testserver"]
+    )
+    def test_alternative_site(self):
+        self.assertEqual(Site.objects.get(pk=1).domain, "example.com")
+
+        Site.objects.create(domain="testserver", name="testserver")
+
+        request = self.factory.get("/")
+
+        self.assertEqual(
+            Site.objects.get_current(request).domain, "testserver"
+        )
+
+        client = MicrosoftClient(request=request)
+
+        self.assertIn("testserver", client.authorization_url()[0])

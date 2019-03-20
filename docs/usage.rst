@@ -10,11 +10,16 @@ Quickstart
 
     .. important::
 
-        **Make sure you update the domain of the active SITE_ID**
+        **Make sure you update the domain in your `Site` object**
 
         This needs to match the host (hostname + post) that you are using to
         access the Django site with. The easiest way to do this to go to
         `/admin/sites/site/1/change/` if you have the admin site enabled.
+
+        `SITE_ID` is only required if want to use the `MicrosoftClient` without
+        a request object (all of the code provided in this package uses a request
+        object). If you want multiple `Site` objects and generate authorize URL
+        when accessing your site from multiple domains, you *must not* set a `SITE_ID`
 
 3. Create a `Microsoft OAuth Application <https://apps.dev.microsoft.com/>`_
 

@@ -22,7 +22,7 @@ def microsoft(request):
         login_type = _("Microsoft")
 
     if config.DEBUG:  # pragma: no branch
-        expected_domain = Site.objects.get_current().domain
+        expected_domain = Site.objects.get_current(request).domain
         current_domain = request.get_host()
         if expected_domain != current_domain:  # pragma: no branch
             logger.warning(
