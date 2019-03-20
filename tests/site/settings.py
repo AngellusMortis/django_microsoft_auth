@@ -67,7 +67,8 @@ USE_L10N = True
 
 LANGUAGE_CODE = "en-us"
 
-from microsoft_auth.conf import DEFAULT_CONFIG  # noqa
+# this much be after the majority of your other settings
+from microsoft_auth.conf import DEFAULT_CONFIG  # isort:skip # noqa
 
 CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
 CONSTANCE_CONFIG = DEFAULT_CONFIG["defaults"]

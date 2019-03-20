@@ -33,7 +33,7 @@ def microsoft_auth_validator(app_configs, **kwargs):
 
     try:
         request = RequestFactory().get("/", HTTP_HOST="example.com")
-        current_site = Site.objects.get_current(request)
+        Site.objects.get_current(request)
     except Site.DoesNotExist:
         pass
     except OperationalError:

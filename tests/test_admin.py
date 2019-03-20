@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.test import modify_settings, override_settings
+from django.test import override_settings
 from django.urls import reverse
 
 from microsoft_auth.admin import _register_admins
