@@ -1,4 +1,3 @@
-from collections import OrderedDict
 from importlib import import_module
 
 from django.test.signals import setting_changed
@@ -31,135 +30,116 @@ LOGIN_TYPE_MA = "ma"
 LOGIN_TYPE_XBL = "xbl"
 
 DEFAULT_CONFIG = {
-    "defaults": OrderedDict(
-        [
-            (
-                "MICROSOFT_AUTH_LOGIN_ENABLED",
-                (
-                    True,
-                    _("Whether or not Microsoft OAuth login is enabled"),
-                    bool,
-                ),
-            ),
-            (
-                "MICROSOFT_AUTH_LOGIN_TYPE",
-                (
-                    LOGIN_TYPE_MA,
-                    _(
-                        """Type of Microsoft login to use.
+    "defaults": {
+        "MICROSOFT_AUTH_LOGIN_ENABLED": (
+            True,
+            _("Whether or not Microsoft OAuth login is enabled."),
+            bool,
+        ),
+        "MICROSOFT_AUTH_LOGIN_TYPE": (
+            LOGIN_TYPE_MA,
+            _(
+                """Type of Microsoft login to use.
                 Microsoft Accounts is normal Microsoft login.
-                Office 365 Accounts are for microsoftonline logins through
-                    Office 365 groups and Microsoft Accounts (Microsoft
-                    Accounts get redirected to separate login screen).
-                Xbox Live Accounts use Microsoft Accounts and then also
-                    authenticate against Xbox Live to retrieve Gamertag."""
-                    ),
-                    "microsoft_choices",
+                Xbox Live Accounts use the old Microsoft Account login screen
+                and then also authenticate against Xbox Live to retrieve
+                Gamertag."""
+            ),
+            "microsoft_choices",
+        ),
+        "MICROSOFT_AUTH_TENANT_ID": (
+            "common",
+            _("Microsoft Office 365 Tenant ID"),
+            str,
+        ),
+        "MICROSOFT_AUTH_CLIENT_ID": (
+            "",
+            _(
+                """Microsoft OAuth Client ID, see
+                https://apps.dev.microsoft.com/ for more."""
+            ),
+            str,
+        ),
+        "MICROSOFT_AUTH_CLIENT_SECRET": (
+            "",
+            _(
+                """Microsoft OAuth Client Secret, see
+                https://apps.dev.microsoft.com/ for more."""
+            ),
+            str,
+        ),
+        "MICROSOFT_AUTH_EXTRA_SCOPES": (
+            "",
+            _(
+                """Extra OAuth scopes for authentication. Required
+                scopes are always provided ('openid email'
+                for Microsoft Auth and 'XboxLive.signin
+                XboxLive.offline_access' for Xbox). Scopes are space
+                delimited."""
+            ),
+            str,
+        ),
+        "MICROSOFT_AUTH_AUTO_CREATE": (
+            True,
+            _(
+                """Autocreate user that attempt to login if they do not
+                already exist?"""
+            ),
+            bool,
+        ),
+        "MICROSOFT_AUTH_REGISTER_INACTIVE_ADMIN": (
+            False,
+            _(
+                """Automatically register admin class for auth type
+                that is not active (Xbox when Microsoft Auth is
+                enabled and Microsoft Auth when Xbox is enabled).
+                Requires restart of app for setting to take effect."""
+            ),
+            bool,
+        ),
+        "MICROSOFT_AUTH_XBL_SYNC_USERNAME": (
+            False,
+            _(
+                """Automatically sync the username from the Xbox Live
+                Gamertag?"""
+            ),
+            bool,
+        ),
+        "MICROSOFT_AUTH_AUTO_REPLACE_ACCOUNTS": (
+            False,
+            _(
+                """Automatically replace an existing Microsoft Account
+                paired to a user when authenticating."""
+            ),
+            bool,
+        ),
+    },
+    "fieldsets": {
+        "Microsoft Login": (
+            "MICROSOFT_AUTH_LOGIN_ENABLED",
+            "MICROSOFT_AUTH_LOGIN_TYPE",
+            "MICROSOFT_AUTH_TENANT_ID",
+            "MICROSOFT_AUTH_CLIENT_ID",
+            "MICROSOFT_AUTH_CLIENT_SECRET",
+            "MICROSOFT_AUTH_EXTRA_SCOPES",
+            "MICROSOFT_AUTH_AUTO_CREATE",
+            "MICROSOFT_AUTH_REGISTER_INACTIVE_ADMIN",
+            "MICROSOFT_AUTH_XBL_SYNC_USERNAME",
+            "MICROSOFT_AUTH_AUTO_REPLACE_ACCOUNTS",
+        )
+    },
+    "fields": {
+        "microsoft_choices": [
+            "django.forms.fields.ChoiceField",
+            {
+                "widget": "django.forms.Select",
+                "choices": (
+                    (LOGIN_TYPE_MA, "Microsoft Auth"),
+                    (LOGIN_TYPE_XBL, "Xbox Live"),
                 ),
-            ),
-            (
-                "MICROSOFT_AUTH_TENANT_ID",
-                ("common", _("Microsoft Office 365 Tenant ID"), str),
-            ),
-            (
-                "MICROSOFT_AUTH_CLIENT_ID",
-                (
-                    "",
-                    _(
-                        "Microsoft OAuth Client ID, see"
-                        "https://apps.dev.microsoft.com/ for more"
-                    ),
-                    str,
-                ),
-            ),
-            (
-                "MICROSOFT_AUTH_CLIENT_SECRET",
-                (
-                    "",
-                    _(
-                        "Microsoft OAuth Client Secret, see"
-                        "https://apps.dev.microsoft.com/ for more"
-                    ),
-                    str,
-                ),
-            ),
-            (
-                "MICROSOFT_AUTH_AUTO_CREATE",
-                (
-                    True,
-                    _(
-                        "Autocreate user that attempt to login if they do not "
-                        "already exist?"
-                    ),
-                    bool,
-                ),
-            ),
-            (
-                "MICROSOFT_AUTH_XBL_SYNC_USERNAME",
-                (
-                    False,
-                    _(
-                        "Automatically sync the username from the Xbox Live "
-                        "Gamertag?"
-                    ),
-                    bool,
-                ),
-            ),
-            (
-                "MICROSOFT_AUTH_REGISTER_INACTIVE_ADMIN",
-                (
-                    False,
-                    _(
-                        "Automatically register admin class for auth type "
-                        "that is not active (Xbox when Microsoft Auth is "
-                        "enabled and Microsoft Auth when Xbox is enabled)"
-                    ),
-                    bool,
-                ),
-            ),
-            (
-                "MICROSOFT_AUTH_EXTRA_SCOPES",
-                (
-                    "",
-                    _(
-                        "Extra OAuth scopes for authentication. Required "
-                        "scopes are always provided ('openid email' "
-                        "for Microsoft Auth and 'XboxLive.signin "
-                        "XboxLive.offline_access' for Xbox). Scopes are space "
-                        "delimited"
-                    ),
-                    str,
-                ),
-            ),
-            (
-                "MICROSOFT_AUTH_AUTO_REPLACE_ACCOUNTS",
-                (
-                    False,
-                    _(
-                        "Automatically replace an existing Microsoft Account "
-                        "paired to a user when authenticating"
-                    ),
-                    bool,
-                ),
-            ),
+            },
         ]
-    ),
-    "fieldsets": OrderedDict(
-        [
-            (
-                "Microsoft Login",
-                (
-                    "MICROSOFT_AUTH_LOGIN_ENABLED",
-                    "MICROSOFT_AUTH_LOGIN_TYPE",
-                    "MICROSOFT_AUTH_TENANT_ID",
-                    "MICROSOFT_AUTH_CLIENT_ID",
-                    "MICROSOFT_AUTH_CLIENT_SECRET",
-                    "MICROSOFT_AUTH_REGISTER_INACTIVE_ADMIN",
-                    "MICROSOFT_AUTH_EXTRA_SCOPES",
-                ),
-            )
-        ]
-    ),
+    },
 }
 
 

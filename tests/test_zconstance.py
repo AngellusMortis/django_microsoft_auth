@@ -12,9 +12,26 @@ from django.test import modify_settings
 
 from microsoft_auth.conf import DEFAULT_CONFIG
 
+from . import TestCase
 from .test_conf import ConfTests
 
 pytest.importorskip("constance")
+
+
+@modify_settings(
+    INSTALLED_APPS={"prepend": ["constance", "constance.backends.database"]}
+)
+class ConstanceTests(TestCase):
+    def test_constance_admin(self):
+        self.client.get("/admin/constance/config/")
+
+    def test_config_constance_not_found(self):
+        from microsoft_auth.conf import config, init_config
+
+        init_config()
+
+        with self.assertRaises(AttributeError):
+            config.NOT_A_REAL_SETTING
 
 
 @modify_settings(

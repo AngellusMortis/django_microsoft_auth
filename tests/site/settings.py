@@ -67,7 +67,12 @@ USE_L10N = True
 
 LANGUAGE_CODE = "en-us"
 
+from microsoft_auth.conf import DEFAULT_CONFIG  # noqa
+
 CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
+CONSTANCE_CONFIG = DEFAULT_CONFIG["defaults"]
+CONSTANCE_CONFIG_FIELDSETS = DEFAULT_CONFIG["fieldsets"]
+CONSTANCE_ADDITIONAL_FIELDS = DEFAULT_CONFIG["fields"]
 
 #####
 # Do not commit these uncommented, they are for development purposes only
@@ -82,5 +87,7 @@ CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
 #     "microsoft_auth.backends.MicrosoftAuthenticationBackend",
 #     "django.contrib.auth.backends.ModelBackend",
 # ]
+
+# INSTALLED_APPS += ["constance", "constance.backends.database"]
 
 # from .local import *

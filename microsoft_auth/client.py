@@ -48,7 +48,12 @@ class MicrosoftClient(OAuth2Session):
 
         extra_scopes = self.config.MICROSOFT_AUTH_EXTRA_SCOPES
 
-        domain = Site.objects.get_current(request).domain
+        try:
+            current_site = Site.objects.get_current(request)
+        except Site.DoesNotExist:
+            current_site = Site.objects.first()
+
+        domain = current_site.domain
         path = reverse("microsoft_auth:auth-callback")
         scope = " ".join(self.SCOPE_MICROSOFT)
 
@@ -151,8 +156,9 @@ class MicrosoftClient(OAuth2Session):
                 'Token': 'token',
                 'IssueInstant': '2016-09-27T15:01:45.225637Z',
                 'DisplayClaims': {'xui': [{'uhs': '###################'}]},
-                'NotAfter': '2016-10-11T15:01:45.225637Z'}
-            """
+                'NotAfter': '2016-10-11T15:01:45.225637Z'
+            }
+        """
 
         # Content-type MUST be json for Xbox Live
         headers = {

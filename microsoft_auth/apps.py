@@ -44,20 +44,19 @@ def microsoft_auth_validator(app_configs, **kwargs):
             )
         )
     else:
-        if str(current_site) == "example.com":
-            errors.append(
-                Warning(
-                    (
-                        "`example.com` is still a valid site, Microsoft "
-                        "auth might not work"
-                    ),
-                    hint=(
-                        "Microsoft/Xbox auth uses OAuth, which requires "
-                        "a real redirect URI to come back to"
-                    ),
-                    id="microsoft_auth.W002",
-                )
+        errors.append(
+            Warning(
+                (
+                    "`example.com` is still a valid site, Microsoft "
+                    "auth might not work"
+                ),
+                hint=(
+                    "Microsoft/Xbox auth uses OAuth, which requires "
+                    "a real redirect URI to come back to"
+                ),
+                id="microsoft_auth.W002",
             )
+        )
 
     if config.MICROSOFT_AUTH_LOGIN_ENABLED:  # pragma: no branch
         if config.MICROSOFT_AUTH_CLIENT_ID == "":

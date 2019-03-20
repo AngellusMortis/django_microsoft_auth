@@ -22,24 +22,24 @@ def microsoft(request):
         login_type = _("Microsoft")
 
     if config.DEBUG:  # pragma: no branch
-        expected_domain = Site.objects.get_current(request).domain
-        current_domain = request.get_host()
-        if expected_domain != current_domain:  # pragma: no branch
+        try:
+            current_domain = Site.objects.get_current(request).domain
+        except Site.DoesNotExist:
             logger.warning(
                 "\nWARNING:\nThe domain configured for the sites framework "
                 "does not match the domain you are accessing Django with. "
                 "Microsoft authentication may not work.\n"
             )
-
-        do_warning = get_scheme(
-            request
-        ) == "http" and not current_domain.startswith("localhost")
-        if do_warning:  # pragma: no branch
-            logger.warning(
-                "\nWARNING:\nYou are not using HTTPS. Microsoft "
-                "authentication only works over HTTPS unless the hostname for "
-                "your `redirect_uri` is `localhost`\n"
-            )
+        else:
+            do_warning = get_scheme(
+                request
+            ) == "http" and not current_domain.startswith("localhost")
+            if do_warning:  # pragma: no branch
+                logger.warning(
+                    "\nWARNING:\nYou are not using HTTPS. Microsoft "
+                    "authentication only works over HTTPS unless the hostname "
+                    "for your `redirect_uri` is `localhost`\n"
+                )
 
     # initialize Microsoft client using CSRF token as state variable
     signer = TimestampSigner()

@@ -1,5 +1,6 @@
 from unittest.mock import Mock, patch
 
+import pytest
 from django.test import RequestFactory, override_settings
 
 from microsoft_auth.conf import LOGIN_TYPE_XBL
@@ -12,6 +13,10 @@ URL = "https://example.com"
 
 @override_settings(DEBUG=True)
 class ContextProcessorsTests(TestCase):
+    @pytest.fixture(autouse=True)
+    def inject_fixtures(self, caplog):
+        self._caplog = caplog
+
     def setUp(self):
         super().setUp()
 
@@ -61,3 +66,17 @@ class ContextProcessorsTests(TestCase):
         context = microsoft(request)
 
         self.assertEqual("Xbox Live", context.get("microsoft_login_type_text"))
+
+    def test_warning(self):
+        self.site.domain = "example.com"
+        self.site.save()
+
+        request = self.factory.get("/")
+        microsoft(request)
+
+        message_found = False
+        for record in self._caplog.records:
+            if "does not match the domain" in record.message:
+                message_found = True
+
+        self.assertTrue(message_found)
