@@ -113,6 +113,16 @@ DEFAULT_CONFIG = {
             ),
             bool,
         ),
+        "MICROSOFT_AUTH_TOKEN_HOOK": (
+            "",
+            _(
+                """Callable hook to call after authenticating a user on the
+                `microsoft_auth.backends.MicrosoftAuthenticationBackend`. The
+                only parameter will be a object of type
+                `oauthlib.oauth2.rfc6749.tokens.OAuth2Token`"""
+            ),
+            str,
+        ),
     },
     "fieldsets": {
         "Microsoft Login": (
@@ -126,6 +136,7 @@ DEFAULT_CONFIG = {
             "MICROSOFT_AUTH_REGISTER_INACTIVE_ADMIN",
             "MICROSOFT_AUTH_XBL_SYNC_USERNAME",
             "MICROSOFT_AUTH_AUTO_REPLACE_ACCOUNTS",
+            "MICROSOFT_AUTH_TOKEN_HOOK",
         )
     },
     "fields": {

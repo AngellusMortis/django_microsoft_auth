@@ -1,3 +1,5 @@
+import importlib
+
 from django.apps import AppConfig, apps
 from django.core.checks import Critical, Warning, register
 from django.db.utils import OperationalError
@@ -81,6 +83,61 @@ def microsoft_auth_validator(app_configs, **kwargs):
                         "auth will be disabled"
                     ),
                     id="microsoft_auth.W004",
+                )
+            )
+
+    if config.MICROSOFT_AUTH_TOKEN_HOOK != "":
+        parts = config.MICROSOFT_AUTH_TOKEN_HOOK.rsplit(".", 1)
+
+        if len(parts) != 2:
+            errors.append(
+                Critical(
+                    (
+                        "{} is not a valid python path".format(
+                            config.MICROSOFT_AUTH_TOKEN_HOOK
+                        )
+                    ),
+                    id="microsoft_auth.E002",
+                )
+            )
+            return errors
+
+        module_path, function_name = parts[0], parts[1]
+        try:
+            module = importlib.import_module(module_path)
+        except ModuleNotFoundError:
+            errors.append(
+                Critical(
+                    ("{} is not a valid module".format(module_path)),
+                    id="microsoft_auth.E003",
+                )
+            )
+            return errors
+
+        try:
+            function = getattr(module, function_name)
+        except AttributeError:
+            errors.append(
+                Critical(
+                    (
+                        "{} does not exist".format(
+                            config.MICROSOFT_AUTH_TOKEN_HOOK
+                        )
+                    ),
+                    id="microsoft_auth.E004",
+                )
+            )
+            return errors
+
+        if not callable(function):
+            errors.append(
+                Critical(
+                    (
+                        "{} is not a callable".format(
+                            config.MICROSOFT_AUTH_TOKEN_HOOK
+                        )
+                    ),
+                    id="microsoft_auth.E005",
                 )
             )
 

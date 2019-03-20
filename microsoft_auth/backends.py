@@ -1,3 +1,4 @@
+import importlib
 import logging
 
 from django.contrib.auth import get_user_model
@@ -46,6 +47,9 @@ class MicrosoftAuthenticationBackend(ModelBackend):
                 token["scope"]
             ):
                 user = self._authenticate_user()
+
+        if user is not None:
+            self._call_hook()
 
         return user
 
@@ -193,3 +197,12 @@ class MicrosoftAuthenticationBackend(ModelBackend):
             return MicrosoftAccount.objects.get(user=user)
         except MicrosoftAccount.DoesNotExist:
             return None
+
+    def _call_hook(self):
+        if self.config.MICROSOFT_AUTH_TOKEN_HOOK != "":
+            hook_path = self.config.MICROSOFT_AUTH_TOKEN_HOOK
+            module_path, function_name = hook_path.rsplit(".", 1)
+            module = importlib.import_module(module_path)
+            function = getattr(module, function_name)
+
+            function(self.microsoft.token)
