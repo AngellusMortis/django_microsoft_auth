@@ -22,7 +22,8 @@ pytest.importorskip("constance")
 )
 class ConstanceConfTests(ConfTests):
     def setUp(self):
-        super(ConstanceConfTests, self).setUp()
+        super().setUp()
+
         call_command("migrate", "database", "zero")
         call_command("migrate", "database", "0001")
 

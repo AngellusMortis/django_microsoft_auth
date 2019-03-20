@@ -1,10 +1,12 @@
 from unittest.mock import Mock, patch
 
 from django.contrib.auth import authenticate, get_user_model
-from django.test import RequestFactory, TestCase, override_settings
+from django.test import RequestFactory, override_settings
 
 from microsoft_auth.conf import LOGIN_TYPE_XBL
 from microsoft_auth.models import MicrosoftAccount, XboxLiveAccount
+
+from . import TestCase
 
 CODE = "test_code"
 TOKEN = {"access_token": "test_token", "scope": ["test"]}
@@ -25,6 +27,8 @@ GAMERTAG = "Some Gamertag"
 )
 class MicrosoftBackendsTests(TestCase):
     def setUp(self):
+        super().setUp()
+
         User = get_user_model()
 
         self.factory = RequestFactory()
@@ -351,6 +355,8 @@ class MicrosoftBackendsTests(TestCase):
 )
 class XboxLiveBackendsTests(TestCase):
     def setUp(self):
+        super().setUp()
+
         User = get_user_model()
 
         self.factory = RequestFactory()

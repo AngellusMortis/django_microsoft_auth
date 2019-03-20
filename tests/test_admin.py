@@ -1,14 +1,18 @@
 from django.contrib.auth import get_user_model
-from django.test import TestCase, override_settings
+from django.test import override_settings
 from django.urls import reverse
 
 from microsoft_auth.admin import _register_admins
 from microsoft_auth.conf import LOGIN_TYPE_MA, LOGIN_TYPE_XBL
 from microsoft_auth.models import MicrosoftAccount, XboxLiveAccount
 
+from . import TestCase
+
 
 class AdminTests(TestCase):
     def setUp(self):
+        super().setUp()
+
         User = get_user_model()
 
         self.user = User.objects.create_superuser(

@@ -3,26 +3,31 @@ import urllib.parse
 from unittest.mock import Mock, patch
 from urllib.parse import parse_qs, urlparse
 
-from django.test import RequestFactory, TestCase, override_settings
 from django.contrib.sites.models import Site
+from django.test import RequestFactory, override_settings
 
 from microsoft_auth.client import MicrosoftClient
 from microsoft_auth.conf import LOGIN_TYPE_XBL
 
+from . import TestCase
+
 STATE = "test_state"
 CLIENT_ID = "test_client_id"
-REDIRECT_URI = "https://example.com/microsoft/auth-callback/"
+REDIRECT_URI = "https://testserver/microsoft/auth-callback/"
 ACCESS_TOKEN = "test_access_token"
 XBOX_TOKEN = "test_xbox_token"
 XBOX_PROFILE = "test_profile"
 
 
+@override_settings(SITE_ID=1)
 class ClientTests(TestCase):
     @classmethod
     def setUpClass(self):
-        super(ClientTests, self).setUpClass()
+        super().setUpClass()
 
     def setUp(self):
+        super().setUp()
+
         self.factory = RequestFactory()
 
     def _get_auth_url(self, base_url, scopes=MicrosoftClient.SCOPE_MICROSOFT):
@@ -239,16 +244,16 @@ class ClientTests(TestCase):
         SITE_ID=None, ALLOWED_HOSTS=["example.com", "testserver"]
     )
     def test_alternative_site(self):
-        self.assertEqual(Site.objects.get(pk=1).domain, "example.com")
+        self.assertEqual(Site.objects.get(pk=1).domain, "testserver")
 
-        Site.objects.create(domain="testserver", name="testserver")
+        Site.objects.create(domain="example.com", name="example.com")
 
-        request = self.factory.get("/")
+        request = self.factory.get("/", HTTP_HOST="example.com")
 
         self.assertEqual(
-            Site.objects.get_current(request).domain, "testserver"
+            Site.objects.get_current(request).domain, "example.com"
         )
 
         client = MicrosoftClient(request=request)
 
-        self.assertIn("testserver", client.authorization_url()[0])
+        self.assertIn("example.com", client.authorization_url()[0])

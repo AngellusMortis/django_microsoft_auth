@@ -1,7 +1,7 @@
 from django.apps import AppConfig, apps
 from django.core.checks import Critical, Warning, register
 from django.db.utils import OperationalError
-from django.core.exceptions import ImproperlyConfigured
+from django.test import RequestFactory
 
 
 class MicrosoftAuthConfig(AppConfig):
@@ -32,8 +32,9 @@ def microsoft_auth_validator(app_configs, **kwargs):
         )
 
     try:
-        current_site = Site.objects.get_current()
-    except ImproperlyConfigured:
+        request = RequestFactory().get("/", HTTP_HOST="example.com")
+        current_site = Site.objects.get_current(request)
+    except Site.DoesNotExist:
         pass
     except OperationalError:
         errors.append(
@@ -47,7 +48,7 @@ def microsoft_auth_validator(app_configs, **kwargs):
             errors.append(
                 Warning(
                     (
-                        "current site is still `example.com`, Microsoft "
+                        "`example.com` is still a valid site, Microsoft "
                         "auth might not work"
                     ),
                     hint=(

@@ -73,14 +73,14 @@ CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
 # Do not commit these uncommented, they are for development purposes only
 #####
 
-DEBUG = True
-TEMPLATES[0]["OPTIONS"]["context_processors"] += [
-    "microsoft_auth.context_processors.microsoft"
-]
+# DEBUG = True
+# TEMPLATES[0]["OPTIONS"]["context_processors"] += [
+#     "microsoft_auth.context_processors.microsoft"
+# ]
 
-AUTHENTICATION_BACKENDS = [
-    "microsoft_auth.backends.MicrosoftAuthenticationBackend",
-    "django.contrib.auth.backends.ModelBackend",
-]
+# AUTHENTICATION_BACKENDS = [
+#     "microsoft_auth.backends.MicrosoftAuthenticationBackend",
+#     "django.contrib.auth.backends.ModelBackend",
+# ]
 
-from .local import *
+# from .local import *

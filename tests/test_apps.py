@@ -1,10 +1,11 @@
 import io
 import sys
 
-from django.contrib.sites.models import Site
 from django.core.management import call_command
 from django.core.management.base import SystemCheckError
-from django.test import TransactionTestCase, modify_settings, override_settings
+from django.test import modify_settings, override_settings
+
+from . import TransactionTestCase
 
 
 @override_settings(
@@ -13,14 +14,11 @@ from django.test import TransactionTestCase, modify_settings, override_settings
 )
 class ChecksTests(TransactionTestCase):
     def setUp(self):
+        super().setUp()
+
         self.captured = io.StringIO()
         sys.stdout = self.captured
         sys.stderr = self.captured
-
-        # set proper domain
-        self.site = Site.objects.get(pk=1)
-        self.site.domain = "testserver"
-        self.site.save()
 
     def tearDown(self):
         sys.stdout = sys.__stdout__
@@ -35,13 +33,6 @@ class ChecksTests(TransactionTestCase):
             call_command("check")
 
         self.assertIn("microsoft_auth.E001", str(exc.exception))
-
-    @override_settings(SITE_ID=None)
-    def test_sites_id_fails(self):
-        with self.assertRaises(SystemCheckError) as exc:
-            call_command("check")
-
-        self.assertIn("microsoft_auth.E002", str(exc.exception))
 
     def test_sites_migrations_fails(self):
         call_command("migrate", "sites", "zero")

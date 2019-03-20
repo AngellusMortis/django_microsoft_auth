@@ -2,9 +2,11 @@
 
 """
 
-from django.test import TransactionTestCase, override_settings
+from django.test import override_settings
 
 from microsoft_auth.conf import DEFAULT_CONFIG, SimpleConfig
+
+from . import TransactionTestCase
 
 
 class SimpleTestConfig(SimpleConfig):

@@ -1,9 +1,11 @@
 from unittest.mock import Mock, patch
 
-from django.test import RequestFactory, TestCase, override_settings
+from django.test import RequestFactory, override_settings
 
 from microsoft_auth.conf import LOGIN_TYPE_XBL
 from microsoft_auth.context_processors import microsoft
+
+from . import TestCase
 
 URL = "https://example.com"
 
@@ -11,6 +13,8 @@ URL = "https://example.com"
 @override_settings(DEBUG=True)
 class ContextProcessorsTests(TestCase):
     def setUp(self):
+        super().setUp()
+
         self.factory = RequestFactory()
 
     @patch("microsoft_auth.context_processors.MicrosoftClient")
