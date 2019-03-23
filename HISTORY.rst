@@ -2,6 +2,14 @@
 History
 =======
 
+2.1.0 (2019-3-23)
+-----------------
+
+* Adds support for multiple SITE_IDs. If the setting is not provided, it will
+  pull it from the request object
+* Adds new setting for callback hook after
+  `microsoft_auth.backends.MicrosoftAuthenticationBackend` authenticates user.
+
 2.0.1 (2019-3-19)
 -----------------
 
