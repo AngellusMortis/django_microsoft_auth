@@ -8,6 +8,10 @@ from django.test import modify_settings, override_settings
 from . import TransactionTestCase
 
 
+def hook_callback(user, token):
+    pass
+
+
 @override_settings(
     MICROSOFT_AUTH_CLIENT_ID="test-client-id",
     MICROSOFT_AUTH_CLIENT_SECRET="test-client-secret",
@@ -88,3 +92,11 @@ class ChecksTests(TransactionTestCase):
             call_command("check")
 
         self.assertIn("microsoft_auth.E005", str(exc.exception))
+
+    @override_settings(
+        MICROSOFT_AUTH_AUTHENTICATE_HOOK="tests.test_apps.hook_callback"
+    )
+    def test_config_hook_valid(self):
+        call_command("check")
+
+        self.assertNotIn("microsoft_auth", self.captured.getvalue())

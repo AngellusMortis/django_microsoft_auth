@@ -205,4 +205,7 @@ class MicrosoftAuthenticationBackend(ModelBackend):
             module = importlib.import_module(module_path)
             function = getattr(module, function_name)
 
-            function(user, self.microsoft.token)
+            if self.config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_XBL:
+                function(user, self.microsoft.xbox_token)
+            else:
+                function(user, self.microsoft.token)

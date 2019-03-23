@@ -117,9 +117,16 @@ DEFAULT_CONFIG = {
             "",
             _(
                 """Callable hook to call after authenticating a user on the
-                `microsoft_auth.backends.MicrosoftAuthenticationBackend`. The
-                parameters will be `(User: user,
-                oauthlib.oauth2.rfc6749.tokens.OAuth2Token: token)`"""
+                `microsoft_auth.backends.MicrosoftAuthenticationBackend`.
+
+                If the login type is Microsoft Auth, the parameters will be
+                `(User: user, oauthlib.oauth2.rfc6749.tokens.OAuth2Token:
+                token)`
+
+                If the login type is Xbox Live, the parameters will be
+                `(User:user dict: token)` where token is the Xbox Token,
+                see `microsoft_auth.client.MicrosoftClient.fetch_xbox_token`
+                for format"""
             ),
             str,
         ),
