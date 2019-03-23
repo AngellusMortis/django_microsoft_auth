@@ -2,6 +2,11 @@
 History
 =======
 
+2.1.1 (2019-3-24)
+-----------------
+
+* Adds profile back as a default scope since Microsoft is added if it is not
+
 2.1.0 (2019-3-23)
 -----------------
 
