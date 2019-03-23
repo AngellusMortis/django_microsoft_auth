@@ -105,7 +105,7 @@ def microsoft_auth_validator(app_configs, **kwargs):
         module_path, function_name = parts[0], parts[1]
         try:
             module = importlib.import_module(module_path)
-        except ModuleNotFoundError:
+        except ImportError:
             errors.append(
                 Critical(
                     ("{} is not a valid module".format(module_path)),
