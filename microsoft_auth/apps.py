@@ -86,15 +86,15 @@ def microsoft_auth_validator(app_configs, **kwargs):
                 )
             )
 
-    if config.MICROSOFT_AUTH_TOKEN_HOOK != "":
-        parts = config.MICROSOFT_AUTH_TOKEN_HOOK.rsplit(".", 1)
+    if config.MICROSOFT_AUTH_AUTHENTICATE_HOOK != "":
+        parts = config.MICROSOFT_AUTH_AUTHENTICATE_HOOK.rsplit(".", 1)
 
         if len(parts) != 2:
             errors.append(
                 Critical(
                     (
                         "{} is not a valid python path".format(
-                            config.MICROSOFT_AUTH_TOKEN_HOOK
+                            config.MICROSOFT_AUTH_AUTHENTICATE_HOOK
                         )
                     ),
                     id="microsoft_auth.E002",
@@ -121,7 +121,7 @@ def microsoft_auth_validator(app_configs, **kwargs):
                 Critical(
                     (
                         "{} does not exist".format(
-                            config.MICROSOFT_AUTH_TOKEN_HOOK
+                            config.MICROSOFT_AUTH_AUTHENTICATE_HOOK
                         )
                     ),
                     id="microsoft_auth.E004",
@@ -134,7 +134,7 @@ def microsoft_auth_validator(app_configs, **kwargs):
                 Critical(
                     (
                         "{} is not a callable".format(
-                            config.MICROSOFT_AUTH_TOKEN_HOOK
+                            config.MICROSOFT_AUTH_AUTHENTICATE_HOOK
                         )
                     ),
                     id="microsoft_auth.E005",

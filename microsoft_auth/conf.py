@@ -113,7 +113,7 @@ DEFAULT_CONFIG = {
             ),
             bool,
         ),
-        "MICROSOFT_AUTH_TOKEN_HOOK": (
+        "MICROSOFT_AUTH_AUTHENTICATE_HOOK": (
             "",
             _(
                 """Callable hook to call after authenticating a user on the
@@ -136,7 +136,7 @@ DEFAULT_CONFIG = {
             "MICROSOFT_AUTH_REGISTER_INACTIVE_ADMIN",
             "MICROSOFT_AUTH_XBL_SYNC_USERNAME",
             "MICROSOFT_AUTH_AUTO_REPLACE_ACCOUNTS",
-            "MICROSOFT_AUTH_TOKEN_HOOK",
+            "MICROSOFT_AUTH_AUTHENTICATE_HOOK",
         )
     },
     "fields": {

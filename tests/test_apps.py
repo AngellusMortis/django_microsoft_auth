@@ -61,28 +61,28 @@ class ChecksTests(TransactionTestCase):
 
         self.assertIn("microsoft_auth.W004", self.captured.getvalue())
 
-    @override_settings(MICROSOFT_AUTH_TOKEN_HOOK="bogus")
+    @override_settings(MICROSOFT_AUTH_AUTHENTICATE_HOOK="bogus")
     def test_config_hook_invalid_path(self):
         with self.assertRaises(SystemCheckError) as exc:
             call_command("check")
 
         self.assertIn("microsoft_auth.E002", str(exc.exception))
 
-    @override_settings(MICROSOFT_AUTH_TOKEN_HOOK="bogus.function")
+    @override_settings(MICROSOFT_AUTH_AUTHENTICATE_HOOK="bogus.function")
     def test_config_hook_invalid_module(self):
         with self.assertRaises(SystemCheckError) as exc:
             call_command("check")
 
         self.assertIn("microsoft_auth.E003", str(exc.exception))
 
-    @override_settings(MICROSOFT_AUTH_TOKEN_HOOK="microsoft_auth.bogus")
+    @override_settings(MICROSOFT_AUTH_AUTHENTICATE_HOOK="microsoft_auth.bogus")
     def test_config_hook_invalid_function_path(self):
         with self.assertRaises(SystemCheckError) as exc:
             call_command("check")
 
         self.assertIn("microsoft_auth.E004", str(exc.exception))
 
-    @override_settings(MICROSOFT_AUTH_TOKEN_HOOK="microsoft_auth.conf")
+    @override_settings(MICROSOFT_AUTH_AUTHENTICATE_HOOK="microsoft_auth.conf")
     def test_config_hook_invalid_function(self):
         with self.assertRaises(SystemCheckError) as exc:
             call_command("check")

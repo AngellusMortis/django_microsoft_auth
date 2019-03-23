@@ -199,8 +199,8 @@ class MicrosoftAuthenticationBackend(ModelBackend):
             return None
 
     def _call_hook(self, user):
-        if self.config.MICROSOFT_AUTH_TOKEN_HOOK != "":
-            hook_path = self.config.MICROSOFT_AUTH_TOKEN_HOOK
+        if self.config.MICROSOFT_AUTH_AUTHENTICATE_HOOK != "":
+            hook_path = self.config.MICROSOFT_AUTH_AUTHENTICATE_HOOK
             module_path, function_name = hook_path.rsplit(".", 1)
             module = importlib.import_module(module_path)
             function = getattr(module, function_name)
