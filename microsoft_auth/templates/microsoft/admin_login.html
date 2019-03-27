@@ -3,7 +3,7 @@
 
 {% block extrastyle %}
   {{ block.super }}
-  <link rel="stylesheet" type="text/css" href="{% static 'microsoft/css/admin_login.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'microsoft/css/login.css' %}" />
   {{ form.media }}
 {% endblock %}
 
@@ -93,7 +93,7 @@
   {{ block.super }}
 
   {% if microsoft_login_enabled %}
-    <script type="text/javascript" src="{% static 'microsoft/js/admin_login.js' %}"></script>
+    <script type="text/javascript" src="{% static 'microsoft/js/login.js' %}"></script>
     <script type="text/javascript">
     document.addEventListener("DOMContentLoaded",
                               function(event) {

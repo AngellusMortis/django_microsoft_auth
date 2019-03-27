@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% load i18n static %}
+{% comment %}
+Example non-admin login form, modified from the main example Django login
+template example:
+https://docs.djangoproject.com/en/2.1/topics/auth/default/#all-authentication-views
+{% endcomment %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{% static 'microsoft/css/login.css' %}" />
+  {{ form.media }}
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+
+  {% if form.errors %}
+  <p>Your username and password didn't match. Please try again.</p>
+  {% endif %}
+
+  {% if next %}
+      {% if user.is_authenticated %}
+      <p>Your account doesn't have access to this page. To proceed,
+      please login with an account that has access.</p>
+      {% else %}
+      <p>Please login to see this page.</p>
+      {% endif %}
+  {% endif %}
+
+  {% if microsoft_login_enabled %}
+  <div class="center">
+      <button id="microsoft-login" class="btn btn-success" type="button">{{ microsoft_login_type_text }}</button>
+      <button id="password-login" class="btn btn-success" type="button">{% trans 'Password' %}</button>
+  </div>
+  {% endif %}
+
+  <div id="login-container" class="{% if microsoft_login_enabled %}hide{% endif %}">
+  <form method="post" action="{% url 'login' %}">
+      {% csrf_token %}
+      {{ form }}
+      <input type="submit" value="login">
+      <input type="hidden" name="next" value="{{ next }}">
+  </form>
+  </div>
+
+  {# Assumes you setup the password_reset view in your URLconf #}
+  <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+  {% if microsoft_login_enabled %}
+    <script type="text/javascript" src="{% static 'microsoft/js/login.js' %}"></script>
+    <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded",
+                              function(event) {
+                                window.microsoft.login = new window.microsoft.objects.LoginController({
+                                  'authorization_url': '{{ microsoft_authorization_url }}'
+                                });
+                              });
+    </script>
+  {% endif %}
+{% endblock %}
