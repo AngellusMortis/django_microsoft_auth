@@ -1,4 +1,3 @@
-import importlib
 import logging
 
 from django.contrib.auth import get_user_model
@@ -7,6 +6,7 @@ from django.contrib.auth.backends import ModelBackend
 from .client import MicrosoftClient
 from .conf import LOGIN_TYPE_XBL
 from .models import MicrosoftAccount, XboxLiveAccount
+from .utils import get_hook
 
 logger = logging.getLogger("django")
 User = get_user_model()
@@ -199,12 +199,8 @@ class MicrosoftAuthenticationBackend(ModelBackend):
             return None
 
     def _call_hook(self, user):
-        if self.config.MICROSOFT_AUTH_AUTHENTICATE_HOOK != "":
-            hook_path = self.config.MICROSOFT_AUTH_AUTHENTICATE_HOOK
-            module_path, function_name = hook_path.rsplit(".", 1)
-            module = importlib.import_module(module_path)
-            function = getattr(module, function_name)
-
+        function = get_hook("MICROSOFT_AUTH_AUTHENTICATE_HOOK")
+        if function is not None:
             if self.config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_XBL:
                 function(user, self.microsoft.xbox_token)
             else:

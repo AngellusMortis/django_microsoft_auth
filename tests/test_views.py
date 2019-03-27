@@ -1,5 +1,5 @@
 import json
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 
 from django.contrib.auth import get_user_model
 from django.core.signing import TimestampSigner
@@ -156,3 +156,27 @@ class ViewsTests(TestCase):
         self.assertEqual(200, response.status_code)
         self.assertEqual({}, message)
         mock_login.assert_called_with(response.wsgi_request, self.user)
+
+    @patch("microsoft_auth.views.authenticate")
+    @patch("microsoft_auth.views.login")
+    @patch("microsoft_auth.views.get_hook")
+    def test_callback_hook(self, mock_get_hook, mock_login, mock_auth):
+        def callback(request, context):
+            return context
+
+        mock_auth.return_value = self.user
+
+        mock_hook = Mock(side_effect=callback)
+        mock_get_hook.return_value = mock_hook
+
+        response = self.client.post(
+            reverse("microsoft_auth:auth-callback"),
+            {"state": STATE, "code": "test_code"},
+        )
+
+        expected_context = {}
+        expected_context["base_url"] = response.context["base_url"]
+        expected_context["message"] = response.context["message"]
+
+        self.assertIsInstance(expected_context, dict)
+        mock_hook.assert_called_with(response.wsgi_request, expected_context)

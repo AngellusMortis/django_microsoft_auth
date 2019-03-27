@@ -346,11 +346,10 @@ class MicrosoftBackendsTests(TestCase):
         MICROSOFT_AUTH_AUTHENTICATE_HOOK="tests.test_backends.test_microsoft.hook_callback"  # noqa
     )
     @patch("microsoft_auth.backends.MicrosoftClient")
-    @patch("microsoft_auth.backends.importlib")
-    def test_authenticate_hook(self, mock_import, mock_client):
-        mock_module = Mock()
-        mock_module.hook_callback = Mock()
-        mock_import.import_module.return_value = mock_module
+    @patch("microsoft_auth.backends.get_hook")
+    def test_authenticate_hook(self, mock_get_hook, mock_client):
+        mock_hook = Mock()
+        mock_get_hook.return_value = mock_hook
 
         mock_auth = Mock()
         mock_auth.fetch_token.return_value = TOKEN
@@ -372,4 +371,4 @@ class MicrosoftBackendsTests(TestCase):
         self.assertEqual(user.id, self.unlinked_account.user.id)
         self.assertEqual(self.unlinked_user.id, self.unlinked_account.user.id)
 
-        mock_module.hook_callback.assert_called_with(user, TOKEN)
+        mock_hook.assert_called_with(user, TOKEN)

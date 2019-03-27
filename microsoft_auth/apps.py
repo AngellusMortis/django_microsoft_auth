@@ -14,7 +14,7 @@ class MicrosoftAuthConfig(AppConfig):
 @register()
 def microsoft_auth_validator(app_configs, **kwargs):
     from django.contrib.sites.models import Site
-    from .conf import config
+    from .conf import config, HOOK_SETTINGS
 
     errors = []
 
@@ -86,59 +86,49 @@ def microsoft_auth_validator(app_configs, **kwargs):
                 )
             )
 
-    if config.MICROSOFT_AUTH_AUTHENTICATE_HOOK != "":
-        parts = config.MICROSOFT_AUTH_AUTHENTICATE_HOOK.rsplit(".", 1)
+    for hook_setting_name in HOOK_SETTINGS:
+        hook_setting = getattr(config, hook_setting_name)
+        if hook_setting != "":
+            parts = hook_setting.rsplit(".", 1)
 
-        if len(parts) != 2:
-            errors.append(
-                Critical(
-                    (
-                        "{} is not a valid python path".format(
-                            config.MICROSOFT_AUTH_AUTHENTICATE_HOOK
-                        )
-                    ),
-                    id="microsoft_auth.E002",
+            if len(parts) != 2:
+                errors.append(
+                    Critical(
+                        ("{} is not a valid python path".format(hook_setting)),
+                        id="microsoft_auth.E002",
+                    )
                 )
-            )
-            return errors
+                return errors
 
-        module_path, function_name = parts[0], parts[1]
-        try:
-            module = importlib.import_module(module_path)
-        except ImportError:
-            errors.append(
-                Critical(
-                    ("{} is not a valid module".format(module_path)),
-                    id="microsoft_auth.E003",
+            module_path, function_name = parts[0], parts[1]
+            try:
+                module = importlib.import_module(module_path)
+            except ImportError:
+                errors.append(
+                    Critical(
+                        ("{} is not a valid module".format(module_path)),
+                        id="microsoft_auth.E003",
+                    )
                 )
-            )
-            return errors
+                return errors
 
-        try:
-            function = getattr(module, function_name)
-        except AttributeError:
-            errors.append(
-                Critical(
-                    (
-                        "{} does not exist".format(
-                            config.MICROSOFT_AUTH_AUTHENTICATE_HOOK
-                        )
-                    ),
-                    id="microsoft_auth.E004",
+            try:
+                function = getattr(module, function_name)
+            except AttributeError:
+                errors.append(
+                    Critical(
+                        ("{} does not exist".format(hook_setting)),
+                        id="microsoft_auth.E004",
+                    )
                 )
-            )
-            return errors
+                return errors
 
-        if not callable(function):
-            errors.append(
-                Critical(
-                    (
-                        "{} is not a callable".format(
-                            config.MICROSOFT_AUTH_AUTHENTICATE_HOOK
-                        )
-                    ),
-                    id="microsoft_auth.E005",
+            if not callable(function):
+                errors.append(
+                    Critical(
+                        ("{} is not a callable".format(hook_setting)),
+                        id="microsoft_auth.E005",
+                    )
                 )
-            )
 
     return errors

@@ -1,7 +1,9 @@
+from unittest.mock import patch, Mock
+
 from django.test import RequestFactory, override_settings
 
 from microsoft_auth.conf import config
-from microsoft_auth.utils import get_scheme
+from microsoft_auth.utils import get_scheme, get_hook
 
 from . import TestCase
 
@@ -32,3 +34,22 @@ class UtilsTests(TestCase):
         self.request.META["HTTP_X_FORWARDED_PROTO"] = "https"
 
         self.assertEqual(get_scheme(self.request), "https")
+
+    def test_get_hook_invalid(self):
+        self.assertIsNone(get_hook("NOT_A_REAL_HOOK"))
+
+    def test_get_hook_valid_default(self):
+        self.assertIsNone(get_hook("MICROSOFT_AUTH_AUTHENTICATE_HOOK"))
+
+    @override_settings(
+        MICROSOFT_AUTH_AUTHENTICATE_HOOK="tests.test_utils.hook_callback"
+    )
+    @patch("microsoft_auth.utils.importlib")
+    def test_get_hook_valid_not_empty(self, mock_import):
+        mock_module = Mock()
+        mock_module.hook_callback = Mock()
+        mock_import.import_module.return_value = mock_module
+
+        function = get_hook("MICROSOFT_AUTH_AUTHENTICATE_HOOK")
+
+        self.assertEqual(function, mock_module.hook_callback)

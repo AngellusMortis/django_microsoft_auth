@@ -1,4 +1,6 @@
-from .conf import config as global_config
+import importlib
+
+from .conf import config as global_config, HOOK_SETTINGS
 
 
 def get_scheme(request, config=None):
@@ -12,3 +14,15 @@ def get_scheme(request, config=None):
         else:
             scheme = request.scheme
     return scheme
+
+
+def get_hook(name):
+    if name in HOOK_SETTINGS:
+        hook_setting = getattr(global_config, name)
+        if hook_setting != "":
+            module_path, function_name = hook_setting.rsplit(".", 1)
+            module = importlib.import_module(module_path)
+            function = getattr(module, function_name)
+
+            return function
+    return None

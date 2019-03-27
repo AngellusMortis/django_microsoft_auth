@@ -28,6 +28,10 @@ settings = None
 
 LOGIN_TYPE_MA = "ma"
 LOGIN_TYPE_XBL = "xbl"
+HOOK_SETTINGS = [
+    "MICROSOFT_AUTH_AUTHENTICATE_HOOK",
+    "MICROSOFT_AUTH_CALLBACK_HOOK",
+]
 
 DEFAULT_CONFIG = {
     "defaults": {
@@ -124,9 +128,33 @@ DEFAULT_CONFIG = {
                 token)`
 
                 If the login type is Xbox Live, the parameters will be
-                `(User:user dict: token)` where token is the Xbox Token,
+                `(User:user, dict: token)` where token is the Xbox Token,
                 see `microsoft_auth.client.MicrosoftClient.fetch_xbox_token`
                 for format"""
+            ),
+            str,
+        ),
+        "MICROSOFT_AUTH_CALLBACK_HOOK": (
+            "",
+            _(
+                """Callable hook to call right before completing the `auth_callback` view.
+
+                Really useful for adding custom data to message or chaning the
+                expected base URL that gets passed back up to the window that
+                initiated the original Authorize request.
+
+                The parameters that will be passed will be `(HttpRequest:
+                request, dict: context)`.
+
+                The expected return value is the updated context dictionary.
+                You should NOT remove the data that is currently there.
+
+                `base_url` is the expected root URL of the window that
+                initiated the authorize request
+
+                `message` is a dictionary that will be serialized as a JSON
+                string and passoed back to the initiating window.
+                """
             ),
             str,
         ),
@@ -144,6 +172,7 @@ DEFAULT_CONFIG = {
             "MICROSOFT_AUTH_XBL_SYNC_USERNAME",
             "MICROSOFT_AUTH_AUTO_REPLACE_ACCOUNTS",
             "MICROSOFT_AUTH_AUTHENTICATE_HOOK",
+            "MICROSOFT_AUTH_CALLBACK_HOOK",
         )
     },
     "fields": {
@@ -218,9 +247,6 @@ def init_config():
     # set constance config global
     if "constance" in settings.INSTALLED_APPS:
         from constance import config as constance_config
-        from constance.signals import config_updated
-
-        config_updated.connect(reload_settings)
     else:
         constance_config = None
 
