@@ -109,8 +109,32 @@ Quickstart
 10. Login as a `Password` user with access to change user accounts.
 11. Go to `Admin -> Users` and edit your Microsoft user to have any permissions
     you want as you normally.
-12. See `microsoft_auth/templates/microsoft/admin_login.html` for details
-    examples on making a Login form.
+
+Test Site
+---------
+
+As part of unit testing, there minimal functioning site that is pimarily used
+for running tests against and to help development. It can be used as a
+reference for how to do some things.
+
+The full refrence site exists under `tests/site`
+
+To setup,
+
+1. Make sure you have installed the project `from sources <installation.html#from-sources>`_.
+2. Get a Microsoft app with a Client ID and Client Secret following step 3
+   above.
+3. Create a `tests/site/local.py` file and add your
+   `MICROSOFT_AUTH_CLIENT_ID` and `MICROSOFT_AUTH_CLIENT_SECRET` settings
+4. Start up the site
+
+.. code-block:: console
+
+    $ python -m tests.site migrate
+    $ python -m tests.site createsuperuser
+    $ python -m tests.site runserver
+
+5. Configure your `Site <http://localhost:8000/admin/sites/site>`_.
 
 
 Migrating from 1.0 to 2.0

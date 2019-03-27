@@ -91,6 +91,9 @@ if "LOAD_DEV_SETTINGS" in os.environ:
     INSTALLED_APPS += ["constance", "constance.backends.database"]
 
     try:
+        # At a minimum you still need to provide the following settings
+        # MICROSOFT_AUTH_CLIENT_ID
+        # MICROSOFT_AUTH_CLIENT_SECRET
         from .local import *  # noqa
     except ImportError:
         pass

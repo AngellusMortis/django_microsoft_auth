@@ -2,6 +2,15 @@
 History
 =======
 
+2.2.0 (2019-3-26)
+-----------------
+
+* Adds new setting for callback hook right before `auth_callback` view renders
+  to override context data
+* Adds example non-admin login form example in test site
+* Renames `admin_login.js` and `admin_login.css` to just `login.js` and
+  `login.css`
+
 2.1.1 (2019-3-24)
 -----------------
 
