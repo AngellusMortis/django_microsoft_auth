@@ -19,7 +19,7 @@ filelock==3.0.10          # via tox
 flake8==3.7.7
 idna==2.8                 # via requests
 mccabe==0.6.1             # via flake8
-more-itertools==6.0.0     # via pytest
+more-itertools==7.0.0     # via pytest
 oauthlib==3.0.1           # via requests-oauthlib
 pluggy==0.9.0             # via pytest, tox
 py==1.8.0                 # via pytest, tox
