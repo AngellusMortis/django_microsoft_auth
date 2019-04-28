@@ -1,9 +1,9 @@
-from unittest.mock import patch, Mock
+from unittest.mock import Mock, patch
 
 from django.test import RequestFactory, override_settings
 
 from microsoft_auth.conf import config
-from microsoft_auth.utils import get_scheme, get_hook
+from microsoft_auth.utils import get_hook, get_scheme
 
 from . import TestCase
 

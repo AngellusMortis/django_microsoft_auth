@@ -13,7 +13,7 @@ from django.utils.translation import ugettext as _
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 
-from .utils import get_scheme, get_hook
+from .utils import get_hook, get_scheme
 
 logger = logging.getLogger("django")
 

@@ -1,5 +1,5 @@
 import json
-from unittest.mock import patch, Mock
+from unittest.mock import Mock, patch
 
 from django.contrib.auth import get_user_model
 from django.core.signing import TimestampSigner
