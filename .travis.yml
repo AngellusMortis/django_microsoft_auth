@@ -15,7 +15,6 @@ env:
     - CC_TEST_REPORTER_ID=9331f307ce08c235307dc7cd7724ff21c2be2252f757d2437f5d9e271270a4ef
   matrix:
     - DJANGO_VERSION=111
-    - DJANGO_VERSION=20
     - DJANGO_VERSION=21
     - DJANGO_VERSION=22
 matrix:
@@ -27,12 +26,12 @@ matrix:
     # Django 2.1+ does not support Python 3.4
     - python: "3.4"
       env: DJANGO_VERSION=21
+    - python: "3.4"
+      env: DJANGO_VERSION=22
     # Only Django 3.x will support Python 3.8, so only test latest version
     # until 3.0 comes out
     - python: "3.8-dev"
       env: DJANGO_VERSION=111
-    - python: "3.8-dev"
-      env: DJANGO_VERSION=20
     - python: "3.8-dev"
       env: DJANGO_VERSION=21
   include:
