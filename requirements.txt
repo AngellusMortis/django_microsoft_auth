@@ -6,16 +6,17 @@
 #
 asn1crypto==0.24.0        # via cryptography
 certifi==2019.3.9         # via requests
-cffi==1.12.2              # via cryptography
+cffi==1.12.3              # via cryptography
 chardet==3.0.4            # via requests
 cryptography==2.6.1
-django==2.1.7
+django==2.2
 idna==2.8                 # via requests
 oauthlib==3.0.1           # via requests-oauthlib
 pycparser==2.19           # via cffi
 pyjwt==1.7.1
-pytz==2018.9              # via django
+pytz==2019.1              # via django
 requests-oauthlib==1.2.0
 requests==2.21.0
 six==1.12.0               # via cryptography
-urllib3==1.24.1           # via requests
+sqlparse==0.3.0           # via django
+urllib3==1.24.2           # via requests

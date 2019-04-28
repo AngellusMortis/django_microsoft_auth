@@ -180,7 +180,7 @@ class MicrosoftAuthenticationBackend(ModelBackend):
                     existing_account.user = None
                     existing_account.save()
                 else:
-                    logger.warn(
+                    logger.warning(
                         "User {} already has linked Microsoft account".format(
                             user.email
                         )

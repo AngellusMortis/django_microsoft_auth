@@ -2,6 +2,11 @@
 History
 =======
 
+2.2.1 (2019-4-28)
+-----------------
+
+* Namespaces messages passed back as part of login
+
 2.2.0 (2019-3-26)
 -----------------
 

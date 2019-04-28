@@ -94,23 +94,26 @@
                 .host;
 
             if (event.origin === origin) {
-                if (event.data.error) {
-                    console.warn(event.data);
+                if (event.data.microsoft_auth) {
+                    let data = event.data.microsoft_auth;
+                    if (data.error) {
+                        console.warn(data);
 
-                    // add error message to screen
-                    var loginContainer = document.getElementById('content-main');
-                    var error = document.createElement('p');
+                        // add error message to screen
+                        var loginContainer = document.getElementById('content-main');
+                        var error = document.createElement('p');
 
-                    error.innerText = event.data.error_description;
-                    error.className = 'errornote';
+                        error.innerText = data.error_description;
+                        error.className = 'errornote';
 
-                    loginContainer.insertBefore(error,
-                        loginContainer.firstChild);
-                } else {
-                    // redirect to next URL if it was provided
-                    let new_path = this.parseGETParam('next') || '/admin';
+                        loginContainer.insertBefore(error,
+                            loginContainer.firstChild);
+                    } else {
+                        // redirect to next URL if it was provided
+                        let new_path = this.parseGETParam('next') || '/admin';
 
-                    window.location = origin + new_path;
+                        window.location = origin + new_path;
+                    }
                 }
             }
         }

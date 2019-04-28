@@ -81,7 +81,7 @@ class AuthenticateCallbackView(View):
             self.context = function(self.request, self.context)
 
         self.context["message"] = mark_safe(
-            json.dumps(self.context["message"])
+            json.dumps({"microsoft_auth": self.context["message"]})
         )
         return self.context
 

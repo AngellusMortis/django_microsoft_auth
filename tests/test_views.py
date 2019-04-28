@@ -35,7 +35,7 @@ class ViewsTests(TestCase):
 
     def test_authenticate_callback_no_params(self):
         response = self.client.post(reverse("microsoft_auth:auth-callback"))
-        message = json.loads(response.context["message"])
+        message = json.loads(response.context["message"])["microsoft_auth"]
 
         self.assertEqual(400, response.status_code)
         self.assertEqual("bad_state", message["error"])
@@ -48,7 +48,7 @@ class ViewsTests(TestCase):
         response = self.client.post(
             reverse("microsoft_auth:auth-callback"), {"state": "test"}
         )
-        message = json.loads(response.context["message"])
+        message = json.loads(response.context["message"])["microsoft_auth"]
 
         self.assertEqual(400, response.status_code)
         self.assertEqual("bad_state", message["error"])
@@ -61,7 +61,7 @@ class ViewsTests(TestCase):
         response = self.client.post(
             reverse("microsoft_auth:auth-callback"), {"state": "001464"}
         )
-        message = json.loads(response.context["message"])
+        message = json.loads(response.context["message"])["microsoft_auth"]
 
         self.assertEqual(400, response.status_code)
         self.assertEqual("bad_state", message["error"])
@@ -74,7 +74,7 @@ class ViewsTests(TestCase):
         response = self.client.post(
             reverse("microsoft_auth:auth-callback"), {"state": STATE[:-1]}
         )
-        message = json.loads(response.context["message"])
+        message = json.loads(response.context["message"])["microsoft_auth"]
 
         self.assertEqual(400, response.status_code)
         self.assertEqual("bad_state", message["error"])
@@ -87,7 +87,7 @@ class ViewsTests(TestCase):
         response = self.client.post(
             reverse("microsoft_auth:auth-callback"), {"state": EXPIRED_STATE}
         )
-        message = json.loads(response.context["message"])
+        message = json.loads(response.context["message"])["microsoft_auth"]
 
         self.assertEqual(400, response.status_code)
         self.assertEqual("bad_state", message["error"])
@@ -101,7 +101,7 @@ class ViewsTests(TestCase):
         response = self.client.post(
             reverse("microsoft_auth:auth-callback"), {"state": STATE}
         )
-        message = json.loads(response.context["message"])
+        message = json.loads(response.context["message"])["microsoft_auth"]
 
         self.assertEqual(400, response.status_code)
         self.assertEqual("missing_code", message["error"])
@@ -119,7 +119,7 @@ class ViewsTests(TestCase):
                 "error_description": TEST_ERROR_DESCRIPTION,
             },
         )
-        message = json.loads(response.context["message"])
+        message = json.loads(response.context["message"])["microsoft_auth"]
 
         self.assertEqual(400, response.status_code)
         self.assertEqual(TEST_ERROR, message["error"])
@@ -133,7 +133,7 @@ class ViewsTests(TestCase):
             reverse("microsoft_auth:auth-callback"),
             {"state": STATE, "code": "test_code"},
         )
-        message = json.loads(response.context["message"])
+        message = json.loads(response.context["message"])["microsoft_auth"]
 
         self.assertEqual(400, response.status_code)
         self.assertEqual("login_failed", message["error"])
@@ -151,7 +151,7 @@ class ViewsTests(TestCase):
             reverse("microsoft_auth:auth-callback"),
             {"state": STATE, "code": "test_code"},
         )
-        message = json.loads(response.context["message"])
+        message = json.loads(response.context["message"])["microsoft_auth"]
 
         self.assertEqual(200, response.status_code)
         self.assertEqual({}, message)

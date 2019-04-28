@@ -7,8 +7,10 @@
     <script>
       document.addEventListener("DOMContentLoaded", function(event) {
         // post message to parent window
+        console.log("posting message to {{ base_url }}");
+        console.log(window.opener);
         window.opener.postMessage({{ message }}, "{{ base_url }}");
-        window.close();
+        // window.close();
       });
     </script>
   </body>
