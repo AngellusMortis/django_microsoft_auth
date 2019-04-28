@@ -17,6 +17,7 @@ env:
     - DJANGO_VERSION=111
     - DJANGO_VERSION=20
     - DJANGO_VERSION=21
+    - DJANGO_VERSION=22
 matrix:
   fast_finish: true
   allow_failures:
