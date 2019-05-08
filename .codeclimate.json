@@ -22,20 +22,23 @@
         "**/*.d.ts"
     ],
     "plugins": {
+        "bandit": {
+            "enabled": true
+        },
         "csslint": {
             "enabled": true
         },
         "duplication": {
             "enabled": true
-       },
-       "fixme": {
+        },
+        "fixme": {
             "enabled": true
-       },
-       "pep8": {
+        },
+        "pep8": {
             "enabled": true
-       },
-       "radon": {
+        },
+        "radon": {
             "enabled": true
-       }
+        }
     }
 }

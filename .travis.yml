@@ -12,7 +12,7 @@ python:
   - "pypy3.5-6.0"
 env:
   global:
-    - CC_TEST_REPORTER_ID=9331f307ce08c235307dc7cd7724ff21c2be2252f757d2437f5d9e271270a4ef
+    - CC_TEST_REPORTER_ID=88fae959f68f3139aeeb3cd64ce11841115a336fdfc91b7cecd52958acb4d3e9
   matrix:
     - DJANGO_VERSION=111
     - DJANGO_VERSION=21
@@ -52,12 +52,12 @@ before_script:
   - PY_VERSION=${PY_VERSION/pypy/py}
   - PY_VERSION=${PY_VERSION/py35-6.0/py3}
   - export TOX_ENV="py$PY_VERSION-dj$DJANGO_VERSION"
-  - if [[ "$TOX_ENV" = "py37-dj21-extras" ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter; fi
-  - if [[ "$TOX_ENV" = "py37-dj21-extras" ]]; then chmod +x ./cc-test-reporter; fi
-  - if [[ "$TOX_ENV" = "py37-dj21-extras" ]]; then ./cc-test-reporter before-build; fi
+  - if [[ "$TOX_ENV" = "py37-dj22-extras" ]]; then curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter; fi
+  - if [[ "$TOX_ENV" = "py37-dj22-extras" ]]; then chmod +x ./cc-test-reporter; fi
+  - if [[ "$TOX_ENV" = "py37-dj22-extras" ]]; then ./cc-test-reporter before-build; fi
 
 after_success:
-  - if [[ "$TOX_ENV" = "py37-dj21-extras" ]]; then coveralls; fi
+  - if [[ "$TOX_ENV" = "py37-dj22-extras" ]]; then coveralls; fi
 
 after_script:
-  - if [[ "$TOX_ENV" = "py37-dj21-extras" ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
+  - if [[ "$TOX_ENV" = "py37-dj22-extras" ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
