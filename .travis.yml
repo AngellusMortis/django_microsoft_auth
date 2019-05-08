@@ -60,4 +60,5 @@ after_success:
   - if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TOX_ENV" = "py37-dj22-extras" ]]; then coveralls; fi
 
 after_script:
+  - if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TOX_ENV" = "py37-dj22-extras" ]]; then coverage xml; fi
   - if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TOX_ENV" = "py37-dj22-extras" ]]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT -t coverage.py; fi
