@@ -4,7 +4,6 @@ language: python
 sudo: required
 dist: xenial
 python:
-  - "3.4"
   - "3.5"
   - "3.6"
   - "3.7"
@@ -23,11 +22,6 @@ matrix:
     - python: "3.8-dev"
       env: DJANGO_VERSION=22
   exclude:
-    # Django 2.1+ does not support Python 3.4
-    - python: "3.4"
-      env: DJANGO_VERSION=21
-    - python: "3.4"
-      env: DJANGO_VERSION=22
     # Only Django 3.x will support Python 3.8, so only test latest version
     # until 3.0 comes out
     - python: "3.8-dev"
