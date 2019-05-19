@@ -5,8 +5,8 @@ Usage
 Quickstart
 ----------
 
-1. Install `Django <https://docs.djangoproject.com/en/1.11/topics/install/>`_
-2. Install and configure the `Sites framework <https://docs.djangoproject.com/en/2.1/ref/contrib/sites/#enabling-the-sites-framework>`_
+1. Install `Django <https://docs.djangoproject.com/en/stable/topics/install/>`_
+2. Install and configure the `Sites framework <https://docs.djangoproject.com/en/stable/ref/contrib/sites/#enabling-the-sites-framework>`_
 
     .. important::
 
@@ -21,24 +21,23 @@ Quickstart
         object). If you want multiple `Site` objects and generate authorize URL
         when accessing your site from multiple domains, you *must not* set a `SITE_ID`
 
-3. Create a `Microsoft OAuth Application <https://apps.dev.microsoft.com/>`_
+3. Create a `Azure AD App <https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade>`_.
+   After you register the app, make sure you click on "Certificates & Secrets"
+   and generate a new Cleint Secret.
 
     .. important::
 
-        You will need Client ID and an Application Secret for step 5. Make sure
+        You will need Client ID and an Client Secret for step 5. Make sure
         you generate these and store them somewhere.
 
-        You will also need a `Web Platform` with `Allow Implicit Flow` and a
-        valid Redirect URL. This **must** match the absolute URL of your
-        `microsoft_auth:auth-callback` view. By default this would be
-        `https://<your-domain>/microsoft/auth-callback/`.
+        When you are registering the app it will ask for a Redirect URI. This
+        **must** match the absolute URL of your `microsoft_auth:auth-callback`
+        view. By default this would be `https://<your-domain>/microsoft/auth-callback/`.
 
         This URL **must be HTTPS** unless your hostname is `localhost`.
         `localhost` can **only** be used if `DEBUG` is set to `True`.
         Microsoft only allows HTTP authentication if the hostname is
         `localhost`.
-
-        Add `User.Read` under `Delegated Permissions`
 
 4. Install package from PyPi
 
