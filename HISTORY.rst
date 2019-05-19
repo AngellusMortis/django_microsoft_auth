@@ -2,6 +2,12 @@
 History
 =======
 
+2.2.3 (2019-5-19)
+-----------------
+
+* Django settings trump Constance settings always now
+* Fixes `microsoft.conf.config` not using Constance in some cases
+
 2.2.2 (2019-5-8)
 ----------------
 

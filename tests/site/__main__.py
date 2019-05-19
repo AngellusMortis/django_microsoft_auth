@@ -16,7 +16,7 @@ def manage():
 
     if "runserver" in sys.argv:
         os.environ["DEBUG_SKIP_THREAD"] = "1"
-        os.environ["LOAD_DEV_SETTINGS"] = "1"
+    os.environ["LOAD_DEV_SETTINGS"] = "1"
     execute_from_command_line(sys.argv)
 
 

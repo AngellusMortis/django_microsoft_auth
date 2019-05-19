@@ -75,7 +75,6 @@ CONSTANCE_CONFIG = DEFAULT_CONFIG["defaults"]
 CONSTANCE_CONFIG_FIELDSETS = DEFAULT_CONFIG["fieldsets"]
 CONSTANCE_ADDITIONAL_FIELDS = DEFAULT_CONFIG["fields"]
 
-
 # only use these settings when started via runserver manually
 if "LOAD_DEV_SETTINGS" in os.environ:
     DEBUG = True

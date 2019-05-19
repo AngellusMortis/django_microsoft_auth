@@ -1,6 +1,7 @@
 from importlib import import_module
 
 from django.test.signals import setting_changed
+from django.utils.functional import SimpleLazyObject
 from django.utils.translation import ugettext_lazy as _
 
 constance_config = None
@@ -206,35 +207,28 @@ class SimpleConfig:
     def __getattr__(self, attr):
         val = None
 
+        # Django settings take priority
+        try:
+            # Check if present in user settings
+            val = getattr(settings, attr)
+        except AttributeError:
+            pass
+
         # Check Constance first if it is installed
-        if constance_config:
+        if val is None and constance_config:
             try:
                 val = getattr(constance_config, attr)
             except AttributeError:
                 pass
 
         if val is None:
+            # Fall back to defaults
             try:
-                # Check if present in user settings
-                val = getattr(settings, attr)
-            except AttributeError:
-                # Fall back to defaults
-                try:
-                    val = self._defaults[attr]
-                except KeyError:
-                    raise AttributeError
+                val = self._defaults[attr]
+            except KeyError:
+                raise AttributeError
 
         return val
-
-
-""" Override MICROSOFT_AUTH_CONFIG_CLASS to inject your own custom dynamic
-    settings class into microsoft_auth. Useful if you want to manage config
-    using a dynamic settings manager such as django-constance
-
-    Optionally the class can have an 'add_default_config' method to add the
-    above DEFAULT_CONFIG to config manager
-"""
-config = None
 
 
 def init_config():
@@ -266,7 +260,14 @@ def init_config():
     return config
 
 
-init_config()
+""" Override MICROSOFT_AUTH_CONFIG_CLASS to inject your own custom dynamic
+    settings class into microsoft_auth. Useful if you want to manage config
+    using a dynamic settings manager such as django-constance
+
+    Optionally the class can have an 'add_default_config' method to add the
+    above DEFAULT_CONFIG to config manager
+"""
+config = SimpleLazyObject(init_config)
 
 
 def reload_settings(*args, **kwargs):

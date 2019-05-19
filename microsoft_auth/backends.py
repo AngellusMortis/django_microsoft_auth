@@ -181,9 +181,11 @@ class MicrosoftAuthenticationBackend(ModelBackend):
                     existing_account.save()
                 else:
                     logger.warning(
-                        "User {} already has linked Microsoft account".format(
-                            user.email
-                        )
+                        (
+                            "User {} already has linked Microsoft "
+                            "account and MICROSOFT_AUTH_AUTO_REPLACE_ACCOUNTS "
+                            "is False"
+                        ).format(user.email)
                     )
                     return None
 
