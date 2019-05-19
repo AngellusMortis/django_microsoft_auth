@@ -15,13 +15,13 @@ coveralls==1.7.0
 cryptography==2.6.1
 docopt==0.6.2             # via coveralls
 entrypoints==0.3          # via flake8
-filelock==3.0.10          # via tox
+filelock==3.0.11          # via tox
 flake8==3.7.7
 idna==2.8                 # via requests
 mccabe==0.6.1             # via flake8
 more-itertools==7.0.0     # via pytest
 oauthlib==3.0.1           # via requests-oauthlib
-pluggy==0.9.0             # via pytest, tox
+pluggy==0.11.0             # via pytest, tox
 py==1.8.0                 # via pytest, tox
 pycodestyle==2.5.0        # via flake8
 pycparser==2.19           # via cffi
@@ -29,12 +29,12 @@ pyflakes==2.1.1           # via flake8
 pyjwt==1.7.1
 pytest-cov==2.7.1
 pytest-django==3.4.8
-pytest==4.4.1
+pytest==4.5.0
 requests-oauthlib==1.2.0
 requests==2.21.0
 six==1.12.0               # via cryptography, pytest, tox
 toml==0.10.0              # via tox
-tox==3.9.0
+tox==3.11.1
 urllib3==1.24.2           # via requests
 versioneer==0.18
 virtualenv==16.5.0        # via tox
