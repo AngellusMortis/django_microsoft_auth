@@ -2,6 +2,11 @@
 History
 =======
 
+2.3.0 (2019-6-2)
+-----------------
+
+* Adds Django cache support for OIDC config/JWKS
+
 2.2.3 (2019-5-19)
 -----------------
 

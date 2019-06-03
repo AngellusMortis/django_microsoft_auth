@@ -4,12 +4,17 @@ import logging
 import jwt
 import requests
 from django.contrib.sites.models import Site
+from django.core.cache import cache
 from django.urls import reverse
-from django.utils.functional import cached_property
 from jwt.algorithms import RSAAlgorithm
 from requests_oauthlib import OAuth2Session
 
-from .conf import LOGIN_TYPE_XBL
+from .conf import (
+    CACHE_KEY_JWKS,
+    CACHE_KEY_OPENID,
+    CACHE_TIMEOUT,
+    LOGIN_TYPE_XBL,
+)
 from .utils import get_scheme
 
 logger = logging.getLogger("django")
@@ -73,26 +78,39 @@ class MicrosoftClient(OAuth2Session):
             **kwargs
         )
 
-    @cached_property
+    @property
     def openid_config(self):
-        config_url = self._config_url.format(
-            tenant=self.config.MICROSOFT_AUTH_TENANT_ID
-        )
-        response = self.get(config_url)
+        config = cache.get(CACHE_KEY_OPENID)
 
-        if response.ok:
-            return response.json()
-        return None
+        if config is None:
+            config_url = self._config_url.format(
+                tenant=self.config.MICROSOFT_AUTH_TENANT_ID
+            )
+            response = self.get(config_url)
 
-    @cached_property
+            if response.ok:
+                config = response.json()
+                cache.set(CACHE_KEY_OPENID, config, CACHE_TIMEOUT)
+
+        return config
+
+    @property
     def jwks(self):
-        response = self.get(self.openid_config["jwks_uri"])
+        jwks = cache.get(CACHE_KEY_JWKS, [])
 
-        if response.ok:
-            return response.json()["keys"]
-        return []
+        if len(jwks) == 0:
+            jwks_uri = self.openid_config["jwks_uri"]
+            if jwks_uri is None:
+                return []
 
-    def get_claims(self):
+            response = self.get(jwks_uri)
+
+            if response.ok:
+                jwks = response.json()["keys"]
+                cache.set(CACHE_KEY_JWKS, jwks, CACHE_TIMEOUT)
+        return jwks
+
+    def get_claims(self, allow_refresh=True):
         if self.token is None:
             return None
 
@@ -106,8 +124,18 @@ class MicrosoftClient(OAuth2Session):
                 break
 
         if jwk is None:
-            logger.warn("could not find public key for id_token")
-            return None
+            if allow_refresh:
+                logger.warn(
+                    "could not find public key for id_token, "
+                    "refreshing OIDC config"
+                )
+                cache.delete(CACHE_KEY_JWKS)
+                cache.delete(CACHE_KEY_OPENID)
+
+                return self.get_claims(allow_refesh=False)
+            else:
+                logger.warn("could not find public key for id_token")
+                return None
 
         public_key = RSAAlgorithm.from_jwk(json.dumps(jwk))
 
