@@ -28,7 +28,7 @@ pycparser==2.19           # via cffi
 pyflakes==2.1.1           # via flake8
 pyjwt==1.7.1
 pytest-cov==2.7.1
-pytest-django==3.4.8
+pytest-django==3.5.0
 pytest==4.5.0
 requests-oauthlib==1.2.0
 requests==2.22.0
