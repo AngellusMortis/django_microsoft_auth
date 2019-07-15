@@ -12,7 +12,7 @@ Quickstart
 
         **Make sure you update the domain in your `Site` object**
 
-        This needs to match the host (hostname + post) that you are using to
+        This needs to match the host (hostname + port) that you are using to
         access the Django site with. The easiest way to do this to go to
         `/admin/sites/site/1/change/` if you have the admin site enabled.
 
