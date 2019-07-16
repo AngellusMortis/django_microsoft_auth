@@ -23,7 +23,7 @@ Quickstart
 
 3. Create a `Azure AD App <https://portal.azure.com/#blade/Microsoft_AAD_RegisteredApps/ApplicationsListBlade>`_.
    After you register the app, make sure you click on "Certificates & Secrets"
-   and generate a new Cleint Secret.
+   and generate a new Client Secret.
 
     .. important::
 
