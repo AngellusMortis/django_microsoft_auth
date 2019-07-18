@@ -2,7 +2,7 @@ import importlib
 
 from django.apps import AppConfig, apps
 from django.core.checks import Critical, Warning, register
-from django.db.utils import OperationalError
+from django.db.utils import ProgrammingError
 from django.test import RequestFactory
 
 
@@ -38,7 +38,7 @@ def microsoft_auth_validator(app_configs, **kwargs):
         Site.objects.get_current(request)
     except Site.DoesNotExist:
         pass
-    except OperationalError:
+    except ProgrammingError:
         errors.append(
             Warning(
                 "`django.contrib.sites` migrations not ran",
