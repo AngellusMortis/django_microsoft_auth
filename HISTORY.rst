@@ -2,6 +2,12 @@
 History
 =======
 
+2.3.1 (2019-7-20)
+-----------------
+
+* Fixes W002 being displayed if you set the SITE_ID setting
+* Fixes migration except for non-SQLite DBs
+
 2.3.0 (2019-6-2)
 -----------------
 
