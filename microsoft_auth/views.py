@@ -80,7 +80,7 @@ class AuthenticateCallbackView(View):
         if function is not None:
             self.context = function(self.request, self.context)
 
-        self.context["message"] = mark_safe(
+        self.context["message"] = mark_safe(  # nosec
             json.dumps({"microsoft_auth": self.context["message"]})
         )
         return self.context

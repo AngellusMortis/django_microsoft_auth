@@ -1,3 +1,5 @@
+""" isort:skip_file """
+
 from unittest.mock import Mock, patch
 
 import pytest

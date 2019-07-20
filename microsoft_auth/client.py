@@ -35,7 +35,9 @@ class MicrosoftClient(OAuth2Session):
     _config_url = "https://login.microsoftonline.com/{tenant}/v2.0/.well-known/openid-configuration"  # noqa
 
     _xbox_authorization_url = "https://login.live.com/oauth20_authorize.srf"
-    _xbox_token_url = "https://user.auth.xboxlive.com/user/authenticate"
+    _xbox_token_url = (
+        "https://user.auth.xboxlive.com/user/authenticate"  # nosec
+    )
     _profile_url = "https://xsts.auth.xboxlive.com/xsts/authorize"
 
     xbox_token = {}

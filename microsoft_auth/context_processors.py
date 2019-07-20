@@ -48,6 +48,6 @@ def microsoft(request):
     auth_url = microsoft.authorization_url()[0]
     return {
         "microsoft_login_enabled": config.MICROSOFT_AUTH_LOGIN_ENABLED,
-        "microsoft_authorization_url": mark_safe(auth_url),
+        "microsoft_authorization_url": mark_safe(auth_url),  # nosec
         "microsoft_login_type_text": login_type,
     }

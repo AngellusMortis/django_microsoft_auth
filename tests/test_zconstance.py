@@ -2,6 +2,8 @@
 
 Note: This file must be last in test runner as Constance does not get
 cleaned correctly afterwards
+
+isort:skip_file
 """
 
 from unittest.mock import patch
