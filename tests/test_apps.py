@@ -45,6 +45,15 @@ class ChecksTests(TransactionTestCase):
 
         self.assertIn("microsoft_auth.W001", self.captured.getvalue())
 
+    def test_sites_default_name_fails_multi_site(self):
+        self.site.domain = "example.com"
+        self.site.save()
+
+        call_command("check")
+
+        self.assertIn("microsoft_auth.W002", self.captured.getvalue())
+
+    @override_settings(SITE_ID=1)
     def test_sites_default_name_fails(self):
         self.site.domain = "example.com"
         self.site.save()
@@ -52,6 +61,12 @@ class ChecksTests(TransactionTestCase):
         call_command("check")
 
         self.assertIn("microsoft_auth.W002", self.captured.getvalue())
+
+    @override_settings(SITE_ID=1)
+    def test_sites_default_name_passes_site_id(self):
+        call_command("check")
+
+        self.assertNotIn("microsoft_auth.W002", self.captured.getvalue())
 
     @override_settings(MICROSOFT_AUTH_CLIENT_ID="")
     def test_config_client_id_fails(self):

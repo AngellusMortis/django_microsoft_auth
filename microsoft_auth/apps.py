@@ -34,8 +34,11 @@ def microsoft_auth_validator(app_configs, **kwargs):
         )
 
     try:
-        request = RequestFactory().get("/", HTTP_HOST="example.com")
-        Site.objects.get_current(request)
+        if not hasattr(config, "SITE_ID"):
+            request = RequestFactory().get("/", HTTP_HOST="example.com")
+            current_site = Site.objects.get_current(request)
+        else:
+            current_site = Site.objects.get_current()
     except Site.DoesNotExist:
         pass
     except (OperationalError, ProgrammingError):
@@ -46,19 +49,20 @@ def microsoft_auth_validator(app_configs, **kwargs):
             )
         )
     else:
-        errors.append(
-            Warning(
-                (
-                    "`example.com` is still a valid site, Microsoft "
-                    "auth might not work"
-                ),
-                hint=(
-                    "Microsoft/Xbox auth uses OAuth, which requires "
-                    "a real redirect URI to come back to"
-                ),
-                id="microsoft_auth.W002",
+        if current_site.domain == "example.com":
+            errors.append(
+                Warning(
+                    (
+                        "`example.com` is still a valid site, Microsoft "
+                        "auth might not work"
+                    ),
+                    hint=(
+                        "Microsoft/Xbox auth uses OAuth, which requires "
+                        "a real redirect URI to come back to"
+                    ),
+                    id="microsoft_auth.W002",
+                )
             )
-        )
 
     if config.MICROSOFT_AUTH_LOGIN_ENABLED:  # pragma: no branch
         if config.MICROSOFT_AUTH_CLIENT_ID == "":
