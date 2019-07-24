@@ -44,7 +44,7 @@ class MicrosoftBackendsTests(TestCase):
         )
 
         self.unlinked_user = User.objects.create(
-            username=EMAIL2, email="test@example.com"
+            username="test@example.com", email="test@example.com"
         )
 
     def test_authenticate_no_code(self):
