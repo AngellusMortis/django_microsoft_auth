@@ -1,6 +1,24 @@
--r lint.in
--r test.in
--r ql.in
+bandit
+black
+doc8
+flake8
+flake8-bugbear
+flake8-builtins
+flake8-commas
+flake8-comprehensions
+isort
+sphinx
+
+coverage
+coveralls
+flake8
+pytest
+pytest-cov
+pytest-django
+tox
+versioneer
+
+djangoql
 
 pip-tools
 sphinx
