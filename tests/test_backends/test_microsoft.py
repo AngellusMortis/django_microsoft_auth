@@ -35,7 +35,7 @@ class MicrosoftBackendsTests(TestCase):
             microsoft_id="test_id"
         )
         self.linked_account.user = User.objects.create(
-            username="user1", email=EMAIL2
+            username=EMAIL2, email=EMAIL2
         )
         self.linked_account.save()
 
@@ -44,7 +44,7 @@ class MicrosoftBackendsTests(TestCase):
         )
 
         self.unlinked_user = User.objects.create(
-            username="user2", email="test@example.com"
+            username=EMAIL2, email="test@example.com"
         )
 
     def test_authenticate_no_code(self):
