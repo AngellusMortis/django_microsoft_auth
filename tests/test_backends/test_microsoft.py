@@ -302,6 +302,26 @@ class MicrosoftBackendsTests(TestCase):
         self.assertEqual(MISSING_ID, user.microsoft_account.microsoft_id)
 
     @patch("microsoft_auth.backends.MicrosoftClient")
+    def test_authenticate_autocreate_no_email(self, mock_client):
+        mock_auth = Mock()
+        mock_auth.fetch_token.return_value = TOKEN
+        mock_auth.valid_scopes.return_value = True
+        mock_auth.get_claims.return_value = {
+            "sub": MISSING_ID,
+            "name": "{} {}".format(FIRST, LAST),
+            "preferred_username": EMAIL,
+        }
+
+        mock_client.return_value = mock_auth
+
+        user = authenticate(self.request, code=CODE)
+
+        self.assertIsNot(user, None)
+        self.assertEqual(EMAIL, user.username)
+        self.assertEqual(MISSING_ID, user.microsoft_account.microsoft_id)
+        self.assertEqual(user.email, '')
+
+    @patch("microsoft_auth.backends.MicrosoftClient")
     def test_authenticate_existing_linked_default(self, mock_client):
         mock_auth = Mock()
         mock_auth.fetch_token.return_value = TOKEN

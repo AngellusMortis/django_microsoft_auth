@@ -172,7 +172,7 @@ class MicrosoftAuthenticationBackend(ModelBackend):
                     username=data["preferred_username"][:150],
                     first_name=first_name,
                     last_name=last_name,
-                    email=data.get('email', None),
+                    email=data.get('email', ''),
                 )
                 user.save()
 
