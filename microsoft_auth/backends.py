@@ -161,11 +161,11 @@ class MicrosoftAuthenticationBackend(ModelBackend):
                 # create new Django user from provided data
                 try:
                     user = User.objects.get(
-                        email=data.get('email', None)
+                        username__iexact=data['preferred_username'][:150]
                     )
                 except User.DoesNotExist:
                     user = User.objects.get(
-                        username=data['preferred_username'][:150]
+                        email__iexact=data.get('email', None)
                     )
 
                 if user.first_name == "" and user.last_name == "":
