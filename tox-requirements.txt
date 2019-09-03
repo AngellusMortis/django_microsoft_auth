@@ -40,6 +40,6 @@ toml==0.10.0              # via tox
 tox==3.13.2
 urllib3==1.25.3           # via requests
 versioneer==0.18
-virtualenv==16.6.2        # via tox
+virtualenv==16.7.5        # via tox
 wcwidth==0.1.7            # via pytest
 zipp==0.5.2               # via importlib-metadata
