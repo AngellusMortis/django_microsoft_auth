@@ -116,7 +116,7 @@ As part of unit testing, there minimal functioning site that is pimarily used
 for running tests against and to help development. It can be used as a
 reference for how to do some things.
 
-The full refrence site exists under `tests/site`
+The full reference site exists under `tests/site`
 
 To setup,
 
