@@ -23,7 +23,7 @@ mccabe==0.6.1             # via flake8
 more-itertools==7.1.0     # via pytest
 oauthlib==3.0.2           # via requests-oauthlib
 packaging==19.0           # via pytest, tox
-pluggy==0.12.0            # via pytest, tox
+pluggy==0.13.0            # via pytest, tox
 py==1.8.0                 # via pytest, tox
 pycodestyle==2.5.0        # via flake8
 pycparser==2.19           # via cffi
