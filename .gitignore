@@ -3,6 +3,7 @@ tests/site/local.py
 test_site
 .pytest_cache
 cc-test-reporter
+.idea
 
 # Created by https://www.gitignore.io/api/python,django,visualstudiocode
 

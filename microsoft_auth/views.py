@@ -6,16 +6,23 @@ from django.contrib.auth import authenticate, login
 from django.contrib.sites.models import Site
 from django.core.signing import BadSignature, SignatureExpired, TimestampSigner
 from django.middleware.csrf import CSRF_TOKEN_LENGTH
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
+from .context_processors import microsoft
+from .conf import config
 
 from .utils import get_hook, get_scheme
 
 logger = logging.getLogger("django")
+
+
+def redirect_microsoft(request):
+    rc = microsoft(request)
+    return redirect(rc['microsoft_authorization_url'])
 
 
 class AuthenticateCallbackView(View):
@@ -148,9 +155,15 @@ class AuthenticateCallbackView(View):
         if "error" in context["message"]:
             status_code = 400
 
-        return render(
-            request,
-            "microsoft/auth_callback.html",
-            context,
-            status=status_code,
-        )
+        if config.MICROSOFT_AUTH_NOT_USE_POPUP and config.LOGIN_URL == '/microsoft/redirect':
+            base_url = re.sub(r'\/$', "", context['base_url'])
+            login_redirect_url = re.sub(r'^\/', "", config.LOGIN_REDIRECT_URL)
+            url = '{0}/{1}'.format(base_url, login_redirect_url)
+            return redirect(url)
+        else:
+            return render(
+                request,
+                "microsoft/auth_callback.html",
+                context,
+                status=status_code,
+            )

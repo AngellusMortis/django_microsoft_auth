@@ -4,6 +4,7 @@ from unittest.mock import Mock, patch
 from django.contrib.auth import get_user_model
 from django.core.signing import TimestampSigner
 from django.urls import reverse
+from django.test import modify_settings
 
 from microsoft_auth.views import AuthenticateCallbackView
 
@@ -161,6 +162,35 @@ class ViewsTests(TestCase):
     @patch("microsoft_auth.views.login")
     @patch("microsoft_auth.views.get_hook")
     def test_callback_hook(self, mock_get_hook, mock_login, mock_auth):
+        def callback(request, context):
+            return context
+
+        mock_auth.return_value = self.user
+
+        mock_hook = Mock(side_effect=callback)
+        mock_get_hook.return_value = mock_hook
+
+        response = self.client.post(
+            reverse("microsoft_auth:auth-callback"),
+            {"state": STATE, "code": "test_code"},
+        )
+
+        expected_context = {}
+        expected_context["base_url"] = response.context["base_url"]
+        expected_context["message"] = response.context["message"]
+
+        self.assertIsInstance(expected_context, dict)
+        mock_hook.assert_called_with(response.wsgi_request, expected_context)
+
+    def test_redirect_microsoft(self):
+        response = self.client.get(reverse("microsoft_auth:redirect_microsoft"))
+        self.assertTrue('login.microsoftonline.com' in response['Location'])
+        self.assertEqual(302, response.status_code)
+
+    @patch("microsoft_auth.views.authenticate")
+    @patch("microsoft_auth.views.login")
+    @patch("microsoft_auth.views.get_hook")
+    def test_callback_redirect(self, mock_get_hook, mock_login, mock_auth):
         def callback(request, context):
             return context
 

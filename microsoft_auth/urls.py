@@ -13,5 +13,6 @@ if config.MICROSOFT_AUTH_LOGIN_ENABLED:  # pragma: no branch
             r"^auth-callback/$",
             views.AuthenticateCallbackView.as_view(),
             name="auth-callback",
-        )
+        ),
+        url(r"^redirect", views.redirect_microsoft, name="redirect_microsoft")
     ]

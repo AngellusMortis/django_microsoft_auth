@@ -60,6 +60,11 @@ DEFAULT_CONFIG = {
             _("Microsoft Office 365 Tenant ID"),
             str,
         ),
+        "MICROSOFT_AUTH_NOT_USE_POPUP": (
+            False,
+            _("Whether not use pop-up is enabled the redirect for Microsoft occour in same page."),
+            bool,
+        ),
         "MICROSOFT_AUTH_CLIENT_ID": (
             "",
             _(
@@ -168,6 +173,7 @@ DEFAULT_CONFIG = {
             "MICROSOFT_AUTH_LOGIN_ENABLED",
             "MICROSOFT_AUTH_LOGIN_TYPE",
             "MICROSOFT_AUTH_TENANT_ID",
+            "MICROSOFT_AUTH_NOT_USE_POPUP",
             "MICROSOFT_AUTH_CLIENT_ID",
             "MICROSOFT_AUTH_CLIENT_SECRET",
             "MICROSOFT_AUTH_EXTRA_SCOPES",
