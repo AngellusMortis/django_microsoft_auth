@@ -18,7 +18,7 @@ entrypoints==0.3          # via flake8
 filelock==3.0.12          # via tox
 flake8==3.7.8
 idna==2.8                 # via requests
-importlib-metadata==0.18  # via pluggy, pytest, tox
+importlib-metadata==0.23  # via pluggy, pytest, tox
 mccabe==0.6.1             # via flake8
 more-itertools==7.1.0     # via pytest
 oauthlib==3.0.2           # via requests-oauthlib
