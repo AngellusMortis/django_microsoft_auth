@@ -31,7 +31,7 @@ pyflakes==2.1.1           # via flake8
 pyjwt==1.7.1
 pyparsing==2.4.0          # via packaging
 pytest-cov==2.8.1
-pytest-django==3.5.1
+pytest-django==3.6.0
 pytest==5.2.1
 requests-oauthlib==1.2.0
 requests==2.22.0
