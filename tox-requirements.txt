@@ -36,7 +36,7 @@ requests-oauthlib==1.2.0
 requests==2.22.0
 six==1.12.0               # via cryptography, packaging, tox
 toml==0.10.0              # via tox
-tox==3.14.0
+tox==3.14.2
 urllib3==1.25.6           # via requests
 versioneer==0.18
 virtualenv==16.7.7        # via tox
