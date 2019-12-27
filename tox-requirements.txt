@@ -23,7 +23,7 @@ more-itertools==7.2.0     # via pytest, zipp
 oauthlib==3.1.0           # via requests-oauthlib
 packaging==19.2           # via pytest, tox
 pluggy==0.13.0            # via pytest, tox
-py==1.8.0                 # via pytest, tox
+py==1.8.1                 # via pytest, tox
 pycodestyle==2.5.0        # via flake8
 pycparser==2.19           # via cffi
 pyflakes==2.1.1           # via flake8
