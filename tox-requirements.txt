@@ -19,7 +19,7 @@ flake8==3.7.9
 idna==2.8                 # via requests
 importlib-metadata==0.23  # via pluggy, pytest, tox
 mccabe==0.6.1             # via flake8
-more-itertools==7.2.0     # via pytest, zipp
+more-itertools==8.1.0     # via pytest, zipp
 oauthlib==3.1.0           # via requests-oauthlib
 packaging==19.2           # via pytest, tox
 pluggy==0.13.0            # via pytest, tox
