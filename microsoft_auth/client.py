@@ -119,6 +119,7 @@ class MicrosoftClient(OAuth2Session):
         token = self.token["id_token"].encode("utf8")
 
         kid = jwt.get_unverified_header(token)["kid"]
+        jwk = None
         public_key = None
         for key in self.jwks:
             if kid == key["kid"]:
