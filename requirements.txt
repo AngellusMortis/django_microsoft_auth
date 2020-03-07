@@ -18,4 +18,4 @@ requests-oauthlib==1.2.0
 requests==2.22.0
 six==1.12.0               # via cryptography
 sqlparse==0.3.0           # via django
-urllib3==1.25.6           # via requests
+urllib3==1.25.8           # via requests
