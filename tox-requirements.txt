@@ -9,7 +9,7 @@ attrs==19.3.0             # via pytest
 certifi==2019.9.11        # via requests
 cffi==1.13.0              # via cryptography
 chardet==3.0.4            # via requests
-coverage==4.5.4
+coverage==5.0.4
 coveralls==1.8.2
 cryptography==2.8
 docopt==0.6.2             # via coveralls
