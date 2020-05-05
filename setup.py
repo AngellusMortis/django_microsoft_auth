@@ -20,7 +20,7 @@ def parse_requirements(filename):
 
 with open(path.join(BASE_DIR, "README.rst")) as readme_file:
     readme = readme_file.read()
-    
+
 with open(path.join(BASE_DIR, "HISTORY.rst")) as history_file:
     history = history_file.read()
 
