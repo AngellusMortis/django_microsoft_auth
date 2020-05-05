@@ -9,13 +9,10 @@ from setuptools import find_packages, setup
 
 import versioneer
 
-# for pip >= 10
-try:
-    from pip._internal.req import parse_requirements
-# for pip <= 9.0.3
-except ImportError:
-    from pip.req import parse_requirements
-
+def parse_requirements(filename):
+    """ load requirements from a pip requirements file """
+    lines = (line.strip() for line in open(filename))
+    return [line for line in lines if line and not line.startswith("#")]
 
 BASE_DIR = path.abspath(path.dirname(__file__))
 
@@ -35,8 +32,7 @@ req_files = {
 
 requirements = {}
 for req, req_file in req_files.items():
-    reqs = parse_requirements(req_file, session="fake")
-    requirements[req] = [str(req.req) for req in reqs]
+    requirements[req] = parse_requirements(req_file)
 
 setup(
     name="django_microsoft_auth",
