@@ -4,6 +4,7 @@
 #
 #    pip-compile --output-file=requirements.txt reqs/requirements.in
 #
+pip<=20.0.2
 certifi==2019.9.11        # via requests
 cffi==1.13.0              # via cryptography
 chardet==3.0.4            # via requests
