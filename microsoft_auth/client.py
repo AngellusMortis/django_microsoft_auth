@@ -135,7 +135,7 @@ class MicrosoftClient(OAuth2Session):
                 cache.delete(CACHE_KEY_JWKS)
                 cache.delete(CACHE_KEY_OPENID)
 
-                return self.get_claims(allow_refesh=False)
+                return self.get_claims(allow_refresh=False)
             else:
                 logger.warn("could not find public key for id_token")
                 return None
