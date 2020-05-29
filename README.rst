@@ -36,8 +36,8 @@ Django Microsoft Authentication Backend
    :alt: Test Coverage
 
 
-Simple app to enable Microsoft Account, Office 365 and Xbox Live authentcation
-as a Django authentcation backend.
+Simple app to enable Microsoft Account, Office 365 and Xbox Live authentication
+as a Django authentication backend.
 
 
 * Free software: MIT license
