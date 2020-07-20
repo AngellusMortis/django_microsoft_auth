@@ -1,2 +1,5 @@
 Django>=1.11
--r requirements-no-django.in
+cryptography
+pyjwt
+requests
+requests-oauthlib

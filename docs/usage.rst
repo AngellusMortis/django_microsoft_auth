@@ -109,6 +109,11 @@ Quickstart
 11. Go to `Admin -> Users` and edit your Microsoft user to have any permissions
     you want as you normally.
 
+Running behind a reverse-proxy
+---------
+
+Make sure to pass your protocol with X-Forwarded-Proto so your callback url will be constructed properly
+
 Test Site
 ---------
 

@@ -119,6 +119,7 @@ class MicrosoftClient(OAuth2Session):
         token = self.token["id_token"].encode("utf8")
 
         kid = jwt.get_unverified_header(token)["kid"]
+        jwk = None
         public_key = None
         for key in self.jwks:
             if kid == key["kid"]:
@@ -134,7 +135,7 @@ class MicrosoftClient(OAuth2Session):
                 cache.delete(CACHE_KEY_JWKS)
                 cache.delete(CACHE_KEY_OPENID)
 
-                return self.get_claims(allow_refesh=False)
+                return self.get_claims(allow_refresh=False)
             else:
                 logger.warn("could not find public key for id_token")
                 return None
