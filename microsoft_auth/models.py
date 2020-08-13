@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 class UnicodeSpaceUsernameValidator(UnicodeUsernameValidator):
@@ -13,6 +13,7 @@ class UnicodeSpaceUsernameValidator(UnicodeUsernameValidator):
 
 # replace UnicodeUsernameValidator on User model...
 User = get_user_model()
+
 for field in User._meta.fields:
     if field.name == "username":
         for index, validator in enumerate(field.validators):
