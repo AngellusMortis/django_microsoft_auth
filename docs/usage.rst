@@ -28,7 +28,8 @@ Quickstart
     .. important::
 
         You will need Client ID and an Client Secret for step 5. Make sure
-        you generate these and store them somewhere.
+        you generate these and store them somewhere. You will additionally need
+        the Tenant ID if you configuring a single-tenant application.
 
         When you are registering the app it will ask for a Redirect URI. This
         **must** match the absolute URL of your `microsoft_auth:auth-callback`
@@ -76,6 +77,8 @@ Quickstart
     # values you got from step 2 from your Mirosoft app
     MICROSOFT_AUTH_CLIENT_ID = 'your-client-id-from-apps.dev.microsoft.com'
     MICROSOFT_AUTH_CLIENT_SECRET = 'your-client-secret-from-apps.dev.microsoft.com'
+    # Tenant ID is also needed for single tenant applications
+    # MICROSOFT_AUTH_TENANT_ID = 'your-tenant-id-from-apps.dev.microsoft.com'
 
     # pick one MICROSOFT_AUTH_LOGIN_TYPE value
     # Microsoft authentication
