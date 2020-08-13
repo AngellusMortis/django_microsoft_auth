@@ -156,9 +156,13 @@ class MicrosoftAuthenticationBackend(ModelBackend):
             first_name, last_name = "", ""
             if fullname is not None:
                 try:
-                    first_name, last_name = fullname.split(" ", 1)
+                    # LastName, FirstName format
+                    last_name, first_name = fullname.split(", ")
                 except ValueError:
-                    firstname = fullname
+                    try:
+                        first_name, last_name = fullname.split(" ", 1)
+                    except ValueError:
+                        firstname = fullname
 
             try:
                 # create new Django user from provided data
