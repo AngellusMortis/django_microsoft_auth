@@ -4,7 +4,7 @@ from django.contrib.sites.models import Site
 from django.core.signing import TimestampSigner
 from django.middleware.csrf import get_token
 from django.utils.safestring import mark_safe
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from .client import MicrosoftClient
 from .conf import LOGIN_TYPE_XBL, config

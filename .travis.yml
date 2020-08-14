@@ -7,26 +7,24 @@ python:
   - "3.5"
   - "3.6"
   - "3.7"
-  - "3.8-dev"
-  - "pypy3.5-6.0"
+  - "3.8"
+  - "pypy3"
 env:
   global:
     - CC_TEST_REPORTER_ID=88fae959f68f3139aeeb3cd64ce11841115a336fdfc91b7cecd52958acb4d3e9
   matrix:
-    - DJANGO_VERSION=111
     - DJANGO_VERSION=21
     - DJANGO_VERSION=22
+    - DJANGO_VERSION=30
+    - DJANGO_VERSION=31
 matrix:
   fast_finish: true
-  allow_failures:
-    - python: "3.8-dev"
-      env: DJANGO_VERSION=22
   exclude:
-    # Only Django 3.x will support Python 3.8, so only test latest version
-    # until 3.0 comes out
-    - python: "3.8-dev"
-      env: DJANGO_VERSION=111
-    - python: "3.8-dev"
+    - python: "3.5"
+      env: DJANGO_VERSION=30
+    - python: "3.5"
+      env: DJANGO_VERSION=31
+    - python: "3.8"
       env: DJANGO_VERSION=21
   include:
     - python: "3.7"

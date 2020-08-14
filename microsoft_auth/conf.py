@@ -2,7 +2,7 @@ from importlib import import_module
 
 from django.test.signals import setting_changed
 from django.utils.functional import SimpleLazyObject
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 constance_config = None
 settings = None
@@ -134,6 +134,7 @@ DEFAULT_CONFIG = {
                 If the login type is Xbox Live, the parameters will be
                 `(User:user, dict: token)` where token is the Xbox Token,
                 see `microsoft_auth.client.MicrosoftClient.fetch_xbox_token`
+
                 for format"""
             ),
             str,
@@ -197,11 +198,13 @@ DEFAULT_CONFIG = {
 class SimpleConfig:
     def __init__(self, config=None):
         self._defaults = {}
+
         if config:
             self.add_default_config(config)
 
     def add_default_config(self, config):
         tmp_dict = {}
+
         for key, value in config["defaults"].items():
             tmp_dict[key] = value[0]
 
@@ -218,6 +221,7 @@ class SimpleConfig:
             pass
 
         # Check Constance first if it is installed
+
         if val is None and constance_config:
             try:
                 val = getattr(constance_config, attr)
@@ -242,12 +246,14 @@ def init_config():
     settings = django_settings
 
     # set constance config global
+
     if "constance" in settings.INSTALLED_APPS:
         from constance import config as constance_config
     else:
         constance_config = None
 
     # retrieve and set config class
+
     if (
         hasattr(settings, "MICROSOFT_AUTH_CONFIG_CLASS")
         and settings.MICROSOFT_AUTH_CONFIG_CLASS is not None
@@ -255,6 +261,7 @@ def init_config():
         module, _, obj = settings.MICROSOFT_AUTH_CONFIG_CLASS.rpartition(".")
         conf = import_module(module)
         config = getattr(conf, obj)
+
         if hasattr(config, "add_default_config"):
             config.add_default_config(DEFAULT_CONFIG)
     else:
@@ -279,6 +286,7 @@ def reload_settings(*args, **kwargs):
     setting = kwargs.get("setting", kwargs.get("key"))
 
     # only reinitialize config if settings changed
+
     if setting.startswith("MICROSOFT_AUTH_"):
         init_config()
 

@@ -1,11 +1,11 @@
-from django.conf.urls import include, url
 from django.contrib import admin
+from django.urls import include, path
 
 urlpatterns = [
-    url(r"^accounts/", include("django.contrib.auth.urls")),
-    url(r"^admin/", admin.site.urls),
-    url(
-        r"^microsoft/",
+    path("accounts/", include("django.contrib.auth.urls")),
+    path("admin/", admin.site.urls),
+    path(
+        "microsoft/",
         include("microsoft_auth.urls", namespace="microsoft_auth"),
     ),
 ]
