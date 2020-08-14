@@ -62,12 +62,10 @@ support, everything should largely already work, but you may need to patch
 
 Supported python versions:  3.5+
 
-Supported Django version: 1.11 LTS, 2.1+
+Supported Django version: 2.1+
 
 https://docs.djangoproject.com/en/stable/faq/install/#what-python-version-can-i-use-with-django
 
-Note: Even though Django 1.11 LTS supports Python 3.4, I do not and you should
-not either. Official support for 3.4 was dropped in March 2019.
 
 Credits
 -------
