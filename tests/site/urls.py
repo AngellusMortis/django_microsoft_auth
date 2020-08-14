@@ -1,11 +1,16 @@
 from django.contrib import admin
-from django.urls import include, path
+
+try:
+    from django.urls import include, re_path
+except ImportError:
+    from django.conf.urls import include
+    from django.conf.urls import url as re_path
 
 urlpatterns = [
-    path("accounts/", include("django.contrib.auth.urls")),
-    path("admin/", admin.site.urls),
-    path(
-        "microsoft/",
+    re_path(r"^accounts/", include("django.contrib.auth.urls")),
+    re_path(r"^admin/", admin.site.urls),
+    re_path(
+        r"^microsoft/",
         include("microsoft_auth.urls", namespace="microsoft_auth"),
     ),
 ]
