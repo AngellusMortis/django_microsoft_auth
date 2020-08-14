@@ -8,7 +8,7 @@ python:
   - "3.6"
   - "3.7"
   - "3.8"
-  - "pypy3.5-6.0"
+  - "pypy3"
 env:
   global:
     - CC_TEST_REPORTER_ID=88fae959f68f3139aeeb3cd64ce11841115a336fdfc91b7cecd52958acb4d3e9
