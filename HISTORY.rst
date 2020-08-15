@@ -3,7 +3,7 @@ History
 =======
 
 2.4.0 (2020-8-14)
-----------------
+-----------------
 
 * Add support for Django 3.0 & 3.1
 * Dropped support for Django 1.11
