@@ -2,6 +2,17 @@
 History
 =======
 
+2.4.0 (2020-8-14)
+----------------
+
+* Add support for Django 3.0 & 3.1
+* Dropped support for Django 1.11
+* Fixes error in name parsing
+  - Fixes crash arising from missing comma in fullname
+  - Assigns fullname to firstname if it can't be split
+* Fixes installation with latest pip
+* Fixes OpenID library crash due to uninitialized jwk
+
 2.3.1 (2019-7-20)
 -----------------
 
