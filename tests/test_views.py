@@ -2,16 +2,15 @@ import json
 from unittest.mock import Mock, patch
 
 from django.contrib.auth import get_user_model
-from django.core.signing import TimestampSigner
+from django.core.signing import dumps
 from django.urls import reverse
 
 from microsoft_auth.views import AuthenticateCallbackView
 
 from . import TestCase
 
-STATE = TimestampSigner().sign(
-    "e4675ea8d28a41b8b416fe9ed1fb52b1e4675ea8d28a41b8b416fe9ed1fb52b1"
-)
+TOKEN = "e4675ea8d28a41b8b416fe9ed1fb52b1e4675ea8d28a41b8b416fe9ed1fb52b1"
+STATE = dumps(dict(token=TOKEN), salt="microsoft_auth")
 EXPIRED_STATE = (
     "e4675ea8d28a41b8b416fe9ed1fb52b1e4675ea8d28a41b8b416fe9ed1fb52b1:"
     "1h5CgL:G-QiLZ3hetUPgrdpJlvAfXkZ2RQ"
@@ -182,6 +181,22 @@ class ViewsTests(TestCase):
 
         self.assertEqual(302, response.status_code)
         self.assertEqual('/', response.url)
+        mock_login.assert_called_with(response.wsgi_request, self.user)
+
+    @patch("microsoft_auth.views.authenticate")
+    @patch("microsoft_auth.views.login")
+    def test_authenticate_callback_redirect_next_path(self, mock_login, mock_auth):
+        mock_auth.return_value = self.user
+
+        next_ = '/next/path'
+        state = dumps(dict(token=TOKEN, next=next_), salt="microsoft_auth")
+        response = self.client.post(
+            reverse("microsoft_auth:from-auth-redirect"),
+            {"state": state, "code": "test_code"},
+        )
+
+        self.assertEqual(302, response.status_code)
+        self.assertEqual(next_, response.url)
         mock_login.assert_called_with(response.wsgi_request, self.user)
 
     @patch("microsoft_auth.views.authenticate")
