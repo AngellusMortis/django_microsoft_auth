@@ -125,6 +125,19 @@ class ViewsTests(TestCase):
         self.assertEqual(TEST_ERROR, message["error"])
         self.assertEqual(TEST_ERROR_DESCRIPTION, message["error_description"])
 
+    def test_authenticate_callback_redirect_error(self):
+        response = self.client.post(
+            reverse("microsoft_auth:from-auth-redirect"),
+            {
+                "state": STATE,
+                "error": TEST_ERROR,
+                "error_description": TEST_ERROR_DESCRIPTION,
+            },
+        )
+
+        self.assertIn(TEST_ERROR, str(response.content))
+        self.assertEqual(400, response.status_code)
+
     @patch("microsoft_auth.views.authenticate")
     def test_authenticate_callback_fail_auth(self, mock_auth):
         mock_auth.return_value = None
@@ -159,6 +172,20 @@ class ViewsTests(TestCase):
 
     @patch("microsoft_auth.views.authenticate")
     @patch("microsoft_auth.views.login")
+    def test_authenticate_callback_redirect_success(self, mock_login, mock_auth):
+        mock_auth.return_value = self.user
+
+        response = self.client.post(
+            reverse("microsoft_auth:from-auth-redirect"),
+            {"state": STATE, "code": "test_code"},
+        )
+
+        self.assertEqual(302, response.status_code)
+        self.assertEqual('/', response.url)
+        mock_login.assert_called_with(response.wsgi_request, self.user)
+
+    @patch("microsoft_auth.views.authenticate")
+    @patch("microsoft_auth.views.login")
     @patch("microsoft_auth.views.get_hook")
     def test_callback_hook(self, mock_get_hook, mock_login, mock_auth):
         def callback(request, context):
@@ -180,3 +207,11 @@ class ViewsTests(TestCase):
 
         self.assertIsInstance(expected_context, dict)
         mock_hook.assert_called_with(response.wsgi_request, expected_context)
+
+    def test_to_ms_redirect(self):
+        response = self.client.get(
+            reverse("microsoft_auth:to-auth-redirect"),
+            fetch_redirect_response=False
+        )
+
+        self.assertEqual(302, response.status_code)

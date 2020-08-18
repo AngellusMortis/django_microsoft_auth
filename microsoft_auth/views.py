@@ -5,14 +5,16 @@ import re
 from django.contrib.auth import authenticate, login
 from django.contrib.sites.models import Site
 from django.core.signing import BadSignature, SignatureExpired, TimestampSigner
+from django.http import HttpResponse
 from django.middleware.csrf import CSRF_TOKEN_LENGTH
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 
+from .context_processors import microsoft
 from .utils import get_hook, get_scheme
 
 logger = logging.getLogger("django")
@@ -154,3 +156,24 @@ class AuthenticateCallbackView(View):
             context,
             status=status_code,
         )
+
+
+def to_ms_redirect(request):
+    url = microsoft(request)["microsoft_authorization_url"]
+    return redirect(url)
+
+
+class AuthenticateCallbackRedirect(AuthenticateCallbackView):
+    redirect = True
+
+    def post(self, request):
+        """ main callback for Microsoft to call
+            validates Microsoft response, attempts to authenticate user and
+            redirects to app root on success. Returns HTTP 401 on error."""
+
+        context = self.get_context_data(**request.POST.dict())
+
+        if "error" in context["message"]:
+            return HttpResponse(context["message"], status=400)
+        else:
+            return redirect("/")
