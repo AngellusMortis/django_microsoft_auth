@@ -113,9 +113,25 @@ Quickstart
     you want as you normally.
 
 Running behind a reverse-proxy
----------
+------------------------------
 
 Make sure to pass your protocol with X-Forwarded-Proto so your callback url will be constructed properly
+
+Redirect based authentication flow
+----------------------------------
+
+`django_microsoft_auth` provides views at `to-auth-redirect/` and
+`from-auth-redirect/`, which can be used for customer facing authentication
+without loading a JavaScript script to the page.
+
+Redirect based authentication flow is triggered when user navigates to
+`to-auth-redirect/`, which takes in an optional `next` query parameter,
+for example, `to-auth-redirect/?next=/next/path`.
+This parameter is passed to the Authentication provider in state variable.
+After successfull authentication, authentication provider redirects the user to
+`from-auth-redirect/`, which logs in the user, parses the state variable, and
+redirects the user to the `next` path provided earlier or to `/` if no next path
+was provided.
 
 Test Site
 ---------

@@ -1,7 +1,7 @@
 import logging
 
 from django.contrib.sites.models import Site
-from django.core.signing import TimestampSigner
+from django.core.signing import dumps
 from django.middleware.csrf import get_token
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
@@ -41,10 +41,15 @@ def microsoft(request):
                     "for your `redirect_uri` is `localhost`\n"
                 )
 
-    # initialize Microsoft client using CSRF token as state variable
-    signer = TimestampSigner()
-    state = signer.sign(get_token(request))
-    microsoft = MicrosoftClient(state=state, request=request)
+    # Initialize Microsoft client using dict with CSRF token and optional
+    # next path as state variable
+    next_ = request.GET.get("next")
+    state = dict(token=get_token(request))
+    if next_:
+        state["next"] = next_
+
+    signed_state = dumps(state, salt="microsoft_auth")
+    microsoft = MicrosoftClient(state=signed_state, request=request)
     auth_url = microsoft.authorization_url()[0]
     return {
         "microsoft_login_enabled": config.MICROSOFT_AUTH_LOGIN_ENABLED,

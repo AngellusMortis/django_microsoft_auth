@@ -3,6 +3,7 @@
 from unittest.mock import Mock, patch
 
 import pytest
+from django.core.signing import loads
 from django.test import RequestFactory, override_settings
 
 from microsoft_auth.conf import LOGIN_TYPE_XBL
@@ -82,3 +83,17 @@ class ContextProcessorsTests(TestCase):
                 message_found = True
 
         self.assertTrue(message_found)
+
+    @patch("microsoft_auth.context_processors.MicrosoftClient")
+    def test_microsoft_next_state(self, mock_client):
+        self.site.domain = "example.com"
+        self.site.save()
+
+        next_ = '/next/path'
+        request = self.factory.get("/", dict(next=next_))
+        microsoft(request)
+
+        mock_calls = mock_client.call_args_list
+        self.assertEqual(len(mock_calls), 1)
+        state = loads(mock_calls[0][1].get("state"), salt='microsoft_auth')
+        self.assertEqual(state["next"], next_)

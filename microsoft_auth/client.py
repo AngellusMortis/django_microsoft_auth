@@ -61,7 +61,12 @@ class MicrosoftClient(OAuth2Session):
             current_site = Site.objects.first()
 
         domain = current_site.domain
-        path = reverse("microsoft_auth:auth-callback")
+        callback = reverse("microsoft_auth:auth-callback")
+        redirect = reverse("microsoft_auth:from-auth-redirect")
+        if not request or 'redirect' not in request.path:
+            path = callback
+        else:
+            path = redirect
         scope = " ".join(self.SCOPE_MICROSOFT)
 
         if self.config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_XBL:

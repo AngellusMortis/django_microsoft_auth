@@ -4,15 +4,17 @@ import re
 
 from django.contrib.auth import authenticate, login
 from django.contrib.sites.models import Site
-from django.core.signing import BadSignature, SignatureExpired, TimestampSigner
+from django.core.signing import BadSignature, SignatureExpired, loads
+from django.http import HttpResponse
 from django.middleware.csrf import CSRF_TOKEN_LENGTH
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 
+from .context_processors import microsoft
 from .utils import get_hook, get_scheme
 
 logger = logging.getLogger("django")
@@ -56,8 +58,11 @@ class AuthenticateCallbackView(View):
             "message": {},
         }
 
-        # validates state using Django CSRF system
-        self._check_csrf(kwargs.get("state"))
+        # validates state using Django CSRF system and sets next path value
+        state = self._parse_state(kwargs.get("state"))
+        self._check_csrf(state)
+        if "next" in state:
+            self.context["next"] = state["next"]
 
         # validates response from Microsoft
         self._check_microsoft_response(
@@ -85,27 +90,30 @@ class AuthenticateCallbackView(View):
         )
         return self.context
 
-    def _check_csrf(self, state):
-        signer = TimestampSigner()
-
+    def _parse_state(self, state):
         if state is None:
             state = ""
 
         try:
-            state = signer.unsign(state, max_age=300)
+            state = loads(state, salt="microsoft_auth", max_age=300)
         except BadSignature:  # pragma: no branch
             logger.debug("state has been tempered with")
-            state = ""
+            state = {}
         except SignatureExpired:  # pragma: no cover
             logger.debug("state has expired")
-            state = ""
+            state = {}
+
+        return state
+
+    def _check_csrf(self, state):
+        token = state.get("token", "")
 
         checks = (
-            re.search("[a-zA-Z0-9]", state),
-            len(state) == CSRF_TOKEN_LENGTH,
+            re.search("[a-zA-Z0-9]", token),
+            len(token) == CSRF_TOKEN_LENGTH,
         )
 
-        # validate state parameter
+        # validate token parameter
         if not all(checks):
             logger.debug("State validation failed:")
             logger.debug("state: {}".format(state))
@@ -154,3 +162,24 @@ class AuthenticateCallbackView(View):
             context,
             status=status_code,
         )
+
+
+def to_ms_redirect(request):
+    url = microsoft(request)["microsoft_authorization_url"]
+    return redirect(url)
+
+
+class AuthenticateCallbackRedirect(AuthenticateCallbackView):
+    redirect = True
+
+    def post(self, request):
+        """ main callback for Microsoft to call
+            validates Microsoft response, attempts to authenticate user and
+            redirects to app root on success. Returns HTTP 401 on error."""
+
+        context = self.get_context_data(**request.POST.dict())
+
+        if "error" in context["message"]:
+            return HttpResponse(context["message"], status=400)
+        else:
+            return redirect(context.get("next", "/"))
