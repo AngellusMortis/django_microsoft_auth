@@ -27,7 +27,7 @@ Quickstart
 
     .. important::
 
-        You will need Client ID and an Client Secret for step 5. Make sure
+        You will need a Client ID and a Client Secret for step 5. Make sure
         you generate these and store them somewhere. You will additionally need
         the Tenant ID if you configuring a single-tenant application.
 
@@ -105,7 +105,7 @@ Quickstart
 
     $ python manage.py migrate
 
-8. Start site and goto `/admin` to and logout if you are logged in.
+8. Start site and go to `/admin` and logout if you are logged in.
 9. Login as `Microsoft/Office 365/Xbox Live` user. It will fail. This will
    automatically create your new user.
 10. Login as a `Password` user with access to change user accounts.
@@ -182,12 +182,12 @@ migrate this data.
 Once these account have been migrated, you can safely delete any remaining
 v1 Microsoft Accounts.
 
-Sliencing `Scope has changed` warnings
+Silencing `Scope has changed` warnings
 --------------------------------------
 
 If you stay on 1.3.x for a bit and you start getting
 `Scope has changed from "User.Read" to "User.Read email profile openid".`, you
-can slience this warning by setting an env variable for
+can silence this warning by setting an env variable for
 `OAUTHLIB_RELAX_TOKEN_SCOPE` before starting Django.
 
 Bash
