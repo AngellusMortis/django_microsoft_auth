@@ -5,10 +5,48 @@ from django.core.checks import Critical, Warning, register
 from django.db.utils import OperationalError, ProgrammingError
 from django.test import RequestFactory
 
+from cryptography import x509
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes, serialization
+
+import base64
+import logging
 
 class MicrosoftAuthConfig(AppConfig):
     name = "microsoft_auth"
     verbose_name = "Microsoft Auth"
+
+    def ready(self):
+        from .conf import config
+
+        if config.MICROSOFT_AUTH_CLIENT_CERTIFICATE != "":
+            (cert, key) = config.MICROSOFT_AUTH_CLIENT_CERTIFICATE
+            
+            try:
+                with open(cert, 'r') as file:
+                    cert_pem = file.read()
+                    cert_x509 = x509.load_pem_x509_certificate(cert_pem.encode(), default_backend())
+	               
+                    thumbprint = cert_x509.fingerprint(hashes.SHA1())
+                    thumbprint_b64 = base64.b64encode(thumbprint).decode()
+
+                    config.MICROSOFT_AUTH_CLIENT_CERTIFICATE_THUMBPRINT = thumbprint_b64
+
+            except (IOError, FileNotFoundError) as x:
+               logger.error("Cannot open or read client certificate: {}".format(cert))
+
+            try:
+                with open(key, 'r') as file:
+                    key_pem = file.read()
+                    
+                    key = serialization.load_pem_private_key(
+                        key_pem.encode(), password=None, backend=default_backend()
+                    )
+
+                    config.MICROSOFT_AUTH_CLIENT_CERTIFICATE_KEY = key
+
+            except (IOError, FileNotFoundError) as x:
+               logger.error("Cannot open or read client key: {}".format(key))
 
 
 @register()
@@ -77,18 +115,52 @@ def microsoft_auth_validator(app_configs, **kwargs):
                     id="microsoft_auth.W003",
                 )
             )
-        if config.MICROSOFT_AUTH_CLIENT_SECRET == "":
+        if config.MICROSOFT_AUTH_CLIENT_SECRET == "" and config.MICROSOFT_AUTH_CLIENT_CERTIFICATE == "":
             errors.append(
                 Warning(
-                    ("`MICROSOFT_AUTH_CLIENT_SECRET` is not configured"),
+                    ("`MICROSOFT_AUTH_CLIENT_SECRET` and `MICROSOFT_AUTH_CLIENT_CERTIFICATE` is not configured"),
                     hint=(
                         "`MICROSOFT_AUTH_LOGIN_ENABLED` is `True`, but "
-                        "`MICROSOFT_AUTH_CLIENT_SECRET` is empty. Microsoft "
-                        "auth will be disabled"
+                        "`MICROSOFT_AUTH_CLIENT_SECRET`and `MICROSOFT_AUTH_CLIENT_CERTIFICATE` is empty. "
+                        "Either `MICROSOFT_AUTH_CLIENT_SECRET` or `MICROSOFT_AUTH_CLIENT_CERTIFICATE` must be configured. "
+                        "Microsoft auth will be disabled"
                     ),
                     id="microsoft_auth.W004",
                 )
             )
+
+        if config.MICROSOFT_AUTH_CLIENT_CERTIFICATE != "":
+                (cert, key) = config.MICROSOFT_AUTH_CLIENT_CERTIFICATE
+                
+                try:
+                    with open(cert, 'r') as file:
+                        cert_pem = file.read()
+                except IOError as x:
+                    errors.append(
+                        Warning(
+                            ("Cannot read client certificate located at: {}".format(cert)),
+                            hint=(
+                                "`MICROSOFT_AUTH_CLIENT_CERTIFICATE` is set, but the client cert cannot be read."
+                                " This can either be because the the file does not exist or django does not have permission to read the file"
+                            ),
+                            id="microsoft_auth.W005",
+                        )
+                    )
+
+                try:
+                    with open(key, 'r') as file:
+                        key_pem = file.read()
+                except IOError as x:
+                        errors.append(
+                            Warning(
+                                ("Cannot read client key located at: {}".format(key)),
+                                hint=(
+                                    "`MICROSOFT_AUTH_CLIENT_CERTIFICATE` is set, but the client key cannot be read."
+                                    " This can either be because the the file does not exist or django does not have permission to read the file"
+                                ),
+                                id="microsoft_auth.W006",
+                            )
+                        )
 
     for hook_setting_name in HOOK_SETTINGS:
         hook_setting = getattr(config, hook_setting_name)

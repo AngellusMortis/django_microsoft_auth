@@ -76,6 +76,22 @@ DEFAULT_CONFIG = {
             ),
             str,
         ),
+        "MICROSOFT_AUTH_CLIENT_CERTIFICATE": (
+            "",
+            _(
+                """Microsoft OAuth Client Certificate, see
+                https://apps.dev.microsoft.com/ for more."""
+            ),
+            str,
+        ),
+        "MICROSOFT_AUTH_CLIENT_KEY": (
+            "",
+            _(
+                """Microsoft OAuth Client Certificate, see
+                https://apps.dev.microsoft.com/ for more."""
+            ),
+            str,
+        ),
         "MICROSOFT_AUTH_EXTRA_SCOPES": (
             "",
             _(
