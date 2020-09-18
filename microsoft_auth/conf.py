@@ -76,6 +76,24 @@ DEFAULT_CONFIG = {
             ),
             str,
         ),
+        "MICROSOFT_AUTH_ASSERTION_CERTIFICATE": (
+            "",
+            _(
+                """Microsoft OAuth Assertion Certificate, see
+                https://docs.microsoft.com/en-us/azure/architecture
+                /multitenant-identity/client-assertion for more."""
+            ),
+            str,
+        ),
+        "MICROSOFT_AUTH_ASSERTION_KEY": (
+            "",
+            _(
+                """Microsoft OAuth Assertion Certificate, see
+                https://docs.microsoft.com/en-us/azure/architecture
+                /multitenant-identity/client-assertion for more."""
+            ),
+            str,
+        ),
         "MICROSOFT_AUTH_EXTRA_SCOPES": (
             "",
             _(

@@ -1,3 +1,4 @@
+import datetime
 import json
 import logging
 
@@ -172,13 +173,50 @@ class MicrosoftClient(OAuth2Session):
 
         return super().authorization_url(auth_url, response_mode="form_post")
 
+    def create_assertion(self):
+        """ Creates JWT assertion """
+
+        exp_at = datetime.datetime.utcnow() + datetime.timedelta(seconds=300)
+
+        payload = {'sub': self.config.MICROSOFT_AUTH_CLIENT_ID,
+                   'iss': self.config.MICROSOFT_AUTH_CLIENT_ID,
+                   'aud': self.openid_config["token_endpoint"],
+                   'exp': exp_at,
+                   }
+
+        thumbprint = self.config.\
+            MICROSOFT_AUTH_ASSERTION_CERTIFICATE_THUMBPRINT
+        key = self.config.MICROSOFT_AUTH_ASSERTION_KEY_CONTENT
+
+        assertion = jwt.encode(payload,
+                               key,
+                               algorithm='RS256',
+                               headers={'x5t': thumbprint}
+                               )
+        return assertion
+
     def fetch_token(self, **kwargs):
         """Fetchs OAuth2 Token with given kwargs"""
 
+        if self.config.MICROSOFT_AUTH_ASSERTION_CERTIFICATE != "":
+            assertion = self.create_assertion()
+
+            type = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"
+
+            arg = {'cert': self.config.MICROSOFT_AUTH_ASSERTION_CERTIFICATE,
+                   'include_client_id': True,
+                   'client_id': self.config.MICROSOFT_AUTH_CLIENT_ID,
+                   'client_assertion_type': type,
+                   'client_assertion': assertion,
+                   }
+
+        elif self.config.MICROSOFT_AUTH_CLIENT_SECRET != "":
+            arg = {'client_secret': self.config.MICROSOFT_AUTH_CLIENT_SECRET}
+
         return super().fetch_token(  # pragma: no cover
             self.openid_config["token_endpoint"],
-            client_secret=self.config.MICROSOFT_AUTH_CLIENT_SECRET,
-            **kwargs,
+            **arg,
+            **kwargs
         )
 
     def fetch_xbox_token(self):
