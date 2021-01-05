@@ -4,28 +4,20 @@ language: python
 sudo: required
 dist: xenial
 python:
-  - "3.5"
   - "3.6"
   - "3.7"
   - "3.8"
+  - "3.9"
   - "pypy3"
 env:
   global:
     - CC_TEST_REPORTER_ID=88fae959f68f3139aeeb3cd64ce11841115a336fdfc91b7cecd52958acb4d3e9
   matrix:
-    - DJANGO_VERSION=21
     - DJANGO_VERSION=22
     - DJANGO_VERSION=30
     - DJANGO_VERSION=31
 matrix:
   fast_finish: true
-  exclude:
-    - python: "3.5"
-      env: DJANGO_VERSION=30
-    - python: "3.5"
-      env: DJANGO_VERSION=31
-    - python: "3.8"
-      env: DJANGO_VERSION=21
   include:
     - python: "3.7"
       env: DJANGO_VERSION=22-extras

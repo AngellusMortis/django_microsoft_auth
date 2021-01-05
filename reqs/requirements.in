@@ -1,5 +1,4 @@
 Django>=1.11
-cryptography
-pyjwt
+pyjwt[crypto]<3.0
 requests
 requests-oauthlib
