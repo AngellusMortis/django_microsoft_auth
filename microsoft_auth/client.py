@@ -151,11 +151,11 @@ class MicrosoftClient(OAuth2Session):
             claims = jwt.decode(
                 token,
                 public_key,
-                algoithm="RS256",
+                algorithms=["RS256"],
                 audience=self.config.MICROSOFT_AUTH_CLIENT_ID,
             )
         except jwt.PyJWTError as e:
-            logger.warn("could verify id_token sig: {}".format(e))
+            logger.warn("could not verify id_token sig: {}".format(e))
             return None
 
         return claims
