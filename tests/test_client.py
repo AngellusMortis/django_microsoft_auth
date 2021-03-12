@@ -106,6 +106,11 @@ class ClientTests(TestCase):
             expected_auth_url, auth_client.authorization_url()
         )
 
+    @override_settings(MICROSOFT_AUTH_PROXIES={'all' : 'http://1.2.3.4:8080'})
+    def test_authorization_with_proxies(self):
+        auth_client = MicrosoftClient(state=STATE)
+        self.assertEqual(auth_client.proxies, {'all' : 'http://1.2.3.4:8080'})
+
     @patch("microsoft_auth.client.requests")
     def test_fetch_xbox_token(self, mock_requests):
         mock_response = Mock()
