@@ -163,6 +163,15 @@ DEFAULT_CONFIG = {
             ),
             str,
         ),
+        "MICROSOFT_AUTH_PROXIES": (
+            {},
+            _(
+                """Use proxies for authentication
+                https://requests.readthedocs.io/en/master/user/advanced/#proxies/ for more."""
+            ),
+            dict,
+        ),
+
     },
     "fieldsets": {
         "Microsoft Login": (
