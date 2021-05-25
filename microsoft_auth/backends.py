@@ -173,6 +173,8 @@ class MicrosoftAuthenticationBackend(ModelBackend):
                     user.last_name = last_name
                     user.save()
             except User.DoesNotExist:
+                if self.config.MICROSOFT_AUTH_CREATE_FROM_EMAIL_ONLY:
+                    return None
                 user = User(
                     username=data["preferred_username"][:150],
                     first_name=first_name,

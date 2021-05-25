@@ -91,7 +91,8 @@ Quickstart
     # Running behind a proxy
     # MICROSOFT_AUTH_PROXIES =  {'all' : 'http://10.0.0.1:8080' }
 
-
+    # Only tie existing django account with matching email address. Don't create a new one.
+    MICROSOFT_AUTH_CREATE_FROM_EMAIL_ONLY = True
 
 6. Add the following to your `urls.py`
 
