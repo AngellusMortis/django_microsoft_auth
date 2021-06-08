@@ -76,19 +76,21 @@ DEFAULT_CONFIG = {
             ),
             str,
         ),
-        "MICROSOFT_AUTH_CLIENT_CERTIFICATE": (
+        "MICROSOFT_AUTH_ASSERTION_CERTIFICATE": (
             "",
             _(
-                """Microsoft OAuth Client Certificate, see
-                https://apps.dev.microsoft.com/ for more."""
+                """Microsoft OAuth Assertion Certificate, see
+                https://docs.microsoft.com/en-us/azure/architecture
+                /multitenant-identity/client-assertion for more."""
             ),
             str,
         ),
-        "MICROSOFT_AUTH_CLIENT_KEY": (
+        "MICROSOFT_AUTH_ASSERTION_KEY": (
             "",
             _(
-                """Microsoft OAuth Client Certificate, see
-                https://apps.dev.microsoft.com/ for more."""
+                """Microsoft OAuth Assertion Certificate, see
+                https://docs.microsoft.com/en-us/azure/architecture
+                /multitenant-identity/client-assertion for more."""
             ),
             str,
         ),
