@@ -1,4 +1,0 @@
-Django>=1.11
-pyjwt[crypto]<3.0
-requests
-requests-oauthlib

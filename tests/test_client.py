@@ -87,9 +87,7 @@ class ClientTests(TestCase):
         base_url = auth_client.openid_config["authorization_endpoint"]
         expected_auth_url = self._get_auth_url(base_url)
 
-        self._assert_auth_url(
-            expected_auth_url, auth_client.authorization_url()
-        )
+        self._assert_auth_url(expected_auth_url, auth_client.authorization_url())
 
     @override_settings(
         MICROSOFT_AUTH_CLIENT_ID=CLIENT_ID,
@@ -102,9 +100,7 @@ class ClientTests(TestCase):
         )
 
         auth_client = MicrosoftClient(state=STATE)
-        self._assert_auth_url(
-            expected_auth_url, auth_client.authorization_url()
-        )
+        self._assert_auth_url(expected_auth_url, auth_client.authorization_url())
 
     @override_settings(MICROSOFT_AUTH_PROXIES={'all' : 'http://1.2.3.4:8080'})
     def test_authorization_with_proxies(self):
@@ -170,9 +166,7 @@ class ClientTests(TestCase):
     def test_get_xbox_profile(self, mock_requests):
         mock_response = Mock()
         mock_response.status_code = 200
-        mock_response.json.return_value = {
-            "DisplayClaims": {"xui": [XBOX_PROFILE]}
-        }
+        mock_response.json.return_value = {"DisplayClaims": {"xui": [XBOX_PROFILE]}}
         mock_requests.post.return_value = mock_response
 
         auth_client = MicrosoftClient()
@@ -245,9 +239,7 @@ class ClientTests(TestCase):
         auth_client = MicrosoftClient()
         self.assertTrue(auth_client.valid_scopes(scopes))
 
-    @override_settings(
-        SITE_ID=None, ALLOWED_HOSTS=["example.com", "testserver"]
-    )
+    @override_settings(SITE_ID=None, ALLOWED_HOSTS=["example.com", "testserver"])
     def test_alternative_site(self):
         self.assertEqual(Site.objects.get(pk=1).domain, "testserver")
 
@@ -255,9 +247,7 @@ class ClientTests(TestCase):
 
         request = self.factory.get("/", HTTP_HOST="example.com")
 
-        self.assertEqual(
-            Site.objects.get_current(request).domain, "example.com"
-        )
+        self.assertEqual(Site.objects.get_current(request).domain, "example.com")
 
         client = MicrosoftClient(request=request)
 

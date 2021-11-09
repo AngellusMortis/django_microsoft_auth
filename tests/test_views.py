@@ -10,7 +10,7 @@ from microsoft_auth.views import AuthenticateCallbackView
 from . import TestCase
 
 TOKEN = "e4675ea8d28a41b8b416fe9ed1fb52b1e4675ea8d28a41b8b416fe9ed1fb52b1"
-STATE = dumps(dict(token=TOKEN), salt="microsoft_auth")
+STATE = dumps({"token": TOKEN}, salt="microsoft_auth")
 EXPIRED_STATE = (
     "e4675ea8d28a41b8b416fe9ed1fb52b1e4675ea8d28a41b8b416fe9ed1fb52b1:"
     "1h5CgL:G-QiLZ3hetUPgrdpJlvAfXkZ2RQ"
@@ -180,7 +180,7 @@ class ViewsTests(TestCase):
         )
 
         self.assertEqual(302, response.status_code)
-        self.assertEqual('/', response.url)
+        self.assertEqual("/", response.url)
         mock_login.assert_called_with(response.wsgi_request, self.user)
 
     @patch("microsoft_auth.views.authenticate")
@@ -188,8 +188,8 @@ class ViewsTests(TestCase):
     def test_authenticate_callback_redirect_next_path(self, mock_login, mock_auth):
         mock_auth.return_value = self.user
 
-        next_ = '/next/path'
-        state = dumps(dict(token=TOKEN, next=next_), salt="microsoft_auth")
+        next_ = "/next/path"
+        state = dumps({"token": TOKEN, "next": next_}, salt="microsoft_auth")
         response = self.client.post(
             reverse("microsoft_auth:from-auth-redirect"),
             {"state": state, "code": "test_code"},
@@ -225,8 +225,7 @@ class ViewsTests(TestCase):
 
     def test_to_ms_redirect(self):
         response = self.client.get(
-            reverse("microsoft_auth:to-auth-redirect"),
-            fetch_redirect_response=False
+            reverse("microsoft_auth:to-auth-redirect"), fetch_redirect_response=False
         )
 
         self.assertEqual(302, response.status_code)

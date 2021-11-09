@@ -13,8 +13,8 @@ User = get_user_model()
 
 
 class MicrosoftAuthenticationBackend(ModelBackend):
-    """ Authentication backend to authenticate a user against their Microsoft
-        Uses Microsoft's Graph OAuth and XBL servers to authentiate. """
+    """Authentication backend to authenticate a user against their Microsoft
+    Uses Microsoft's Graph OAuth and XBL servers to authentiate."""
 
     config = None
     microsoft = None
@@ -26,13 +26,13 @@ class MicrosoftAuthenticationBackend(ModelBackend):
 
     def authenticate(self, request, code=None):
         """
-            Authenticates the user against the Django backend
-                using a Microsoft auth code from
-            https://login.microsoftonline.com/common/oauth2/v2.0/authorize or
-            https://login.live.com/oauth20_authorize.srf
+        Authenticates the user against the Django backend
+            using a Microsoft auth code from
+        https://login.microsoftonline.com/common/oauth2/v2.0/authorize or
+        https://login.live.com/oauth20_authorize.srf
 
-            For more details:
-            https://developer.microsoft.com/en-us/graph/docs/get-started/rest
+        For more details:
+        https://developer.microsoft.com/en-us/graph/docs/get-started/rest
         """
 
         self.microsoft = MicrosoftClient(request=request)
@@ -43,9 +43,7 @@ class MicrosoftAuthenticationBackend(ModelBackend):
             token = self.microsoft.fetch_token(code=code)
 
             # validate permission scopes
-            if "access_token" in token and self.microsoft.valid_scopes(
-                token["scope"]
-            ):
+            if "access_token" in token and self.microsoft.valid_scopes(token["scope"]):
                 user = self._authenticate_user()
 
         if user is not None:
@@ -76,8 +74,8 @@ class MicrosoftAuthenticationBackend(ModelBackend):
         return None
 
     def _get_user_from_xbox(self, data):
-        """ Retrieves existing Django user or creates
-            a new one from Xbox Live profile data """
+        """Retrieves existing Django user or creates
+        a new one from Xbox Live profile data"""
         user = None
         xbox_user = self._get_xbox_user(data)
 
@@ -107,9 +105,7 @@ class MicrosoftAuthenticationBackend(ModelBackend):
         except XboxLiveAccount.DoesNotExist:
             if self.config.MICROSOFT_AUTH_AUTO_CREATE:
                 # create new Xbox Live Account
-                xbox_user = XboxLiveAccount(
-                    xbox_id=data["xid"], gamertag=data["gtg"]
-                )
+                xbox_user = XboxLiveAccount(xbox_id=data["xid"], gamertag=data["gtg"])
                 xbox_user.save()
 
         return xbox_user
@@ -123,8 +119,8 @@ class MicrosoftAuthenticationBackend(ModelBackend):
             xbox_user.save()
 
     def _get_user_from_microsoft(self, data):
-        """ Retrieves existing Django user or creates
-            a new one from Xbox Live profile data """
+        """Retrieves existing Django user or creates
+        a new one from Xbox Live profile data"""
         user = None
         microsoft_user = self._get_microsoft_user(data)
 
@@ -137,9 +133,7 @@ class MicrosoftAuthenticationBackend(ModelBackend):
         microsoft_user = None
 
         try:
-            microsoft_user = MicrosoftAccount.objects.get(
-                microsoft_id=data["sub"]
-            )
+            microsoft_user = MicrosoftAccount.objects.get(microsoft_id=data["sub"])
         except MicrosoftAccount.DoesNotExist:
             if self.config.MICROSOFT_AUTH_AUTO_CREATE:
                 # create new Microsoft Account
@@ -162,7 +156,7 @@ class MicrosoftAuthenticationBackend(ModelBackend):
                     try:
                         first_name, last_name = fullname.split(" ", 1)
                     except ValueError:
-                        firstname = fullname
+                        first_name = fullname
 
             try:
                 # create new Django user from provided data

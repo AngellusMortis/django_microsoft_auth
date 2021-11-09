@@ -21,11 +21,11 @@ logger = logging.getLogger("django")
 
 
 class AuthenticateCallbackView(View):
-    """ Authentication callback for Microsoft to call as part of OAuth2
-            implicit grant flow
+    """Authentication callback for Microsoft to call as part of OAuth2
+        implicit grant flow
 
-        For more details:
-        https://developer.microsoft.com/en-us/graph/docs/get-started/rest
+    For more details:
+    https://developer.microsoft.com/en-us/graph/docs/get-started/rest
     """
 
     messages = {
@@ -34,8 +34,7 @@ class AuthenticateCallbackView(View):
             "Please refresh the page and try again later."
         ),
         "missing_code": _(
-            "No authentication code was provided from "
-            "Microsoft. Please try again."
+            "No authentication code was provided from " "Microsoft. Please try again."
         ),
         "login_failed": _(
             "Failed to authenticate you for an unknown reason. "
@@ -144,11 +143,11 @@ class AuthenticateCallbackView(View):
                     login(self.request, user)
 
     def post(self, request):
-        """ main callback for Microsoft to call
+        """main callback for Microsoft to call
 
-            validates Microsoft response, attempts to authenticate user and
-            returns simple HTML page with Javascript that will post a message
-            to parent window with details of result """
+        validates Microsoft response, attempts to authenticate user and
+        returns simple HTML page with Javascript that will post a message
+        to parent window with details of result"""
 
         context = self.get_context_data(**request.POST.dict())
 
@@ -173,9 +172,9 @@ class AuthenticateCallbackRedirect(AuthenticateCallbackView):
     redirect = True
 
     def post(self, request):
-        """ main callback for Microsoft to call
-            validates Microsoft response, attempts to authenticate user and
-            redirects to app root on success. Returns HTTP 401 on error."""
+        """main callback for Microsoft to call
+        validates Microsoft response, attempts to authenticate user and
+        redirects to app root on success. Returns HTTP 401 on error."""
 
         context = self.get_context_data(**request.POST.dict())
 

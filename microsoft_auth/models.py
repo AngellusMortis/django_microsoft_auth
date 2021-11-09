@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class UnicodeSpaceUsernameValidator(UnicodeUsernameValidator):
-    """ validator to allow spaces in username """
+    """validator to allow spaces in username"""
 
     regex = r"^[\w\.@+\- ]+$"
 

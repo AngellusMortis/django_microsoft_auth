@@ -1,6 +1,7 @@
+django.in
 pip-wheel-metadata
 tests/site/local.py
-.vscode
+.vscode/settings.json
 test_site
 .pytest_cache
 cc-test-reporter
