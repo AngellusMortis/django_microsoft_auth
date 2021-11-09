@@ -19,10 +19,6 @@ Django Microsoft Authentication Backend
     :target: https://django-microsoft-auth.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation
 
-.. image:: https://coveralls.io/repos/github/AngellusMortis/django_microsoft_auth/badge.svg?branch=master
-    :target: https://coveralls.io/github/AngellusMortis/django_microsoft_auth?branch=master
-    :alt: Coverage
-
 .. image:: https://api.codeclimate.com/v1/badges/ea41b61fa3a1e22e92e9/maintainability
    :target: https://codeclimate.com/github/AngellusMortis/django_microsoft_auth/maintainability
    :alt: Maintainability
