@@ -49,7 +49,7 @@ Python/Django support
 
 `django_microsoft_auth` follows the same `support cycle as Django <https://www.djangoproject.com/download/#supported-versions>`_.
 
-Supported python versions: 3.3+
+Supported python versions: 3.8+
 
 Supported Django version: 2.2, 3.1+
 
