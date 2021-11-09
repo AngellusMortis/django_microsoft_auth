@@ -3,7 +3,7 @@ requires = ["flit_core >=3,<4"]
 build-backend = "flit_core.buildapi"
 
 [project]
-name = "microsoft_auth"
+name = "django_microsoft_auth"
 authors = [
     {name = "Christopher Bailey", email = "cbailey@mort.is"},
 ]
@@ -66,6 +66,9 @@ ql = [
 [project.urls]
 Documentation = "https://django-microsoft-auth.readthedocs.io/en/latest/"
 Source = "https://github.com/AngellusMortis/django_microsoft_auth"
+
+[tool.flit.module]
+name = "microsoft_auth"
 
 [tool.flit.sdist]
 include = [

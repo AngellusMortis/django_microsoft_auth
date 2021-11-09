@@ -36,7 +36,7 @@ function setLintModules() {
         PYLINT_MODULES="$PYLINT_MODULES tests"
     fi
 
-    MODULE_NAME=$( cat "$ROOT_PATH/pyproject.toml" | grep -e "^name =" | sed 's/name = "\(.*\)"/\1/' )
+    MODULE_NAME="microsoft_auth"
     echo "Found module \`$MODULE_NAME\`"
 
     BANDIT_MODULES=$( echo "$BANDIT_MODULES $MODULE_NAME" | xargs )
