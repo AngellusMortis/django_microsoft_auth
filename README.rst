@@ -11,17 +11,13 @@ Django Microsoft Authentication Backend
     :target: https://pypi.python.org/pypi/django_microsoft_auth
     :alt: Python Versions
 
-.. image:: https://travis-ci.org/AngellusMortis/django_microsoft_auth.svg?branch=master
-    :target: https://travis-ci.org/AngellusMortis/django_microsoft_auth/
-    :alt: Travis CI
+.. image:: https://github.com/AngellusMortis/django_microsoft_auth/actions/workflows/ci.yml/badge.svg
+    :target: https://github.com/AngellusMortis/django_microsoft_auth/actions/workflows/ci.yml
+    :alt: CI
 
 .. image:: https://readthedocs.org/projects/django-microsoft-auth/badge/?version=latest
     :target: https://django-microsoft-auth.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation
-
-.. image:: https://pyup.io/repos/github/AngellusMortis/django_microsoft_auth/shield.svg
-    :target: https://pyup.io/repos/github/AngellusMortis/django_microsoft_auth/
-    :alt: Updates
 
 .. image:: https://coveralls.io/repos/github/AngellusMortis/django_microsoft_auth/badge.svg?branch=master
     :target: https://coveralls.io/github/AngellusMortis/django_microsoft_auth?branch=master
