@@ -14,7 +14,7 @@ logger = logging.getLogger("django")
 
 
 def microsoft(request):
-    """ Adds global template variables for microsoft_auth """
+    """Adds global template variables for microsoft_auth"""
     login_type = None
     if config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_XBL:
         login_type = _("Xbox Live")
@@ -44,7 +44,7 @@ def microsoft(request):
     # Initialize Microsoft client using dict with CSRF token and optional
     # next path as state variable
     next_ = request.GET.get("next")
-    state = dict(token=get_token(request))
+    state = {"token": get_token(request)}
     if next_:
         state["next"] = next_
 

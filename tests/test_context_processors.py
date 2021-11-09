@@ -89,11 +89,11 @@ class ContextProcessorsTests(TestCase):
         self.site.domain = "example.com"
         self.site.save()
 
-        next_ = '/next/path'
-        request = self.factory.get("/", dict(next=next_))
+        next_ = "/next/path"
+        request = self.factory.get("/", {"next": next_})
         microsoft(request)
 
         mock_calls = mock_client.call_args_list
         self.assertEqual(len(mock_calls), 1)
-        state = loads(mock_calls[0][1].get("state"), salt='microsoft_auth')
+        state = loads(mock_calls[0][1].get("state"), salt="microsoft_auth")
         self.assertEqual(state["next"], next_)

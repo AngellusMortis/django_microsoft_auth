@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+env:
+  DEFAULT_DJANGO: "3.2"
+  DEFAULT_PYTHON: "3.10"
+
+jobs:
+  ci:
+    name: "Test and Lint"
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.8", "3.9", "3.10"]
+        django: ["2.2", "3.1", "3.2"]
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+
+          if [[ "${{ matrix.django }}" == "${{ env.DEFAULT_DJANGO }}" ]]; then
+            pip install -r ./reqs/dev-requirements.txt
+          else
+            pip install -r ./reqs/dj${{ matrix.django }}-requirements.txt
+          fi
+
+      - name: Lint Code
+        if: matrix.python == env.DEFAULT_PYTHON && matrix.django == env.DEFAULT_DJANGO
+        run: .bin/lint-code
+
+      - name: Test with pytest
+        run: |
+          export PYTHONPATH=$GITHUB_WORKSPACE
+          pytest --force-sugar --ignore=tests/test_zconstance.py
+          if [[ "${{ matrix.django }}" == "${{ env.DEFAULT_DJANGO }}" ]]; then
+            pytest --force-sugar tests/test_zconstance.py
+          fi
+
+      - name: Publish Code Coverage
+        uses: paambaati/codeclimate-action@v2.7.5
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        with:
+          coverageCommand: coverage xml
+          coverageLocations: ${{github.workspace}}/coverage.xml:cobertura

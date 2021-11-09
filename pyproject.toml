@@ -1,5 +1,108 @@
+[build-system]
+requires = ["flit_core >=3,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "django_microsoft_auth"
+authors = [
+    {name = "Christopher Bailey", email = "cbailey@mort.is"},
+]
+requires-python='>=3.8'
+dependencies=[
+  "django>=2.2",
+  "pyjwt[crypto]<3.0",
+  "requests-oauthlib",
+  "requests",
+]
+dynamic = ["version", "description"]
+readme = "README.rst"
+classifiers=[
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Natural Language :: English",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Framework :: Django :: 2.2",
+  "Framework :: Django :: 3.1",
+  "Framework :: Django :: 3.2",
+]
+keywords = ["django_microsoft_auth"]
+license = {file = "LICENSE"}
+
+[project.optional-dependencies]
+test = [
+  "coverage",
+  "pytest",
+  "pytest-cov",
+  "pytest-django",
+  "pytest-sugar",
+]
+dev = [
+  "bandit",
+  "black",
+  "djangoql",
+  "doc8",
+  "flake8-bugbear",
+  "flake8-builtins",
+  "flake8-commas",
+  "flake8-comprehensions",
+  "flake8",
+  "flit",
+  "furo",
+  "ipython",
+  "isort",
+  "pip-tools",
+  "pyproject-flake8",
+  "snooty-lextudio",
+  "sphinx",
+]
+ql = [
+  "djangoql",
+]
+
+[project.urls]
+Documentation = "https://django-microsoft-auth.readthedocs.io/en/latest/"
+Source = "https://github.com/AngellusMortis/django_microsoft_auth"
+
+[tool.flit.module]
+name = "microsoft_auth"
+
+[tool.flit.sdist]
+include = [
+  "AUTHORS.rst",
+  "CONTRIBUTING.rst",
+  "HISTORY.rst",
+  "LICENSE",
+  "README.rst",
+  "microsoft_auth/*",
+  "microsoft_auth/templates/*.html",
+  "microsoft_auth/static/*.css",
+  "microsoft_auth/static/*.js",
+  "microsoft_auth/static/*.jpg",
+  "microsoft_auth/static/*.png",
+  "microsoft_auth/static/*.gif",
+  "tests/*",
+  "docs/*.rst",
+  "docs/conf.py",
+  "docs/Makefile",
+  "docs/make.bat",
+  "docs/*.jpg",
+  "docs/*.png",
+  "docs/*.gif",
+]
+exclude = [
+  "__pycache__",
+  "*.py",
+  "*.pyc",
+  "*.pyo"
+]
+
 [tool.black]
-line-length = 79
+line-length = 88
+target-versions = 'py39'
 include = '\.pyi?$'
 exclude = '''
 
@@ -15,8 +118,19 @@ exclude = '''
     | buck-out
     | build
     | dist
-    | microsoft_auth/_version.py
-    | versioneer.py
-  )
+    | migrations
+  )/
 )
 '''
+
+[tool.flake8]
+exclude = ".eggs, .git, .tox"
+ignore = "C812, W503, C816, C815, B008"
+max-line-length = 88
+
+[tool.isort]
+profile = "black"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "tests.site.settings"
+addopts = "--cov-config .coveragerc --cov-branch --cov-append --cov-report term-missing --color=yes --no-cov-on-fail --cov=microsoft_auth --durations=10 --maxfail=5"
