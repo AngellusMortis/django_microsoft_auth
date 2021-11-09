@@ -67,6 +67,8 @@ USE_L10N = True
 
 LANGUAGE_CODE = "en-us"
 
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
 # this much be after the majority of your other settings
 from microsoft_auth.conf import DEFAULT_CONFIG  # isort:skip # noqa
 

@@ -1,0 +1,4 @@
+exclude_dirs:
+  - tests/*
+  - .tox/*
+  - .git/*

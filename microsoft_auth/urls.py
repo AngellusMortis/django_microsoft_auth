@@ -24,5 +24,5 @@ if config.MICROSOFT_AUTH_LOGIN_ENABLED:  # pragma: no branch
             "to-auth-redirect/",
             views.to_ms_redirect,
             name="to-auth-redirect",
-        )
+        ),
     ]

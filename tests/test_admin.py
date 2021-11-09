@@ -32,14 +32,12 @@ class AdminTests(TestCase):
         MICROSOFT_AUTH_REGISTER_INACTIVE_ADMIN=False,
     )
     def test_admin_classes_microsoft_auth(self):
-        """ Verify only Microsoft Auth classes are injected """
+        """Verify only Microsoft Auth classes are injected"""
 
         _register_admins()
 
         self.client.get(reverse("admin:index"))
-        self.client.get(
-            reverse("admin:auth_user_change", args=(self.user.id,))
-        )
+        self.client.get(reverse("admin:auth_user_change", args=(self.user.id,)))
 
         self.client.get(
             reverse(
@@ -53,14 +51,12 @@ class AdminTests(TestCase):
         MICROSOFT_AUTH_REGISTER_INACTIVE_ADMIN=False,
     )
     def test_admin_classes_xbox(self):
-        """ Verify only Xbox classes are injected """
+        """Verify only Xbox classes are injected"""
 
         _register_admins()
 
         self.client.get(reverse("admin:index"))
-        self.client.get(
-            reverse("admin:auth_user_change", args=(self.user.id,))
-        )
+        self.client.get(reverse("admin:auth_user_change", args=(self.user.id,)))
 
         self.client.get(
             reverse(
@@ -71,14 +67,12 @@ class AdminTests(TestCase):
 
     @override_settings(MICROSOFT_AUTH_REGISTER_INACTIVE_ADMIN=True)
     def test_admin_classes_both(self):
-        """ Verify both admin classes are injected """
+        """Verify both admin classes are injected"""
 
         _register_admins()
 
         self.client.get(reverse("admin:index"))
-        self.client.get(
-            reverse("admin:auth_user_change", args=(self.user.id,))
-        )
+        self.client.get(reverse("admin:auth_user_change", args=(self.user.id,)))
 
         self.client.get(
             reverse(

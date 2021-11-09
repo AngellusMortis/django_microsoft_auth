@@ -85,8 +85,8 @@ def _get_inlines():
 class UserAdmin(*base_user_admin):
     @property
     def inlines(self):
-        """ Adds MicrosoftAccount and/or XboxLiveAccount foreign keys to
-        User model """
+        """Adds MicrosoftAccount and/or XboxLiveAccount foreign keys to
+        User model"""
 
         return _get_inlines()
 

@@ -9,35 +9,28 @@ from django.urls import reverse
 from jwt.algorithms import RSAAlgorithm
 from requests_oauthlib import OAuth2Session
 
-from .conf import (
-    CACHE_KEY_JWKS,
-    CACHE_KEY_OPENID,
-    CACHE_TIMEOUT,
-    LOGIN_TYPE_XBL,
-)
+from .conf import CACHE_KEY_JWKS, CACHE_KEY_OPENID, CACHE_TIMEOUT, LOGIN_TYPE_XBL
 from .utils import get_scheme
 
 logger = logging.getLogger("django")
 
 
 class MicrosoftClient(OAuth2Session):
-    """ Simple Microsoft OAuth2 Client to authenticate them
+    """Simple Microsoft OAuth2 Client to authenticate them
 
-        Extended from Requests-OAuthlib's OAuth2Session class which
-            does most of the heavy lifting
+    Extended from Requests-OAuthlib's OAuth2Session class which
+        does most of the heavy lifting
 
-        https://requests-oauthlib.readthedocs.io/en/latest/
+    https://requests-oauthlib.readthedocs.io/en/latest/
 
-        Microsoft OAuth documentation can be found at
-        https://developer.microsoft.com/en-us/graph/docs/get-started/rest
+    Microsoft OAuth documentation can be found at
+    https://developer.microsoft.com/en-us/graph/docs/get-started/rest
     """
 
     _config_url = "https://login.microsoftonline.com/{tenant}/v2.0/.well-known/openid-configuration"  # noqa
 
     _xbox_authorization_url = "https://login.live.com/oauth20_authorize.srf"
-    _xbox_token_url = (
-        "https://user.auth.xboxlive.com/user/authenticate"  # nosec
-    )
+    _xbox_token_url = "https://user.auth.xboxlive.com/user/authenticate"  # nosec
     _profile_url = "https://xsts.auth.xboxlive.com/xsts/authorize"
 
     xbox_token = {}
@@ -63,7 +56,7 @@ class MicrosoftClient(OAuth2Session):
         domain = current_site.domain
         callback = reverse("microsoft_auth:auth-callback")
         redirect = reverse("microsoft_auth:from-auth-redirect")
-        if not request or 'redirect' not in request.path:
+        if not request or "redirect" not in request.path:
             path = callback
         else:
             path = redirect
@@ -134,8 +127,7 @@ class MicrosoftClient(OAuth2Session):
         if jwk is None:
             if allow_refresh:
                 logger.warn(
-                    "could not find public key for id_token, "
-                    "refreshing OIDC config"
+                    "could not find public key for id_token, " "refreshing OIDC config"
                 )
                 cache.delete(CACHE_KEY_JWKS)
                 cache.delete(CACHE_KEY_OPENID)
@@ -161,7 +153,7 @@ class MicrosoftClient(OAuth2Session):
         return claims
 
     def authorization_url(self):
-        """ Generates Microsoft/Xbox or a Office 365 Authorization URL """
+        """Generates Microsoft/Xbox or a Office 365 Authorization URL"""
 
         auth_url = self.openid_config["authorization_endpoint"]
         if self.config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_XBL:
@@ -170,7 +162,7 @@ class MicrosoftClient(OAuth2Session):
         return super().authorization_url(auth_url, response_mode="form_post")
 
     def fetch_token(self, **kwargs):
-        """ Fetchs OAuth2 Token with given kwargs"""
+        """Fetchs OAuth2 Token with given kwargs"""
 
         return super().fetch_token(  # pragma: no cover
             self.openid_config["token_endpoint"],
@@ -179,21 +171,21 @@ class MicrosoftClient(OAuth2Session):
         )
 
     def fetch_xbox_token(self):
-        """ Fetches Xbox Live Auth token.
+        """Fetches Xbox Live Auth token.
 
-            token must contain a valid access_token
-                - retrieved from fetch_token
+        token must contain a valid access_token
+            - retrieved from fetch_token
 
-            Reversed engineered from existing Github repos,
-                no "official" API docs from Microsoft
+        Reversed engineered from existing Github repos,
+            no "official" API docs from Microsoft
 
-            Response will be similar to
-            {
-                'Token': 'token',
-                'IssueInstant': '2016-09-27T15:01:45.225637Z',
-                'DisplayClaims': {'xui': [{'uhs': '###################'}]},
-                'NotAfter': '2016-10-11T15:01:45.225637Z'
-            }
+        Response will be similar to
+        {
+            'Token': 'token',
+            'IssueInstant': '2016-09-27T15:01:45.225637Z',
+            'DisplayClaims': {'xui': [{'uhs': '###################'}]},
+            'NotAfter': '2016-10-11T15:01:45.225637Z'
+        }
         """
 
         # Content-type MUST be json for Xbox Live
@@ -221,28 +213,28 @@ class MicrosoftClient(OAuth2Session):
 
     def get_xbox_profile(self):
         """
-            Fetches the Xbox Live user profile from Xbox servers
+        Fetches the Xbox Live user profile from Xbox servers
 
-            xbox_token must contain a valid Xbox Live token
-                - retrieved from fetch_xbox_token
+        xbox_token must contain a valid Xbox Live token
+            - retrieved from fetch_xbox_token
 
-            Reversed engineered from existing Github repos,
-                no "official" API docs from Microsoft
+        Reversed engineered from existing Github repos,
+            no "official" API docs from Microsoft
 
-            Response will be similar to
-            {
-                'NotAfter': '2016-09-28T07:19:21.9608601Z',
-                'DisplayClaims': {
-                    'xui': [
-                        {
-                            'agg': 'Adult',
-                            'uhs': '###################',
-                            'usr': '###',
-                            'xid': '################',
-                            'prv': '### ### ###...',
-                            'gtg': 'Gamertag'}]},
-                'IssueInstant': '2016-09-27T15:19:21.9608601Z',
-                'Token': 'token'}
+        Response will be similar to
+        {
+            'NotAfter': '2016-09-28T07:19:21.9608601Z',
+            'DisplayClaims': {
+                'xui': [
+                    {
+                        'agg': 'Adult',
+                        'uhs': '###################',
+                        'usr': '###',
+                        'xid': '################',
+                        'prv': '### ### ###...',
+                        'gtg': 'Gamertag'}]},
+            'IssueInstant': '2016-09-27T15:19:21.9608601Z',
+            'Token': 'token'}
         """
 
         if "Token" in self.xbox_token:
@@ -268,7 +260,7 @@ class MicrosoftClient(OAuth2Session):
         return {}
 
     def valid_scopes(self, scopes):
-        """ Validates response scopes based on MICROSOFT_AUTH_LOGIN_TYPE """
+        """Validates response scopes based on MICROSOFT_AUTH_LOGIN_TYPE"""
 
         scopes = set(scopes)
         required_scopes = None
