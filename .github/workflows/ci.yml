@@ -2,7 +2,6 @@ name: CI
 
 on:
   push:
-    branches: [master]
   pull_request:
     branches: [master]
 
@@ -55,7 +54,7 @@ jobs:
       - name: Publish Code Coverage
         uses: paambaati/codeclimate-action@v2.7.5
         env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+          CC_TEST_REPORTER_ID: 88fae959f68f3139aeeb3cd64ce11841115a336fdfc91b7cecd52958acb4d3e9
         with:
           coverageCommand: coverage xml
           coverageLocations: ${{github.workspace}}/coverage.xml:cobertura
