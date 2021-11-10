@@ -171,13 +171,7 @@ DEFAULT_CONFIG = {
             ),
             dict,
         ),
-        "MICROSOFT_AUTH_CREATE_FROM_EMAIL_ONLY": (
-            False,
-            _( """Don't create a new account but only tie AD account to an existing 
-                account with matching email address."""
-            ),
-            bool,
-        ),
+
     },
     "fieldsets": {
         "Microsoft Login": (
