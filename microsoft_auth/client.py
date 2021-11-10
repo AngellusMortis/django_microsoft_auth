@@ -9,7 +9,13 @@ from django.urls import reverse
 from jwt.algorithms import RSAAlgorithm
 from requests_oauthlib import OAuth2Session
 
-from .conf import CACHE_KEY_JWKS, CACHE_KEY_OPENID, CACHE_TIMEOUT, LOGIN_TYPE_XBL
+from .conf import (
+    CACHE_KEY_JWKS,
+    CACHE_KEY_OPENID,
+    CACHE_TIMEOUT,
+    LOGIN_TYPE_XBL,
+    config,
+)
 from .utils import get_scheme
 
 logger = logging.getLogger("django")
@@ -42,12 +48,32 @@ class MicrosoftClient(OAuth2Session):
     SCOPE_MICROSOFT = ["openid", "email", "profile"]
 
     def __init__(self, state=None, request=None, *args, **kwargs):
-        from .conf import config
-
         self.config = config
 
-        extra_scopes = self.config.MICROSOFT_AUTH_EXTRA_SCOPES
+        super().__init__(
+            self.config.MICROSOFT_AUTH_CLIENT_ID,
+            scope=self._get_scopes(),
+            state=state,
+            redirect_uri=self._get_redirect_uri(),
+            *args,
+            **kwargs,
+        )
 
+        if self.config.MICROSOFT_AUTH_PROXIES:
+            self.proxies = self.config.MICROSOFT_AUTH_PROXIES
+
+    def _get_scopes(self):
+        scope = " ".join(self.SCOPE_MICROSOFT)
+
+        if self.config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_XBL:
+            scope = " ".join(self.SCOPE_XBL)
+
+        extra_scopes = self.config.MICROSOFT_AUTH_EXTRA_SCOPES
+        scope = "{} {}".format(scope, extra_scopes).strip()
+
+        return scope
+
+    def _get_redirect_uri(self, request):
         try:
             current_site = Site.objects.get_current(request)
         except Site.DoesNotExist:
@@ -60,25 +86,8 @@ class MicrosoftClient(OAuth2Session):
             path = callback
         else:
             path = redirect
-        scope = " ".join(self.SCOPE_MICROSOFT)
 
-        if self.config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_XBL:
-            scope = " ".join(self.SCOPE_XBL)
-
-        scope = "{} {}".format(scope, extra_scopes).strip()
-
-        scheme = get_scheme(request, self.config)
-
-        super().__init__(
-            self.config.MICROSOFT_AUTH_CLIENT_ID,
-            scope=scope,
-            state=state,
-            redirect_uri="{0}://{1}{2}".format(scheme, domain, path),
-            *args,
-            **kwargs
-        )
-        if self.config.MICROSOFT_AUTH_PROXIES:
-            self.proxies = self.config.MICROSOFT_AUTH_PROXIES
+        return f"{get_scheme(request, self.config)}://{domain}{path}"
 
     @property
     def openid_config(self):
@@ -169,7 +178,7 @@ class MicrosoftClient(OAuth2Session):
         return super().fetch_token(  # pragma: no cover
             self.openid_config["token_endpoint"],
             client_secret=self.config.MICROSOFT_AUTH_CLIENT_SECRET,
-            **kwargs
+            **kwargs,
         )
 
     def fetch_xbox_token(self):
