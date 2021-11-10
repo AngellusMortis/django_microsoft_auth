@@ -167,7 +167,7 @@ DEFAULT_CONFIG = {
             {},
             _(
                 """Use proxies for authentication
-                https://requests.readthedocs.io/en/master/user/advanced/#proxies/ for more."""
+                See https://requests.readthedocs.io/en/master/user/advanced/#proxies/"""
             ),
             dict,
         ),
