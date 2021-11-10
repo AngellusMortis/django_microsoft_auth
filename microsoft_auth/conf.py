@@ -171,7 +171,6 @@ DEFAULT_CONFIG = {
             ),
             dict,
         ),
-
     },
     "fieldsets": {
         "Microsoft Login": (
