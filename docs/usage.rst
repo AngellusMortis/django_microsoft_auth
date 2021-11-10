@@ -88,6 +88,9 @@ Quickstart
     # Xbox Live authentication
     MICROSOFT_AUTH_LOGIN_TYPE = 'xbl'  # Xbox Live authentication
 
+    # Running behind a proxy
+    # MICROSOFT_AUTH_PROXIES =  {'all' : 'http://10.0.0.1:8080' }
+
 
 
 6. Add the following to your `urls.py`

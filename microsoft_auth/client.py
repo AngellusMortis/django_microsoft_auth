@@ -77,6 +77,8 @@ class MicrosoftClient(OAuth2Session):
             *args,
             **kwargs
         )
+        if self.config.MICROSOFT_AUTH_PROXIES:
+            self.proxies = self.config.MICROSOFT_AUTH_PROXIES
 
     @property
     def openid_config(self):
