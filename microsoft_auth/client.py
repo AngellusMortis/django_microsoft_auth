@@ -54,7 +54,7 @@ class MicrosoftClient(OAuth2Session):
             self.config.MICROSOFT_AUTH_CLIENT_ID,
             scope=self._get_scopes(),
             state=state,
-            redirect_uri=self._get_redirect_uri(),
+            redirect_uri=self._get_redirect_uri(request),
             *args,
             **kwargs,
         )
