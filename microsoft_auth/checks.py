@@ -74,13 +74,17 @@ def microsoft_auth_validator(app_configs, **kwargs):
                     id="microsoft_auth.W003",
                 )
             )
-        if config.MICROSOFT_AUTH_CLIENT_SECRET == "" and \
-           config.MICROSOFT_AUTH_ASSERTION_CERTIFICATE == "":
+        if (
+            config.MICROSOFT_AUTH_CLIENT_SECRET == ""
+            and config.MICROSOFT_AUTH_ASSERTION_CERTIFICATE == ""
+        ):
             errors.append(
                 Warning(
-                    ("`MICROSOFT_AUTH_CLIENT_SECRET` and "
-                     "`MICROSOFT_AUTH_ASSERTION_CERTIFICATE`"
-                     " is not configured"),
+                    (
+                        "`MICROSOFT_AUTH_CLIENT_SECRET` and "
+                        "`MICROSOFT_AUTH_ASSERTION_CERTIFICATE`"
+                        " is not configured"
+                    ),
                     hint=(
                         "`MICROSOFT_AUTH_LOGIN_ENABLED` is `True`, but "
                         "`MICROSOFT_AUTH_CLIENT_SECRET`and "
@@ -101,12 +105,11 @@ def microsoft_auth_validator(app_configs, **kwargs):
             if not exists_and_readable:
                 errors.append(
                     Warning(
-                        ("`MICROSOFT_AUTH_ASSERTION_CERTIFICATE`"
-                         " cannot be read"),
+                        ("`MICROSOFT_AUTH_ASSERTION_CERTIFICATE`" " cannot be read"),
                         hint=(
-                         "MICROSOFT_AUTH_ASSERTION_CERTIFICATE is configured"
-                         " but either it doesn't exist"
-                         " or django does not have permission to read it"
+                            "MICROSOFT_AUTH_ASSERTION_CERTIFICATE is configured"  # noqa
+                            " but either it doesn't exist"
+                            " or django does not have permission to read it"
                         ),
                         id="microsoft_auth.W005",
                     )
@@ -119,12 +122,11 @@ def microsoft_auth_validator(app_configs, **kwargs):
             if not exists_and_readable:
                 errors.append(
                     Warning(
-                        ("`MICROSOFT_AUTH_ASSERTION_KEY`"
-                         " cannot be read"),
+                        ("`MICROSOFT_AUTH_ASSERTION_KEY`" " cannot be read"),
                         hint=(
-                         "MICROSOFT_AUTH_ASSERTION_KEY is configured"
-                         " but either it doesn't exist"
-                         " or django does not have permission to read it"
+                            "MICROSOFT_AUTH_ASSERTION_KEY is configured"
+                            " but either it doesn't exist"
+                            " or django does not have permission to read it"
                         ),
                         id="microsoft_auth.W005",
                     )

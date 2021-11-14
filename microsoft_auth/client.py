@@ -37,7 +37,7 @@ class MicrosoftClient(OAuth2Session):
     _config_url = "https://login.microsoftonline.com/{tenant}/v2.0/.well-known/openid-configuration"  # noqa
 
     _xbox_authorization_url = "https://login.live.com/oauth20_authorize.srf"
-    _xbox_token_url = "https://user.auth.xboxlive.com/user/authenticate"  # nosec
+    _xbox_token_url = "https://user.auth.xboxlive.com/user/authenticate"  # nosec # noqa
     _profile_url = "https://xsts.auth.xboxlive.com/xsts/authorize"
 
     xbox_token = {}
@@ -174,25 +174,23 @@ class MicrosoftClient(OAuth2Session):
         return super().authorization_url(auth_url, response_mode="form_post")
 
     def create_assertion(self):
-        """ Creates JWT assertion """
+        """Creates JWT assertion"""
 
         exp_at = datetime.datetime.utcnow() + datetime.timedelta(seconds=300)
 
-        payload = {'sub': self.config.MICROSOFT_AUTH_CLIENT_ID,
-                   'iss': self.config.MICROSOFT_AUTH_CLIENT_ID,
-                   'aud': self.openid_config["token_endpoint"],
-                   'exp': exp_at,
-                   }
+        payload = {
+            "sub": self.config.MICROSOFT_AUTH_CLIENT_ID,
+            "iss": self.config.MICROSOFT_AUTH_CLIENT_ID,
+            "aud": self.openid_config["token_endpoint"],
+            "exp": exp_at,
+        }
 
-        thumbprint = self.config.\
-            MICROSOFT_AUTH_ASSERTION_CERTIFICATE_THUMBPRINT
+        thumbprint = self.config.MICROSOFT_AUTH_ASSERTION_CERTIFICATE_THUMBPRINT
         key = self.config.MICROSOFT_AUTH_ASSERTION_KEY_CONTENT
 
-        assertion = jwt.encode(payload,
-                               key,
-                               algorithm='RS256',
-                               headers={'x5t': thumbprint}
-                               )
+        assertion = jwt.encode(
+            payload, key, algorithm="RS256", headers={"x5t": thumbprint}
+        )
         return assertion
 
     def fetch_token(self, **kwargs):
@@ -201,22 +199,23 @@ class MicrosoftClient(OAuth2Session):
         if self.config.MICROSOFT_AUTH_ASSERTION_CERTIFICATE != "":
             assertion = self.create_assertion()
 
-            type = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"
+            client_type = (
+                "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"  # noqa
+            )
 
-            arg = {'cert': self.config.MICROSOFT_AUTH_ASSERTION_CERTIFICATE,
-                   'include_client_id': True,
-                   'client_id': self.config.MICROSOFT_AUTH_CLIENT_ID,
-                   'client_assertion_type': type,
-                   'client_assertion': assertion,
-                   }
+            arg = {
+                "cert": self.config.MICROSOFT_AUTH_ASSERTION_CERTIFICATE,
+                "include_client_id": True,
+                "client_id": self.config.MICROSOFT_AUTH_CLIENT_ID,
+                "client_assertion_type": client_type,
+                "client_assertion": assertion,
+            }
 
         elif self.config.MICROSOFT_AUTH_CLIENT_SECRET != "":
-            arg = {'client_secret': self.config.MICROSOFT_AUTH_CLIENT_SECRET}
+            arg = {"client_secret": self.config.MICROSOFT_AUTH_CLIENT_SECRET}
 
         return super().fetch_token(  # pragma: no cover
-            self.openid_config["token_endpoint"],
-            **arg,
-            **kwargs
+            self.openid_config["token_endpoint"], **arg, **kwargs
         )
 
     def fetch_xbox_token(self):

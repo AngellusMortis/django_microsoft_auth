@@ -253,43 +253,53 @@ class ClientTests(TestCase):
 
         self.assertIn("example.com", client.authorization_url()[0])
 
-    @override_settings(MICROSOFT_AUTH_ASSERTION_CERTIFICATE_THUMBPRINT="2D:45:11:16:FA:3B:A1:0C:9A:DD:7E:A4:F5:04:55:0E:B7:64:04:0C")
-    @override_settings(MICROSOFT_AUTH_ASSERTION_KEY_CONTENT=open("tests/client_asertion_key.pem").read())
-    @override_settings(MICROSOFT_AUTH_ASSERTION_CERTIFICATE=open("tests/client_asertion_cert.pem").read())
+    @override_settings(
+        MICROSOFT_AUTH_ASSERTION_CERTIFICATE_THUMBPRINT="2D:45:11:16:FA:3B:A1:0C:9A:DD:7E:A4:F5:04:55:0E:B7:64:04:0C"  # noqa
+    )
+    @override_settings(
+        MICROSOFT_AUTH_ASSERTION_KEY_CONTENT=open(
+            "tests/client_asertion_key.pem"
+        ).read()
+    )  # noqa
+    @override_settings(
+        MICROSOFT_AUTH_ASSERTION_CERTIFICATE=open(
+            "tests/client_asertion_cert.pem"
+        ).read()
+    )  # noqa
     @override_settings(MICROSOFT_AUTH_CLIENT_ID="1234")
     @patch("requests_oauthlib.OAuth2Session.fetch_token")
     def test_fetch_token_client_assertion(self, mock_fetch_token):
         auth_client = MicrosoftClient()
+        kwargs = {}
 
-        kwargs = {
-        }
-  
-        token = auth_client.fetch_token(**kwargs)
+        token = auth_client.fetch_token(**kwargs)  # noqa
 
         assertion = auth_client.create_assertion()
-        type = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer" 
+        client_type = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"
 
-        args = {'cert': auth_client.config.MICROSOFT_AUTH_ASSERTION_CERTIFICATE, 
-            'include_client_id': True, 
-            'client_id': auth_client.config.MICROSOFT_AUTH_CLIENT_ID, 
-            'client_assertion_type': type, 
-            'client_assertion': assertion, 
-            } 
+        args = {
+            "cert": auth_client.config.MICROSOFT_AUTH_ASSERTION_CERTIFICATE,
+            "include_client_id": True,
+            "client_id": auth_client.config.MICROSOFT_AUTH_CLIENT_ID,
+            "client_assertion_type": client_type,
+            "client_assertion": assertion,
+        }
 
-        mock_fetch_token.assert_called_with(auth_client.openid_config["token_endpoint"], **args, **kwargs)
+        mock_fetch_token.assert_called_with(
+            auth_client.openid_config["token_endpoint"], **args, **kwargs
+        )
 
     @patch("requests_oauthlib.OAuth2Session.fetch_token")
     @override_settings(MICROSOFT_AUTH_CLIENT_SECRET="1234")
     def test_fetch_token_client_secret(self, mock_fetch_token):
         auth_client = MicrosoftClient()
 
-        args = {
-            'client_secret' : auth_client.config.MICROSOFT_AUTH_CLIENT_SECRET
-        }
+        args = {"client_secret": auth_client.config.MICROSOFT_AUTH_CLIENT_SECRET}
 
-        kwargs = {
-        }
+        kwargs = {}
 
-        token = auth_client.fetch_token(**kwargs)
-        mock_fetch_token.assert_called_with(auth_client.openid_config["token_endpoint"], **args, **kwargs)
+        token = auth_client.fetch_token(**kwargs)  # noqa
 
+        mock_fetch_token.assert_called_with(
+            auth_client.openid_config["token_endpoint"], **args, **kwargs
+        )

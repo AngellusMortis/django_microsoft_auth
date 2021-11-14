@@ -1,6 +1,6 @@
 """
-Simple app to enable Microsoft Account, Office 365 and Xbox Live authentcation as a
-Django authentcation backend.
+Simple app to enable Microsoft Account, Office 365 and Xbox Live
+authentcation as a Django authentcation backend.
 """
 
 __version__ = "2.4.1"
