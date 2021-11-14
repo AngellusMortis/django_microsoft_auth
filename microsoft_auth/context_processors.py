@@ -6,8 +6,10 @@ from django.middleware.csrf import get_token
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
+from microsoft_auth.default_config import LOGIN_TYPE_XBL
+
 from .client import MicrosoftClient
-from .conf import LOGIN_TYPE_XBL, config
+from .conf import config
 from .utils import get_scheme
 
 logger = logging.getLogger("django")

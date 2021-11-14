@@ -10,13 +10,9 @@ from django.urls import reverse
 from jwt.algorithms import RSAAlgorithm
 from requests_oauthlib import OAuth2Session
 
-from .conf import (
-    CACHE_KEY_JWKS,
-    CACHE_KEY_OPENID,
-    CACHE_TIMEOUT,
-    LOGIN_TYPE_XBL,
-    config,
-)
+from microsoft_auth.default_config import LOGIN_TYPE_XBL
+
+from .conf import CACHE_KEY_JWKS, CACHE_KEY_OPENID, CACHE_TIMEOUT, config
 from .utils import get_scheme
 
 logger = logging.getLogger("django")
@@ -173,10 +169,14 @@ class MicrosoftClient(OAuth2Session):
 
         return super().authorization_url(auth_url, response_mode="form_post")
 
+    def get_exp_datetime(self):
+        exp = datetime.datetime.utcnow() + datetime.timedelta(seconds=300)
+        return exp
+
     def create_assertion(self):
         """Creates JWT assertion"""
 
-        exp_at = datetime.datetime.utcnow() + datetime.timedelta(seconds=300)
+        exp_at = self.get_exp_datetime()
 
         payload = {
             "sub": self.config.MICROSOFT_AUTH_CLIENT_ID,
@@ -191,6 +191,7 @@ class MicrosoftClient(OAuth2Session):
         assertion = jwt.encode(
             payload, key, algorithm="RS256", headers={"x5t": thumbprint}
         )
+
         return assertion
 
     def fetch_token(self, **kwargs):

@@ -3,7 +3,7 @@ from unittest.mock import Mock, patch
 from django.contrib.auth import authenticate, get_user_model
 from django.test import RequestFactory, override_settings
 
-from microsoft_auth.conf import LOGIN_TYPE_XBL
+from microsoft_auth.default_config import LOGIN_TYPE_XBL
 from microsoft_auth.models import XboxLiveAccount
 
 from .. import TestCase

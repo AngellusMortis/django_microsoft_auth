@@ -7,6 +7,25 @@ from django.db.utils import OperationalError, ProgrammingError
 from django.test import RequestFactory
 
 
+def assertion_check_helper(errors, option_filename, option_name):
+    if option_filename != "":
+        exists_and_readable = os.access(option_filename, os.R_OK)
+
+        if not exists_and_readable:
+            errors.append(
+                Warning(
+                    (f"`{option_name}`" " cannot be read"),
+                    hint=(
+                        f"{option_name} is configured"  # noqa
+                        " but either it doesn't exist"
+                        " or django does not have permission to read it"
+                    ),
+                    id="microsoft_auth.W005",
+                )
+            )
+    return errors
+
+
 @register()
 def microsoft_auth_validator(app_configs, **kwargs):
     from django.contrib.sites.models import Site
@@ -98,39 +117,14 @@ def microsoft_auth_validator(app_configs, **kwargs):
                 )
             )
 
-        if config.MICROSOFT_AUTH_ASSERTION_CERTIFICATE != "":
-            filename = config.MICROSOFT_AUTH_ASSERTION_CERTIFICATE
-            exists_and_readable = os.access(filename, os.R_OK)
-
-            if not exists_and_readable:
-                errors.append(
-                    Warning(
-                        ("`MICROSOFT_AUTH_ASSERTION_CERTIFICATE`" " cannot be read"),
-                        hint=(
-                            "MICROSOFT_AUTH_ASSERTION_CERTIFICATE is configured"  # noqa
-                            " but either it doesn't exist"
-                            " or django does not have permission to read it"
-                        ),
-                        id="microsoft_auth.W005",
-                    )
-                )
-
-        if config.MICROSOFT_AUTH_ASSERTION_KEY != "":
-            filename = config.MICROSOFT_AUTH_ASSERTION_KEY
-            exists_and_readable = os.access(filename, os.R_OK)
-
-            if not exists_and_readable:
-                errors.append(
-                    Warning(
-                        ("`MICROSOFT_AUTH_ASSERTION_KEY`" " cannot be read"),
-                        hint=(
-                            "MICROSOFT_AUTH_ASSERTION_KEY is configured"
-                            " but either it doesn't exist"
-                            " or django does not have permission to read it"
-                        ),
-                        id="microsoft_auth.W005",
-                    )
-                )
+    errors = assertion_check_helper(
+        errors,
+        config.MICROSOFT_AUTH_ASSERTION_CERTIFICATE,
+        "MICROSOFT_AUTH_ASSERTION_CERTIFICATE",
+    )
+    errors = assertion_check_helper(
+        errors, config.MICROSOFT_AUTH_ASSERTION_KEY, "MICROSOFT_AUTH_ASSERTION_KEY"
+    )
 
     for hook_setting_name in HOOK_SETTINGS:
         hook_setting = getattr(config, hook_setting_name)

@@ -1,5 +1,6 @@
 import json
 import urllib.parse
+from datetime import datetime
 from unittest.mock import Mock, patch
 from urllib.parse import parse_qs, urlparse
 
@@ -7,7 +8,7 @@ from django.contrib.sites.models import Site
 from django.test import RequestFactory, override_settings
 
 from microsoft_auth.client import MicrosoftClient
-from microsoft_auth.conf import LOGIN_TYPE_XBL
+from microsoft_auth.default_config import LOGIN_TYPE_XBL
 
 from . import TestCase
 
@@ -267,8 +268,12 @@ class ClientTests(TestCase):
         ).read()
     )  # noqa
     @override_settings(MICROSOFT_AUTH_CLIENT_ID="1234")
+    @patch("microsoft_auth.client.MicrosoftClient.get_exp_datetime")
     @patch("requests_oauthlib.OAuth2Session.fetch_token")
-    def test_fetch_token_client_assertion(self, mock_fetch_token):
+    def test_fetch_token_client_assertion(self, mock_fetch_token, mock_utcnow):
+
+        mock_utcnow.return_value = datetime.utcnow()
+
         auth_client = MicrosoftClient()
         kwargs = {}
 

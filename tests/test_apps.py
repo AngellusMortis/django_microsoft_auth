@@ -15,6 +15,8 @@ def hook_callback(user, token):
 @override_settings(
     MICROSOFT_AUTH_CLIENT_ID="test-client-id",
     MICROSOFT_AUTH_CLIENT_SECRET="test-client-secret",
+    MICROSOFT_AUTH_ASSERTION_CERTIFICATE="tests/client_asertion_cert.pem",
+    MICROSOFT_AUTH_ASSERTION_KEY="tests/client_asertion_key.pem",
 )
 class ChecksTests(TransactionTestCase):
     def setUp(self):
@@ -74,7 +76,20 @@ class ChecksTests(TransactionTestCase):
 
         self.assertIn("microsoft_auth.W003", self.captured.getvalue())
 
+    @override_settings(MICROSOFT_AUTH_ASSERTION_CERTIFICATE="does_not_exist")
+    def test_config_assertion_certificate_fails(self):
+        call_command("check")
+
+        self.assertIn("microsoft_auth.W005", self.captured.getvalue())
+
+    @override_settings(MICROSOFT_AUTH_ASSERTION_KEY="does_not_exist")
+    def test_config_assertion_key_fails(self):
+        call_command("check")
+
+        self.assertIn("microsoft_auth.W005", self.captured.getvalue())
+
     @override_settings(MICROSOFT_AUTH_CLIENT_SECRET="")
+    @override_settings(MICROSOFT_AUTH_ASSERTION_CERTIFICATE="")
     def test_config_client_secret_fails(self):
         call_command("check")
 
@@ -109,6 +124,8 @@ class ChecksTests(TransactionTestCase):
         self.assertIn("microsoft_auth.E005", str(exc.exception))
 
     @override_settings(MICROSOFT_AUTH_AUTHENTICATE_HOOK="tests.test_apps.hook_callback")
+    @override_settings(MICROSOFT_AUTH_ASSERTION_CERTIFICATE="")
+    @override_settings(MICROSOFT_AUTH_ASSERTION_KEY="")
     def test_config_hook_valid(self):
         call_command("check")
 

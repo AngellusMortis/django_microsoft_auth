@@ -6,8 +6,8 @@ import pytest
 from django.core.signing import loads
 from django.test import RequestFactory, override_settings
 
-from microsoft_auth.conf import LOGIN_TYPE_XBL
 from microsoft_auth.context_processors import microsoft
+from microsoft_auth.default_config import LOGIN_TYPE_XBL
 
 from . import TestCase
 
