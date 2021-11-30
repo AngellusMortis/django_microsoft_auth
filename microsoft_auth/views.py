@@ -30,8 +30,9 @@ class AuthenticateCallbackView(View):
 
     messages = {
         "bad_state": _(
-            "An invalid state variable was provided. "
-            "Please refresh the page and try again later."
+            "Login failed. "
+            "You probably left this page open for too long. "
+            "Please refresh the page and try again."
         ),
         "missing_code": _(
             "No authentication code was provided from " "Microsoft. Please try again."
@@ -94,7 +95,7 @@ class AuthenticateCallbackView(View):
             state = ""
 
         try:
-            state = loads(state, salt="microsoft_auth", max_age=300)
+            state = loads(state, salt="microsoft_auth", max_age=60*60*21)
         except BadSignature:  # pragma: no branch
             logger.debug("state has been tempered with")
             state = {}
