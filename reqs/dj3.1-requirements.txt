@@ -20,7 +20,7 @@ coverage[toml]==6.1.1
     #   pytest-cov
 cryptography==35.0.0
     # via pyjwt
-django==3.2.9
+django==3.2.12
     # via
     #   -r django.in
     #   microsoft_auth (pyproject.toml)
