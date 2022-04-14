@@ -10,11 +10,13 @@ Quickstart
 
     .. important::
 
-        **Make sure you update the domain in your `Site` object**
+        **Make sure you update the domain in your `Site` object from example.com to 
+        your own site url (eg. localhost:8000)**
 
         This needs to match the host (hostname + port) that you are using to
         access the Django site with. The easiest way to do this to go to
-        `/admin/sites/site/1/change/` if you have the admin site enabled.
+        `/admin/sites/site/1/change/` if you have the admin site enabled or to
+        create a migration that will update the `django_site` table in the database.
 
         `SITE_ID` is only required if want to use the `MicrosoftClient` without
         a request object (all of the code provided in this package uses a request
@@ -130,11 +132,26 @@ without loading a JavaScript script to the page.
 Redirect based authentication flow is triggered when user navigates to
 `to-auth-redirect/`, which takes in an optional `next` query parameter,
 for example, `to-auth-redirect/?next=/next/path`.
+
 This parameter is passed to the Authentication provider in state variable.
 After successfull authentication, authentication provider redirects the user to
 `from-auth-redirect/`, which logs in the user, parses the state variable, and
 redirects the user to the `next` path provided earlier or to `/` if no next path
 was provided.
+
+Example usage in a view with the next parameter would look like the following
+
+.. code-block:: console
+
+    @login_required(login_url='microsoft/to-auth-redirect/?next=/admin')
+    def index(request):
+        ...<additional code here>
+
+On loading this view, an unauthenticated user would be redirected to the azure login. After going through 
+the azure login, you'd be redirected to `http://<site_id_url/microsoft/from-auth-redirect/` and then to the 
+path suggested by the next variable. The `site_id_url` is the domain that is in the sites table in your database.
+If you're finding yourself redirected to an example domain check that you've properly set the row in that table.
+
 
 Test Site
 ---------
