@@ -11,7 +11,7 @@ Quickstart
     .. important::
 
         **Make sure you update the domain in your `Site` object from example.com to 
-        your own site url**
+        your own site url (eg. localhost:8000)**
 
         This needs to match the host (hostname + port) that you are using to
         access the Django site with. The easiest way to do this to go to
