@@ -259,7 +259,7 @@ typing-extensions==3.10.0.2
     # via
     #   black
     #   snooty-lextudio
-ujson==1.35
+ujson==5.2.0
     # via python-jsonrpc-server
 urllib3==1.26.7
     # via requests
