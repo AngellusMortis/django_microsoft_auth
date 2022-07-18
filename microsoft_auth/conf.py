@@ -87,6 +87,16 @@ DEFAULT_CONFIG = {
             ),
             str,
         ),
+        "MICROSOFT_AUTH_EXTRA_PARAMETERS": (
+            {},
+            _(
+                """Any optional parameters to include when building the
+                 microsoft authorization code request url. Parameters are
+                 parsed from a dict and appended in the order they appear
+                 in the dict"""
+            ),
+            dict,
+        ),
         "MICROSOFT_AUTH_AUTO_CREATE": (
             True,
             _(
@@ -180,6 +190,7 @@ DEFAULT_CONFIG = {
             "MICROSOFT_AUTH_CLIENT_ID",
             "MICROSOFT_AUTH_CLIENT_SECRET",
             "MICROSOFT_AUTH_EXTRA_SCOPES",
+            "MICROSOFT_AUTH_EXTRA_PARAMETERS",
             "MICROSOFT_AUTH_AUTO_CREATE",
             "MICROSOFT_AUTH_REGISTER_INACTIVE_ADMIN",
             "MICROSOFT_AUTH_XBL_SYNC_USERNAME",
