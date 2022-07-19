@@ -33,6 +33,8 @@ class ClientTests(TestCase):
     def _get_auth_url(self, base_url, scopes=MicrosoftClient.SCOPE_MICROSOFT, extra_args=None):
         if extra_args is None:
             extra_args = {}
+        if extra_args != dict:
+            return TypeError("Extra arguments must be of type dict")
         args = {
             "response_type": "code",
             "client_id": CLIENT_ID,
@@ -256,9 +258,17 @@ class ClientTests(TestCase):
 
         self.assertIn("example.com", client.authorization_url()[0])
 
-    @override_settings(MICROSOFT_AUTH_CLIENT_ID=CLIENT_ID, MICROSOFT_AUTH_EXTRA_PARAMETERS={"prompt": "select_account"})
+    @override_settings(MICROSOFT_AUTH_CLIENT_ID=CLIENT_ID,
+                       MICROSOFT_AUTH_EXTRA_PARAMETERS={"prompt": "select_account"})
     def test_additional_url_parameters(self):
         auth_client = MicrosoftClient(state=STATE)
         base_url = auth_client.openid_config["authorization_endpoint"]
         expected_auth_url = self._get_auth_url(base_url, extra_args={"prompt": "select_account"})
         self._assert_auth_url(expected_auth_url, auth_client.authorization_url())
+
+    @override_settings(MICROSOFT_AUTH_CLIENT_ID=CLIENT_ID)
+    def test_assert_fail_extra_args_not_dict(self):
+        auth_client = MicrosoftClient(state=STATE)
+        base_url = auth_client.openid_config["authorization_endpoint"]
+        self.assertRaises(TypeError, self._get_auth_url(base_url, extra_args=[]))
+
