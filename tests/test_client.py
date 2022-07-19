@@ -31,6 +31,8 @@ class ClientTests(TestCase):
         self.factory = RequestFactory()
 
     def _get_auth_url(self, base_url, scopes=MicrosoftClient.SCOPE_MICROSOFT, extra_args=None):
+        if extra_args is None:
+            extra_args = {}
         args = {
             "response_type": "code",
             "client_id": CLIENT_ID,
@@ -39,8 +41,9 @@ class ClientTests(TestCase):
             "state": STATE,
             "response_mode": "form_post",
         }
-        for e_arg in extra_args:
-            args[e_arg] = extra_args[e_arg]
+        if extra_args is dict:
+            for key, value in extra_args:
+                args[key] = value
         return (base_url + "?" + urllib.parse.urlencode(args), STATE)
 
     def _assert_auth_url(self, expected, actual):
