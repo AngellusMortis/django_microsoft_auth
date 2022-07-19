@@ -34,7 +34,7 @@ class ClientTests(TestCase):
         if extra_args is None:
             extra_args = {}
         if extra_args != dict:
-            return TypeError("Extra arguments must be of type dict")
+            raise TypeError("Extra arguments must be of type dict")
         args = {
             "response_type": "code",
             "client_id": CLIENT_ID,
