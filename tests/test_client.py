@@ -33,7 +33,7 @@ class ClientTests(TestCase):
     def _get_auth_url(self, base_url, scopes=MicrosoftClient.SCOPE_MICROSOFT, extra_args=None):
         if extra_args is None:
             extra_args = {}
-        if extra_args != dict:
+        if len(extra_args) != 0 and type(extra_args) != dict:
             raise TypeError("Extra arguments must be of type dict")
         args = {
             "response_type": "code",
