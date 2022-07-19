@@ -225,3 +225,16 @@ PowerShell
 ```
 
 You should however upgrade to 2.0 once you can.
+
+Additional Options
+------------------
+
+In your settings.py file you may include the following:
+
+.. code-block:: python3
+    
+    MICROSOFT_AUTH_EXTRA_PARAMETERS = {}
+    
+All of the required parameters as well as the "response_mode" parameter are already handled but the optional parameters such as prompt can be used.
+The extra parameters can be found at https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow#request-an-authorization-code
+
