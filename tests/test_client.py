@@ -41,9 +41,7 @@ class ClientTests(TestCase):
             "state": STATE,
             "response_mode": "form_post",
         }
-        if extra_args is dict:
-            for key, value in extra_args:
-                args[key] = value
+        args.update(extra_args)
         return (base_url + "?" + urllib.parse.urlencode(args), STATE)
 
     def _assert_auth_url(self, expected, actual):
@@ -262,6 +260,5 @@ class ClientTests(TestCase):
     def test_additional_url_parameters(self):
         auth_client = MicrosoftClient(state=STATE)
         base_url = auth_client.openid_config["authorization_endpoint"]
-        expected_auth_url = self._get_auth_url(base_url,
-                                               extra_args={"response_mode": "form_post", "prompt": "select_account"})
+        expected_auth_url = self._get_auth_url(base_url, extra_args={"prompt": "select_account"})
         self._assert_auth_url(expected_auth_url, auth_client.authorization_url())
