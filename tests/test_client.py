@@ -39,9 +39,8 @@ class ClientTests(TestCase):
             "state": STATE,
             "response_mode": "form_post",
         }
-        if extra_args is not None and extra_args is dict:
-            for e_arg in extra_args:
-                args[e_arg] = extra_args[e_arg]
+        for e_arg in extra_args:
+            args[e_arg] = extra_args[e_arg]
         return (base_url + "?" + urllib.parse.urlencode(args), STATE)
 
     def _assert_auth_url(self, expected, actual):
@@ -256,7 +255,7 @@ class ClientTests(TestCase):
 
         self.assertIn("example.com", client.authorization_url()[0])
 
-    @override_settings(MICROSOFT_AUTH_EXTRA_PARAMETERS={"prompt": "select_account"})
+    @override_settings(MICROSOFT_AUTH_CLIENT_ID=CLIENT_ID, MICROSOFT_AUTH_EXTRA_PARAMETERS={"prompt": "select_account"})
     def test_additional_url_parameters(self):
         auth_client = MicrosoftClient(state=STATE)
         base_url = auth_client.openid_config["authorization_endpoint"]
