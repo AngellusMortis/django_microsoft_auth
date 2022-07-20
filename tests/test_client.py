@@ -30,7 +30,8 @@ class ClientTests(TestCase):
 
         self.factory = RequestFactory()
 
-    def _get_auth_url(self, base_url, scopes=MicrosoftClient.SCOPE_MICROSOFT, extra_args=None):
+    def _get_auth_url(self, base_url, scopes=MicrosoftClient.SCOPE_MICROSOFT,
+                      extra_args=None):
         if extra_args is None:
             extra_args = {}
         if len(extra_args) != 0 and type(extra_args) != dict:
@@ -263,7 +264,7 @@ class ClientTests(TestCase):
 
     @override_settings(MICROSOFT_AUTH_CLIENT_ID=CLIENT_ID,
                        MICROSOFT_AUTH_EXTRA_PARAMETERS={"prompt": "select_account"})
-    def test_additional_url_parameters(self):
+    def test_extra_url_params(self):
         auth_client = MicrosoftClient(state=STATE)
         base_url = auth_client.openid_config["authorization_endpoint"]
         expected_auth_url = self._get_auth_url(
