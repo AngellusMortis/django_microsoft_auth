@@ -170,7 +170,10 @@ class MicrosoftClient(OAuth2Session):
         if self.config.MICROSOFT_AUTH_LOGIN_TYPE == LOGIN_TYPE_XBL:
             auth_url = self._xbox_authorization_url
 
-        return super().authorization_url(auth_url, response_mode="form_post")
+        extra_parameters = self.config.MICROSOFT_AUTH_EXTRA_PARAMETERS
+        extra_parameters["response_mode"] = "form_post"
+        built_auth_url = super().authorization_url(auth_url, **extra_parameters)
+        return built_auth_url
 
     def fetch_token(self, **kwargs):
         """Fetchs OAuth2 Token with given kwargs"""
