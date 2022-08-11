@@ -40,7 +40,7 @@ cryptography==35.0.0
     # via pyjwt
 decorator==5.1.0
     # via ipython
-django==3.2.14
+django==3.2.15
     # via
     #   -r django.in
     #   django-picklefield
