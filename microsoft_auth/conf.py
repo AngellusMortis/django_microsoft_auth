@@ -272,14 +272,12 @@ def init_config():
         constance_config = None
 
     # retrieve and set config class
-
-    if (
-        hasattr(settings, "MICROSOFT_AUTH_CONFIG_CLASS")
-        and settings.MICROSOFT_AUTH_CONFIG_CLASS is not None
-    ):
-        module, _, obj = settings.MICROSOFT_AUTH_CONFIG_CLASS.rpartition(".")
+    auth_config_class = getattr(settings, "MICROSOFT_AUTH_CONFIG_CLASS", None)
+    if auth_config_class is not None:
+        module, _, obj = auth_config_class.rpartition(".")
         conf = import_module(module)
-        config = getattr(conf, obj)
+        # Get class and instantiate it
+        config = getattr(conf, obj)()
 
         if hasattr(config, "add_default_config"):
             config.add_default_config(DEFAULT_CONFIG)
