@@ -276,8 +276,10 @@ def init_config():
     if auth_config_class is not None:
         module, _, obj = auth_config_class.rpartition(".")
         conf = import_module(module)
-        # Get class and instantiate it
-        config = getattr(conf, obj)()
+        config = getattr(conf, obj)
+        # If class is not already instantiated, do so
+        if callable(config):
+            config = config()
 
         if hasattr(config, "add_default_config"):
             config.add_default_config(DEFAULT_CONFIG)
