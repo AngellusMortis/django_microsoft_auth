@@ -56,7 +56,7 @@ dev = [
   "pyproject-flake8",
   "pytest-cov",
   "pytest-django",
-  "pytest-sugar",
+  "pytest-rich",
   "pytest",
   "sphinx",
 ]
