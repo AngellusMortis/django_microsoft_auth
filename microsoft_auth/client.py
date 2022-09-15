@@ -1,12 +1,12 @@
 import json
 import logging
 
-import jwt
-import requests
 from django.contrib.sites.models import Site
 from django.core.cache import cache
 from django.urls import reverse
+import jwt
 from jwt.algorithms import RSAAlgorithm
+import requests
 from requests_oauthlib import OAuth2Session
 
 from .conf import (

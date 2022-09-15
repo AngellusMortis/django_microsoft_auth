@@ -152,7 +152,8 @@ DEFAULT_CONFIG = {
         "MICROSOFT_AUTH_CALLBACK_HOOK": (
             "",
             _(
-                """Callable hook to call right before completing the `auth_callback` view.
+                """
+                Callable hook to call right before completing the `auth_callback` view.
 
                 Really useful for adding custom data to message or chaning the
                 expected base URL that gets passed back up to the window that

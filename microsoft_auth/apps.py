@@ -78,7 +78,7 @@ def microsoft_auth_validator(app_configs, **kwargs):
                     id="microsoft_auth.W003",
                 )
             )
-        if config.MICROSOFT_AUTH_CLIENT_SECRET == "":
+        if config.MICROSOFT_AUTH_CLIENT_SECRET == "":  # nosec
             errors.append(
                 Warning(
                     ("`MICROSOFT_AUTH_CLIENT_SECRET` is not configured"),

@@ -1,5 +1,7 @@
-from django.test import TestCase as BaseTestCase
-from django.test import TransactionTestCase as BaseTransactionTestCase
+from django.test import (
+    TestCase as BaseTestCase,
+    TransactionTestCase as BaseTransactionTestCase,
+)
 
 
 class TestServerSiteMixin:

@@ -5,55 +5,62 @@
     },
     "extensions": [
         "ms-python.python",
+        "ms-python.vscode-pylance",
         "eamodio.gitlens",
         "ryanluker.vscode-coverage-gutters",
         "bungcip.better-toml",
         "mikestead.dotenv",
-        "lextudio.restructuredtext",
-        "trond-snekvik.simple-rst",
+        "ms-python.black-formatter",
+        "ms-python.isort",
+        "streetsidesoftware.code-spell-checker"
     ],
     "settings": {
+        // common
         "editor.formatOnSave": true,
         "editor.formatOnSaveTimeout": 3000,
         "editor.insertSpaces": true,
         "files.insertFinalNewline": true,
         "files.trimTrailingWhitespace": true,
+        // python common
+        "[python]": {
+            "editor.defaultFormatter": "ms-python.black-formatter",
+            "editor.codeActionsOnSave": {
+                "source.organizeImports": true
+            },
+        },
         "python.envFile": "${workspaceFolder}/.env",
         "python.defaultInterpreterPath": "/usr/local/bin/python",
         "python.pythonPath": "/usr/local/bin/python",
-        "python.formatting.blackArgs": [
-            "--line-length",
-            "88"
-        ],
-        "python.formatting.provider": "black",
-        "python.linting.banditEnabled": true,
-        "python.linting.banditArgs": [
-            "-c ${workspaceFolder}/.bandit.yml"
-        ],
+        // python linting
+        "python.linting.banditEnabled": false,
         "python.linting.enabled": true,
         "python.linting.flake8Enabled": true,
-        "python.linting.flake8Path": "pflake8",
-        "python.linting.mypyEnabled": false,
+        "python.linting.flake8Path": "/usr/local/bin/pflake8",
+        "python.linting.mypyEnabled": true,
         "python.linting.pylintEnabled": false,
         "python.linting.pylamaEnabled": false,
-        "python.sortImports.args": [
-            "--settings-path=${workspaceFolder}/pyproject.toml"
+        "black-formatter.args": [
+            "--config=./pyproject.toml",
+            "--line-length=88"
         ],
-        "python.testing.promptToConfigure": false,
-        "restructuredtext.confPath": "${workspaceFolder}/docs",
+        "isort.args": [
+            "--settings-path=./pyproject.toml"
+        ],
+        "pylint.args": [
+            "--rcfile=./pyproject.toml"
+        ],
+        // python tests
         "coverage-gutters.xmlname": "coverage.xml",
         "coverage-gutters.customizable.status-bar-toggler-watchCoverageAndVisibleEditors-enabled": true,
         "coverage-gutters.showLineCoverage": true,
+        "python.testing.promptToConfigure": false,
         "python.testing.pytestEnabled": true,
         "python.testing.unittestEnabled": false,
         "python.testing.nosetestsEnabled": false,
         "python.testing.pytestArgs": [
             "--cov-report=xml",
-            "--color=no",
-        ],
+            "--color=no"
+        ]
     },
-    "forwardPorts": [
-        8000
-    ],
-    "postCreateCommand": "flit install --symlink && cd /workspaces/django_microsoft_auth && flit install --symlink"
+    "postCreateCommand": "pip install -e '.[dev,ql]'"
 }

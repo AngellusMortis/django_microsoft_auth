@@ -1,20 +1,24 @@
 [build-system]
-requires = ["flit_core >=3,<4"]
-build-backend = "flit_core.buildapi"
+requires = [
+  "setuptools >= 61.0.0", "setuptools_scm[toml]>=6.2",
+  "wheel",
+]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "django_microsoft_auth"
+description = "Simple app to enable Microsoft Account, Office 365 and Xbox Live authentcation as a Django authentcation backend."
 authors = [
     {name = "Christopher Bailey", email = "cbailey@mort.is"},
 ]
 requires-python='>=3.8'
 dependencies=[
-  "django>=2.2",
+  "django>=3.2",
   "pyjwt[crypto]<3.0",
   "requests-oauthlib",
   "requests",
 ]
-dynamic = ["version", "description"]
+dynamic = ["version"]
 readme = "README.rst"
 classifiers=[
   "Development Status :: 5 - Production/Stable",
@@ -25,24 +29,18 @@ classifiers=[
   "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
-  "Framework :: Django :: 2.2",
-  "Framework :: Django :: 3.1",
   "Framework :: Django :: 3.2",
+  "Framework :: Django :: 4.0",
+  "Framework :: Django :: 4.1",
 ]
 keywords = ["django_microsoft_auth"]
 license = {file = "LICENSE"}
 
 [project.optional-dependencies]
-test = [
-  "coverage",
-  "pytest",
-  "pytest-cov",
-  "pytest-django",
-  "pytest-sugar",
-]
 dev = [
   "bandit",
   "black",
+  "coverage",
   "djangoql",
   "doc8",
   "flake8-bugbear",
@@ -56,7 +54,10 @@ dev = [
   "isort",
   "pip-tools",
   "pyproject-flake8",
-  "snooty-lextudio",
+  "pytest-cov",
+  "pytest-django",
+  "pytest-sugar",
+  "pytest",
   "sphinx",
 ]
 ql = [
@@ -67,42 +68,13 @@ ql = [
 Documentation = "https://django-microsoft-auth.readthedocs.io/en/latest/"
 Source = "https://github.com/AngellusMortis/django_microsoft_auth"
 
-[tool.flit.module]
-name = "microsoft_auth"
-
-[tool.flit.sdist]
-include = [
-  "AUTHORS.rst",
-  "CONTRIBUTING.rst",
-  "HISTORY.rst",
-  "LICENSE",
-  "README.rst",
-  "microsoft_auth/*",
-  "microsoft_auth/templates/*.html",
-  "microsoft_auth/static/*.css",
-  "microsoft_auth/static/*.js",
-  "microsoft_auth/static/*.jpg",
-  "microsoft_auth/static/*.png",
-  "microsoft_auth/static/*.gif",
-  "tests/*",
-  "docs/*.rst",
-  "docs/conf.py",
-  "docs/Makefile",
-  "docs/make.bat",
-  "docs/*.jpg",
-  "docs/*.png",
-  "docs/*.gif",
-]
-exclude = [
-  "__pycache__",
-  "*.py",
-  "*.pyc",
-  "*.pyo"
-]
+[tool.setuptools.packages.find]
+include = ["microsoft_auth", "microsoft_auth.*"]
+exclude = ["tests", "tests.*"]
 
 [tool.black]
 line-length = 88
-target-versions = 'py39'
+target-versions = 'py310'
 include = '\.pyi?$'
 exclude = '''
 
@@ -123,14 +95,30 @@ exclude = '''
 )
 '''
 
+[tool.coverage.run]
+omit = [
+    "microsoft_auth/migrations/*.py",
+]
+
 [tool.flake8]
-exclude = ".eggs, .git, .tox"
+exclude = ".eggs, .git, .tox, build"
 ignore = "C812, W503, C816, C815, B008"
 max-line-length = 88
 
 [tool.isort]
 profile = "black"
+# will group `import x` and `from x import` of the same module.
+force_sort_within_sections = true
+known_first_party = [
+    "microsoft_auth",
+]
+combine_as_imports = true
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "tests.site.settings"
 addopts = "--cov-config .coveragerc --cov-branch --cov-append --cov-report term-missing --color=yes --no-cov-on-fail --cov=microsoft_auth --durations=10 --maxfail=5"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools_scm]

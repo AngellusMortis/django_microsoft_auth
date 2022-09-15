@@ -1,6 +1,6 @@
 import json
-import urllib.parse
 from unittest.mock import Mock, patch
+import urllib.parse
 from urllib.parse import parse_qs, urlparse
 
 from django.contrib.sites.models import Site

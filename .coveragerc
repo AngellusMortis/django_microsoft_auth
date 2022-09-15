@@ -1,4 +1,0 @@
-[run]
-omit =
-    microsoft_auth/_version.py
-    microsoft_auth/migrations/*.py

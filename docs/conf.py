@@ -56,8 +56,8 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = u"Django Microsoft Authentication Backend"
-copyright = u"2017, Christopher Bailey"  # noqa
+project = "Django Microsoft Authentication Backend"
+copyright = "2017, Christopher Bailey"  # noqa
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
@@ -210,8 +210,8 @@ latex_documents = [
     (
         "index",
         "django_microsoft_auth.tex",
-        u"Django Microsoft Authentication Backend Documentation",
-        u"Christopher Bailey",
+        "Django Microsoft Authentication Backend Documentation",
+        "Christopher Bailey",
         "manual",
     )
 ]
@@ -245,8 +245,8 @@ man_pages = [
     (
         "index",
         "django_microsoft_auth",
-        u"Django Microsoft Authentication Backend Documentation",
-        [u"Christopher Bailey"],
+        "Django Microsoft Authentication Backend Documentation",
+        ["Christopher Bailey"],
         1,
     )
 ]
@@ -264,8 +264,8 @@ texinfo_documents = [
     (
         "index",
         "django_microsoft_auth",
-        u"Django Microsoft Authentication Backend Documentation",
-        u"Christopher Bailey",
+        "Django Microsoft Authentication Backend Documentation",
+        "Christopher Bailey",
         "django_microsoft_auth",
         "One line description of project.",
         "Miscellaneous",

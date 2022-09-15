@@ -10,23 +10,18 @@ setRoot
 
 pushd "$ROOT_PATH" 2>&1 >/dev/null
 
-dj_versions=("2.2" "3.1")
-dj_stable="3.2"
+dj_versions=("3.2" "4.0" "4.1")
+dj_stable="4.1"
 
 for dj_version in "${dj_versions[@]}"; do
     echo "Generating requirements for Django $dj_version..."
     echo "django~=$dj_version" > django.in
-    pip-compile -q --extra=test --upgrade --output-file=reqs/dj$dj_version-requirements.txt pyproject.toml django.in
+    pip-compile --pip-args='--root-user-action=ignore' -q --extra=dev --extra=ql --upgrade --output-file=reqs/dj$dj_version-requirements.txt pyproject.toml django.in
     rm django.in
 done
-echo "Generating main dev requirements for Django $dj_stable..."
-echo -e "django~=$dj_stable\ndjango-constance[database]" > django.in
-pip-compile -q --upgrade --extra=dev --extra=ql --extra=test --output-file=reqs/dev-requirements.txt pyproject.toml django.in
-rm django.in
 
 echo "Installing new requirements..."
-pip install -r ./reqs/dev-requirements.txt
-cd ../django_microsoft_auth && flit install --symlink || true
-flit install --symlink
+pip install --root-user-action=ignore -r ./reqs/dj$dj_stable-requirements.txt
+pip install --root-user-action=ignore -e ".[dev,ql]"
 
 popd 2>&1 >/dev/null

@@ -51,7 +51,7 @@ Python/Django support
 
 Supported python versions: 3.8+
 
-Supported Django version: 2.2, 3.1+
+Supported Django version: 3.2+
 
 https://docs.djangoproject.com/en/stable/faq/install/#what-python-version-can-i-use-with-django
 

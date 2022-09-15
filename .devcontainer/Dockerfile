@@ -1,18 +1,29 @@
-FROM python:3.10-slim-buster
+FROM python:3.10-slim-buster as base
 
-RUN apt-get update \
-    && apt-get install -y git build-essential vim curl \
-    # cleaning up unused files
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-    && rm -rf /var/lib/apt/lists/*
+LABEL org.opencontainers.image.source https://github.com/AngellusMortis/django_microsoft_auth
 
-COPY ./reqs/dev-requirements.txt /dev-requirements.txt
-RUN --mount=type=cache,mode=0755,target=/root/.cache/pip \
-    pip install --no-cache-dir -U pip \
-    && pip install --no-cache-dir -r /dev-requirements.txt \
-    && rm /dev-requirements.txt \
+ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
+
+
+FROM base as builder
+
+RUN --mount=type=cache,mode=0755,id=apt,target=/var/lib/apt/lists apt-get update -qq \
+    && apt-get install -yqq build-essential
+
+COPY ./reqs/dj4.1-requirements.txt /
+RUN --mount=type=cache,mode=0755,target=/root/.cache/pip pip install -U pip \
+    && pip install -r /dj4.1-requirements.txt \
+    && rm /dj4.1-requirements.txt
+
+
+FROM base as dev
+
+COPY --from=builder /usr/local/bin/ /usr/local/bin/
+COPY --from=builder /usr/local/lib/python3.10/ /usr/local/lib/python3.10/
+RUN --mount=type=cache,mode=0755,id=apt,target=/var/lib/apt/lists apt-get update \
+    && apt-get install -y git vim curl \
     && echo 'export PS1="\[$(tput setaf 6)\]\w \[$(tput setaf 7)\]\\$ \[$(tput sgr0)\]"' >> /root/.bashrc
 
 ENV PATH /workspaces/django_microsoft_auth/.bin:$PATH
 ENV PYTHONPATH /workspaces/django_microsoft_auth/
-ENV FLIT_ROOT_INSTALL=1
