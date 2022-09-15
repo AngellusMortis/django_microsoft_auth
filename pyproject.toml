@@ -40,6 +40,7 @@ license = {file = "LICENSE"}
 dev = [
   "bandit",
   "black",
+  "build",
   "coverage",
   "doc8",
   "flake8-bugbear",

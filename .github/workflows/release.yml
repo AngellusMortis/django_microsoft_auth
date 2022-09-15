@@ -30,10 +30,10 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flit
+        pip install ".[dev]"
 
     - name: Build package
-      run: flit build
+      run: python -m build
 
     - name: Publish a Python distribution to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
