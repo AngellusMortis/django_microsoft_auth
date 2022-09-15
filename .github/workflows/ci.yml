@@ -6,7 +6,7 @@ on:
     branches: [master]
 
 env:
-  DEFAULT_DJANGO: "3.2"
+  DEFAULT_DJANGO: "4.1"
   DEFAULT_PYTHON: "3.10"
 
 jobs:
@@ -42,11 +42,10 @@ jobs:
       - name: Test with pytest
         run: |
           export PYTHONPATH=$GITHUB_WORKSPACE
-          pytest --rich --ignore=tests/test_zconstance.py
+          pytest --ignore=tests/test_zconstance.py
           if [[ "${{ matrix.django }}" == "${{ env.DEFAULT_DJANGO }}" ]]; then
-            pytest --rich tests/test_zconstance.py
+            pytest tests/test_zconstance.py
           fi
-          coverage report -m
 
       - name: Publish Code Coverage
         uses: paambaati/codeclimate-action@v2.7.5

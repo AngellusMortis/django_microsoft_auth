@@ -50,6 +50,11 @@ django==4.1.1
     # via
     #   -r django.in
     #   django-microsoft-auth (pyproject.toml)
+    #   django-picklefield
+django-constance[database]==2.9.1
+    # via -r django.in
+django-picklefield==3.1
+    # via django-constance
 djangoql==0.17.1
     # via django-microsoft-auth (pyproject.toml)
 doc8==1.0.0

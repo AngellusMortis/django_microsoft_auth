@@ -46,7 +46,7 @@ cryptography==38.0.1
     # via pyjwt
 decorator==5.1.1
     # via ipython
-django==3.2.15
+django==4.1.1
     # via
     #   -r django.in
     #   django-microsoft-auth (pyproject.toml)
@@ -177,9 +177,7 @@ pytest-django==4.5.2
 pytest-rich==0.1.1
     # via django-microsoft-auth (pyproject.toml)
 pytz==2022.2.1
-    # via
-    #   babel
-    #   django
+    # via babel
 pyyaml==6.0
     # via bandit
 requests==2.28.1

@@ -116,7 +116,7 @@ combine_as_imports = true
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "tests.site.settings"
-addopts = "--cov-config .coveragerc --cov-branch --cov-append --cov-report term-missing --color=yes --no-cov-on-fail --cov=microsoft_auth --durations=10 --maxfail=5"
+addopts = "--rich --cov-config .coveragerc --cov-branch --cov-append --cov-report term-missing --color=yes --no-cov-on-fail --cov=microsoft_auth --durations=10 --maxfail=5"
 
 [tool.setuptools]
 include-package-data = true
