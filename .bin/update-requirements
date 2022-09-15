@@ -15,12 +15,14 @@ dj_stable="4.1"
 
 for dj_version in "${dj_versions[@]}"; do
     echo "Generating requirements for Django $dj_version..."
+    django_reqs="django~=$dj_stable"
+    extras="--extra=dev"
     if [[ "$dj_version" == "$dj_stable" ]]; then
-        echo -e "django~=$dj_stable\ndjango-constance[database]" > django.in
-    else
-        echo -e "django~=$dj_stable" > django.in
+        django_reqs="django~=$dj_stable\ndjango-constance[database]"
+        extras="--extra=dev --extra=ql"
     fi
-    pip-compile --pip-args='--root-user-action=ignore' -q --extra=dev --extra=ql --upgrade --output-file=reqs/dj$dj_version-requirements.txt pyproject.toml django.in
+    echo -e "$django_reqs" > django.in
+    pip-compile --pip-args='--root-user-action=ignore' -q $extras --upgrade --output-file=reqs/dj$dj_version-requirements.txt pyproject.toml django.in
     rm django.in
 done
 

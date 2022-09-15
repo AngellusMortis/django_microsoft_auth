@@ -41,7 +41,6 @@ dev = [
   "bandit",
   "black",
   "coverage",
-  "djangoql",
   "doc8",
   "flake8-bugbear",
   "flake8-builtins",
