@@ -45,7 +45,7 @@ class MicrosoftClient(OAuth2Session):
 
     # required OAuth scopes
     SCOPE_XBL = ["XboxLive.signin", "XboxLive.offline_access"]
-    SCOPE_MICROSOFT = ["openid", "email", "profile"]
+    SCOPE_MICROSOFT = ["User.Read", "openid", "email", "profile"]
 
     def __init__(self, state=None, request=None, *args, **kwargs):
         self.config = config
