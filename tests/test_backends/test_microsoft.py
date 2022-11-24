@@ -185,7 +185,6 @@ class MicrosoftBackendsTests(TestCase):
         self.assertEqual(FIRST, self.unlinked_account.user.first_name)
         self.assertEqual(LAST, self.unlinked_account.user.last_name)
 
-
     @patch("microsoft_auth.backends.MicrosoftClient")
     def test_authenticate_existing_user_no_user_with_first_last_name(self, mock_client):
         mock_auth = Mock()
@@ -208,7 +207,6 @@ class MicrosoftBackendsTests(TestCase):
         self.assertEqual(EMAIL, self.unlinked_account.user.email)
         self.assertEqual(FIRST, self.unlinked_account.user.first_name)
         self.assertEqual(LAST, self.unlinked_account.user.last_name)
-
 
     @patch("microsoft_auth.backends.MicrosoftClient")
     def test_authenticate_existing_user_unlinked_user(self, mock_client):
