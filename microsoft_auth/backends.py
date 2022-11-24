@@ -153,6 +153,8 @@ class MicrosoftAuthenticationBackend(ModelBackend):
                     last_name, first_name = fullname.split(", ")
                 elif " " in fullname:
                     first_name, last_name = fullname.split(" ", 1)
+                elif "." in fullname:
+                    first_name, last_name = fullname.split(".", 1)
                 else:
                     first_name = fullname
 
