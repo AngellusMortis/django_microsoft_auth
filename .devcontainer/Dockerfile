@@ -1,4 +1,4 @@
-FROM python:3.10-slim-buster as base
+FROM python:3.11-slim-buster as base
 
 LABEL org.opencontainers.image.source https://github.com/AngellusMortis/django_microsoft_auth
 
@@ -20,7 +20,7 @@ RUN --mount=type=cache,mode=0755,target=/root/.cache/pip pip install -U pip \
 FROM base as dev
 
 COPY --from=builder /usr/local/bin/ /usr/local/bin/
-COPY --from=builder /usr/local/lib/python3.10/ /usr/local/lib/python3.10/
+COPY --from=builder /usr/local/lib/python3.11/ /usr/local/lib/python3.11/
 RUN --mount=type=cache,mode=0755,id=apt,target=/var/lib/apt/lists apt-get update \
     && apt-get install -y git vim curl \
     && echo 'export PS1="\[$(tput setaf 6)\]\w \[$(tput setaf 7)\]\\$ \[$(tput sgr0)\]"' >> /root/.bashrc
