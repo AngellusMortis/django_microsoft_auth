@@ -83,7 +83,7 @@ class ConfTests(TransactionTestCase):
             mockClass.assert_called_once()
 
     @override_settings(
-        MICROSOFT_AUTH_CONFIG_CLASS="tests.test_conf.SimpleTestNoDefaultConfig",
+        MICROSOFT_AUTH_CONFIG_CLASS="tests.test_conf.SimpleTestNoDefaultConfig",  # noqa
     )
     def test_custom_config_class_with_no_default_uninstantiated(self):
         """
