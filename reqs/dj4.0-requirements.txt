@@ -18,7 +18,7 @@ babel==2.11.0
     # via sphinx
 backcall==0.2.0
     # via ipython
-bandit==1.7.4
+bandit[toml]==1.7.4
     # via django-microsoft-auth (pyproject.toml)
 beautifulsoup4==4.11.1
     # via furo
@@ -223,6 +223,8 @@ stevedore==4.1.1
     # via
     #   bandit
     #   doc8
+toml==0.10.2
+    # via bandit
 tomli-w==1.0.0
     # via flit
 traitlets==5.5.0

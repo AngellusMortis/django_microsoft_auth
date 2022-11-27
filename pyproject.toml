@@ -39,7 +39,7 @@ license = {file = "LICENSE"}
 
 [project.optional-dependencies]
 dev = [
-  "bandit",
+  "bandit[toml]",
   "black",
   "build",
   "coverage",
