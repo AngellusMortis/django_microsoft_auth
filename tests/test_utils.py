@@ -42,7 +42,7 @@ class UtilsTests(TestCase):
         self.assertIsNone(get_hook("MICROSOFT_AUTH_AUTHENTICATE_HOOK"))
 
     @override_settings(
-        MICROSOFT_AUTH_AUTHENTICATE_HOOK="tests.test_utils.hook_callback"
+        MICROSOFT_AUTH_AUTHENTICATE_HOOK="tests.test_utils.hook_callback",
     )
     @patch("microsoft_auth.utils.importlib")
     def test_get_hook_valid_not_empty(self, mock_import):
