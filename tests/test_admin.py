@@ -16,13 +16,18 @@ class AdminTests(TestCase):
         User = get_user_model()
 
         self.user = User.objects.create_superuser(
-            "test", "test@example.com", "password1"
+            "test",
+            "test@example.com",
+            "password1",
         )
         self.microsoft_account = MicrosoftAccount.objects.create(
-            microsoft_id="test", user=self.user
+            microsoft_id="test",
+            user=self.user,
         )
         self.xbox_account = XboxLiveAccount.objects.create(
-            xbox_id="test", gamertag="test", user=self.user
+            xbox_id="test",
+            gamertag="test",
+            user=self.user,
         )
 
         self.client.force_login(self.user)
@@ -37,13 +42,15 @@ class AdminTests(TestCase):
         _register_admins()
 
         self.client.get(reverse("admin:index"))
-        self.client.get(reverse("admin:auth_user_change", args=(self.user.id,)))
+        self.client.get(
+            reverse("admin:auth_user_change", args=(self.user.id,)),
+        )
 
         self.client.get(
             reverse(
                 "admin:microsoft_auth_microsoftaccount_change",
                 args=(self.microsoft_account.id,),
-            )
+            ),
         )
 
     @override_settings(
@@ -56,13 +63,15 @@ class AdminTests(TestCase):
         _register_admins()
 
         self.client.get(reverse("admin:index"))
-        self.client.get(reverse("admin:auth_user_change", args=(self.user.id,)))
+        self.client.get(
+            reverse("admin:auth_user_change", args=(self.user.id,)),
+        )
 
         self.client.get(
             reverse(
                 "admin:microsoft_auth_xboxliveaccount_change",
                 args=(self.xbox_account.id,),
-            )
+            ),
         )
 
     @override_settings(MICROSOFT_AUTH_REGISTER_INACTIVE_ADMIN=True)
@@ -72,17 +81,19 @@ class AdminTests(TestCase):
         _register_admins()
 
         self.client.get(reverse("admin:index"))
-        self.client.get(reverse("admin:auth_user_change", args=(self.user.id,)))
+        self.client.get(
+            reverse("admin:auth_user_change", args=(self.user.id,)),
+        )
 
         self.client.get(
             reverse(
                 "admin:microsoft_auth_microsoftaccount_change",
                 args=(self.microsoft_account.id,),
-            )
+            ),
         )
         self.client.get(
             reverse(
                 "admin:microsoft_auth_xboxliveaccount_change",
                 args=(self.xbox_account.id,),
-            )
+            ),
         )
