@@ -33,7 +33,8 @@ class XboxLiveBackendsTests(TestCase):
         self.request = self.factory.get("/")
 
         self.linked_account = XboxLiveAccount.objects.create(
-            xbox_id="test_id", gamertag="test_gamertag"
+            xbox_id="test_id",
+            gamertag="test_gamertag",
         )
         self.linked_account.user = User.objects.create(username="user1")
         self.linked_account.save()
