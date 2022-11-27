@@ -21,7 +21,9 @@ pytest.importorskip("constance")
 
 
 @modify_settings(
-    INSTALLED_APPS={"prepend": ["constance", "constance.backends.database"]}
+    INSTALLED_APPS={
+        "prepend": ["constance", "constance.backends.database"],
+    },
 )
 class ConstanceTests(TestCase):
     def test_constance_admin(self):
@@ -37,7 +39,7 @@ class ConstanceTests(TestCase):
 
 
 @modify_settings(
-    INSTALLED_APPS={"prepend": ["constance", "constance.backends.database"]}
+    INSTALLED_APPS={"prepend": ["constance", "constance.backends.database"]},
 )
 class ConstanceConfTests(ConfTests):
     def setUp(self):
