@@ -28,7 +28,7 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    }
+    },
 }
 
 ROOT_URLCONF = "tests.site.urls"
@@ -48,9 +48,9 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-            ]
+            ],
         },
-    }
+    },
 ]
 
 MIDDLEWARE = [
@@ -81,7 +81,7 @@ CONSTANCE_ADDITIONAL_FIELDS = DEFAULT_CONFIG["fields"]
 if "LOAD_DEV_SETTINGS" in os.environ:
     DEBUG = True
     TEMPLATES[0]["OPTIONS"]["context_processors"] += [
-        "microsoft_auth.context_processors.microsoft"
+        "microsoft_auth.context_processors.microsoft",
     ]
 
     AUTHENTICATION_BACKENDS = [
