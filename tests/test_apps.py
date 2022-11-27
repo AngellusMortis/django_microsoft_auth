@@ -108,7 +108,9 @@ class ChecksTests(TransactionTestCase):
 
         self.assertIn("microsoft_auth.E005", str(exc.exception))
 
-    @override_settings(MICROSOFT_AUTH_AUTHENTICATE_HOOK="tests.test_apps.hook_callback")
+    @override_settings(
+        MICROSOFT_AUTH_AUTHENTICATE_HOOK="tests.test_apps.hook_callback",
+    )
     def test_config_hook_valid(self):
         call_command("check")
 
