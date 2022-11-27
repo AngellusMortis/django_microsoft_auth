@@ -31,7 +31,10 @@ class ClientTests(TestCase):
         self.factory = RequestFactory()
 
     def _get_auth_url(
-        self, base_url, scopes=MicrosoftClient.SCOPE_MICROSOFT, extra_args=None
+        self,
+        base_url,
+        scopes=MicrosoftClient.SCOPE_MICROSOFT,
+        extra_args=None,
     ):
         if extra_args is None:
             extra_args = {}
@@ -94,7 +97,10 @@ class ClientTests(TestCase):
         base_url = auth_client.openid_config["authorization_endpoint"]
         expected_auth_url = self._get_auth_url(base_url)
 
-        self._assert_auth_url(expected_auth_url, auth_client.authorization_url())
+        self._assert_auth_url(
+            expected_auth_url,
+            auth_client.authorization_url(),
+        )
 
     @override_settings(
         MICROSOFT_AUTH_CLIENT_ID=CLIENT_ID,
@@ -103,11 +109,15 @@ class ClientTests(TestCase):
     def test_authorization_url_with_xbl(self):
         base_url = MicrosoftClient._xbox_authorization_url
         expected_auth_url = self._get_auth_url(
-            base_url, scopes=MicrosoftClient.SCOPE_XBL
+            base_url,
+            scopes=MicrosoftClient.SCOPE_XBL,
         )
 
         auth_client = MicrosoftClient(state=STATE)
-        self._assert_auth_url(expected_auth_url, auth_client.authorization_url())
+        self._assert_auth_url(
+            expected_auth_url,
+            auth_client.authorization_url(),
+        )
 
     @override_settings(MICROSOFT_AUTH_PROXIES={"all": "http://1.2.3.4:8080"})
     def test_authorization_with_proxies(self):
@@ -143,7 +153,7 @@ class ClientTests(TestCase):
                     "SiteName": "user.auth.xboxlive.com",
                     "RpsTicket": "d={}".format(ACCESS_TOKEN),
                 },
-            }
+            },
         )
 
         auth_client = MicrosoftClient()
@@ -173,7 +183,9 @@ class ClientTests(TestCase):
     def test_get_xbox_profile(self, mock_requests):
         mock_response = Mock()
         mock_response.status_code = 200
-        mock_response.json.return_value = {"DisplayClaims": {"xui": [XBOX_PROFILE]}}
+        mock_response.json.return_value = {
+            "DisplayClaims": {"xui": [XBOX_PROFILE]},
+        }
         mock_requests.post.return_value = mock_response
 
         auth_client = MicrosoftClient()
@@ -196,7 +208,7 @@ class ClientTests(TestCase):
                     "UserTokens": [XBOX_TOKEN],
                     "SandboxId": "RETAIL",
                 },
-            }
+            },
         )
 
         auth_client = MicrosoftClient()
@@ -246,7 +258,10 @@ class ClientTests(TestCase):
         auth_client = MicrosoftClient()
         self.assertTrue(auth_client.valid_scopes(scopes))
 
-    @override_settings(SITE_ID=None, ALLOWED_HOSTS=["example.com", "testserver"])
+    @override_settings(
+        SITE_ID=None,
+        ALLOWED_HOSTS=["example.com", "testserver"],
+    )
     def test_alternative_site(self):
         self.assertEqual(Site.objects.get(pk=1).domain, "testserver")
 
@@ -254,7 +269,10 @@ class ClientTests(TestCase):
 
         request = self.factory.get("/", HTTP_HOST="example.com")
 
-        self.assertEqual(Site.objects.get_current(request).domain, "example.com")
+        self.assertEqual(
+            Site.objects.get_current(request).domain,
+            "example.com",
+        )
 
         client = MicrosoftClient(request=request)
 
@@ -268,12 +286,19 @@ class ClientTests(TestCase):
         auth_client = MicrosoftClient(state=STATE)
         base_url = auth_client.openid_config["authorization_endpoint"]
         expected_auth_url = self._get_auth_url(
-            base_url, extra_args={"prompt": "select_account"}
+            base_url,
+            extra_args={"prompt": "select_account"},
         )
-        self._assert_auth_url(expected_auth_url, auth_client.authorization_url())
+        self._assert_auth_url(
+            expected_auth_url,
+            auth_client.authorization_url(),
+        )
 
     @override_settings(MICROSOFT_AUTH_CLIENT_ID=CLIENT_ID)
     def test_assert_fail_extra_args_not_dict(self):
         auth_client = MicrosoftClient(state=STATE)
         base_url = auth_client.openid_config["authorization_endpoint"]
-        self.assertRaises(TypeError, self._get_auth_url(base_url, extra_args=[]))
+        self.assertRaises(
+            TypeError,
+            self._get_auth_url(base_url, extra_args=[]),
+        )
