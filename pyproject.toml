@@ -61,9 +61,7 @@ dev = [
   "pytest",
   "sphinx",
 ]
-ql = [
-  "djangoql",
-]
+ql = [ "djangoql",]
 
 [project.urls]
 Documentation = "https://django-microsoft-auth.readthedocs.io/en/latest/"
@@ -72,6 +70,13 @@ Source = "https://github.com/AngellusMortis/django_microsoft_auth"
 [tool.setuptools.packages.find]
 include = ["microsoft_auth", "microsoft_auth.*"]
 exclude = ["tests", "tests.*"]
+
+[tool.bandit]
+exclude_dirs = [
+  "tests/*",
+  ".tox/*",
+  ".git/*",
+]
 
 [tool.black]
 line-length = 88

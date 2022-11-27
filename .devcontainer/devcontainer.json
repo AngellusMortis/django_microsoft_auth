@@ -1,66 +1,83 @@
 {
+    "name": "django_microsoft_auth",
     "build": {
         "dockerfile": "Dockerfile",
         "context": ".."
     },
-    "extensions": [
-        "ms-python.python",
-        "ms-python.vscode-pylance",
-        "eamodio.gitlens",
-        "ryanluker.vscode-coverage-gutters",
-        "bungcip.better-toml",
-        "mikestead.dotenv",
-        "ms-python.black-formatter",
-        "ms-python.isort",
-        "streetsidesoftware.code-spell-checker"
-    ],
-    "settings": {
-        // common
-        "editor.formatOnSave": true,
-        "editor.formatOnSaveTimeout": 3000,
-        "editor.insertSpaces": true,
-        "files.insertFinalNewline": true,
-        "files.trimTrailingWhitespace": true,
-        // python common
-        "[python]": {
-            "editor.defaultFormatter": "ms-python.black-formatter",
-            "editor.codeActionsOnSave": {
-                "source.organizeImports": true
-            },
-        },
-        "python.envFile": "${workspaceFolder}/.env",
-        "python.defaultInterpreterPath": "/usr/local/bin/python",
-        "python.pythonPath": "/usr/local/bin/python",
-        // python linting
-        "python.linting.banditEnabled": false,
-        "python.linting.enabled": true,
-        "python.linting.flake8Enabled": true,
-        "python.linting.flake8Path": "/usr/local/bin/pflake8",
-        "python.linting.mypyEnabled": true,
-        "python.linting.pylintEnabled": false,
-        "python.linting.pylamaEnabled": false,
-        "black-formatter.args": [
-            "--config=./pyproject.toml",
-            "--line-length=88"
-        ],
-        "isort.args": [
-            "--settings-path=./pyproject.toml"
-        ],
-        "pylint.args": [
-            "--rcfile=./pyproject.toml"
-        ],
-        // python tests
-        "coverage-gutters.xmlname": "coverage.xml",
-        "coverage-gutters.customizable.status-bar-toggler-watchCoverageAndVisibleEditors-enabled": true,
-        "coverage-gutters.showLineCoverage": true,
-        "python.testing.promptToConfigure": false,
-        "python.testing.pytestEnabled": true,
-        "python.testing.unittestEnabled": false,
-        "python.testing.nosetestsEnabled": false,
-        "python.testing.pytestArgs": [
-            "--cov-report=xml",
-            "--color=no"
-        ]
-    },
-    "postCreateCommand": "pip install -e '.[dev,ql]'"
+    "containerUser": "root",
+    "workspaceFolder": "/workspaces/django_microsoft_auth",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/django_microsoft_auth,type=bind,consistency=cached",
+    "postCreateCommand": "pip install -e '.[dev,ql]",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "bungcip.better-toml",
+                "eamodio.gitlens",
+                "mikestead.dotenv",
+                "ms-python.black-formatter",
+                "ms-python.flake8",
+                "ms-python.isort",
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "ryanluker.vscode-coverage-gutters",
+                "samuelcolvin.jinjahtml",
+                "streetsidesoftware.code-spell-checker",
+            ],
+            "settings": {
+                // common
+                "editor.formatOnSave": true,
+                "editor.formatOnSaveTimeout": 3000,
+                "editor.insertSpaces": true,
+                "files.insertFinalNewline": true,
+                "files.trimTrailingWhitespace": true,
+                // python common
+                "[python]": {
+                    "editor.defaultFormatter": "ms-python.black-formatter",
+                    "editor.codeActionsOnSave": {
+                        "source.organizeImports": true
+                    }
+                },
+                "python.envFile": "${workspaceFolder}/.env",
+                "python.defaultInterpreterPath": "/usr/local/bin/python",
+                "python.pythonPath": "/usr/local/bin/python",
+                "python.formatting.provider": "none",
+                // python linting
+                "python.linting.banditEnabled": true,
+                "python.linting.banditArgs": [
+                    "-c ${workspaceFolder}/pyproject.toml"
+                ],
+                "python.linting.enabled": true,
+                "python.linting.flake8Enabled": false,
+                "python.linting.mypyEnabled": false,
+                "python.linting.pylintEnabled": false,
+                "python.linting.pylamaEnabled": false,
+                "black.args": [
+                    "--config=./pyproject.toml"
+                ],
+                "flake8.args": [
+                    "--config=./pyproject.toml"
+                ],
+                "flake8.path": [
+                    "/usr/local/bin/pflake8"
+                ],
+                "isort.args": [
+                    "--settings-path=./pyproject.toml"
+                ],
+                // python tests
+                "coverage-gutters.xmlname": "coverage.xml",
+                "coverage-gutters.customizable.status-bar-toggler-watchCoverageAndVisibleEditors-enabled": true,
+                "coverage-gutters.showLineCoverage": true,
+                "python.testing.promptToConfigure": false,
+                "python.testing.pytestEnabled": true,
+                "python.testing.unittestEnabled": false,
+                "python.testing.nosetestsEnabled": false,
+                "python.testing.pytestArgs": [
+                    "--cov-report=xml",
+                    "--color=no"
+                ],
+                // spelling rules
+                "cSpell.allowCompoundWords": true
+            }
+        }
+    }
 }
