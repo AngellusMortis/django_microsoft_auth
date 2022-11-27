@@ -24,7 +24,7 @@ exit_code=$?
 echo
 
 echo "Running bandit..."
-bandit -c .bandit.yml -r $BANDIT_MODULES
+bandit -c pyproject.toml -r $BANDIT_MODULES
 test $? -eq 0 -a $exit_code -eq 0
 exit_code=$?
 echo

@@ -22,7 +22,7 @@ for dj_version in "${dj_versions[@]}"; do
         extras="--extra=dev --extra=ql"
     fi
     echo -e "$django_reqs" > django.in
-    pip-compile --pip-args='--root-user-action=ignore' --resolver=backtracking -q $extras --upgrade --output-file=reqs/dj$dj_version-requirements.txt pyproject.toml django.in
+    CUSTOM_COMPILE_COMMAND="./.bin/update-requirements" pip-compile --pip-args='--root-user-action=ignore' --resolver=backtracking -q $extras --upgrade --output-file=reqs/dj$dj_version-requirements.txt pyproject.toml django.in
     rm django.in
 done
 
