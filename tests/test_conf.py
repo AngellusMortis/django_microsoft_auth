@@ -58,7 +58,7 @@ class ConfTests(TransactionTestCase):
         self.assertTrue(isinstance(config, SimpleTestConfig))
 
     @override_settings(
-        MICROSOFT_AUTH_CONFIG_CLASS="tests.test_conf.no_default_test_conf"
+        MICROSOFT_AUTH_CONFIG_CLASS="tests.test_conf.no_default_test_conf",
     )
     def test_custom_config_class_with_no_default(self):
         """Tests MICROSOFT_AUTH_CONFIG_CLASS set to another class with no
@@ -67,9 +67,13 @@ class ConfTests(TransactionTestCase):
 
         self.assertTrue(isinstance(config, SimpleTestNoDefaultConfig))
 
-    @override_settings(MICROSOFT_AUTH_CONFIG_CLASS="tests.test_conf.SimpleTestConfig")
+    @override_settings(
+        MICROSOFT_AUTH_CONFIG_CLASS="tests.test_conf.SimpleTestConfig",
+    )
     def test_custom_config_class_uninstantiated(self):
-        """Tests MICROSOFT_AUTH_CONFIG_CLASS set to another class (uninstantiated)"""
+        """
+        Tests MICROSOFT_AUTH_CONFIG_CLASS set to another class (uninstantiated)
+        """
         from microsoft_auth.conf import config, init_config
 
         self.assertTrue(isinstance(config, SimpleTestConfig))
@@ -79,12 +83,12 @@ class ConfTests(TransactionTestCase):
             mockClass.assert_called_once()
 
     @override_settings(
-        MICROSOFT_AUTH_CONFIG_CLASS="tests.test_conf.SimpleTestNoDefaultConfig"
+        MICROSOFT_AUTH_CONFIG_CLASS="tests.test_conf.SimpleTestNoDefaultConfig",
     )
     def test_custom_config_class_with_no_default_uninstantiated(self):
         """
-        Tests MICROSOFT_AUTH_CONFIG_CLASS set to another class (uninstantiated) with
-        no add_default_config option
+        Tests MICROSOFT_AUTH_CONFIG_CLASS set to another class (uninstantiated)
+        with no add_default_config option
         """
         from microsoft_auth.conf import config, init_config
 
