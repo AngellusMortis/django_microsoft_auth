@@ -45,7 +45,8 @@ class ViewsTests(TestCase):
 
     def test_authenticate_callback_bad_state_format(self):
         response = self.client.post(
-            reverse("microsoft_auth:auth-callback"), {"state": "test"}
+            reverse("microsoft_auth:auth-callback"),
+            {"state": "test"},
         )
         message = json.loads(response.context["message"])["microsoft_auth"]
 
@@ -58,7 +59,8 @@ class ViewsTests(TestCase):
 
     def test_authenticate_callback_bad_state_length(self):
         response = self.client.post(
-            reverse("microsoft_auth:auth-callback"), {"state": "001464"}
+            reverse("microsoft_auth:auth-callback"),
+            {"state": "001464"},
         )
         message = json.loads(response.context["message"])["microsoft_auth"]
 
@@ -71,7 +73,8 @@ class ViewsTests(TestCase):
 
     def test_authenticate_callback_bad_state(self):
         response = self.client.post(
-            reverse("microsoft_auth:auth-callback"), {"state": STATE[:-1]}
+            reverse("microsoft_auth:auth-callback"),
+            {"state": STATE[:-1]},
         )
         message = json.loads(response.context["message"])["microsoft_auth"]
 
@@ -84,7 +87,8 @@ class ViewsTests(TestCase):
 
     def test_authenticate_callback_bad_state_expired(self):
         response = self.client.post(
-            reverse("microsoft_auth:auth-callback"), {"state": EXPIRED_STATE}
+            reverse("microsoft_auth:auth-callback"),
+            {"state": EXPIRED_STATE},
         )
         message = json.loads(response.context["message"])["microsoft_auth"]
 
@@ -98,7 +102,8 @@ class ViewsTests(TestCase):
     def test_authenticate_callback_missing_code(self):
 
         response = self.client.post(
-            reverse("microsoft_auth:auth-callback"), {"state": STATE}
+            reverse("microsoft_auth:auth-callback"),
+            {"state": STATE},
         )
         message = json.loads(response.context["message"])["microsoft_auth"]
 
@@ -171,7 +176,11 @@ class ViewsTests(TestCase):
 
     @patch("microsoft_auth.views.authenticate")
     @patch("microsoft_auth.views.login")
-    def test_authenticate_callback_redirect_success(self, mock_login, mock_auth):
+    def test_authenticate_callback_redirect_success(
+        self,
+        mock_login,
+        mock_auth,
+    ):
         mock_auth.return_value = self.user
 
         response = self.client.post(
@@ -185,7 +194,11 @@ class ViewsTests(TestCase):
 
     @patch("microsoft_auth.views.authenticate")
     @patch("microsoft_auth.views.login")
-    def test_authenticate_callback_redirect_next_path(self, mock_login, mock_auth):
+    def test_authenticate_callback_redirect_next_path(
+        self,
+        mock_login,
+        mock_auth,
+    ):
         mock_auth.return_value = self.user
 
         next_ = "/next/path"
@@ -225,7 +238,8 @@ class ViewsTests(TestCase):
 
     def test_to_ms_redirect(self):
         response = self.client.get(
-            reverse("microsoft_auth:to-auth-redirect"), fetch_redirect_response=False
+            reverse("microsoft_auth:to-auth-redirect"),
+            fetch_redirect_response=False,
         )
 
         self.assertEqual(302, response.status_code)
