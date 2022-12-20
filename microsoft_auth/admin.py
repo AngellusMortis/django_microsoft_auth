@@ -1,7 +1,6 @@
 from django.apps import apps
 from django.contrib import admin
 from django.contrib.auth import get_user_model
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 from .conf import LOGIN_TYPE_MA, LOGIN_TYPE_XBL, config
 from .models import MicrosoftAccount, XboxLiveAccount
@@ -27,11 +26,6 @@ if apps.is_installed("djangoql"):  # pragma: no branch
     extra_base = [DjangoQLSearchMixin]
 
 base_admin = extra_base + [admin.ModelAdmin]
-base_user_admin = extra_base + [BaseUserAdmin]
-
-# unregister User mode if it is already registered
-if admin.site.is_registered(User):  # pragma: no branch
-    admin.site.unregister(User)
 
 
 class MicrosoftAccountAdmin(*base_admin):
@@ -81,14 +75,11 @@ def _get_inlines():
     return inlines
 
 
-@admin.register(User)
-class UserAdmin(*base_user_admin):
-    @property
-    def inlines(self):
-        """Adds MicrosoftAccount and/or XboxLiveAccount foreign keys to
-        User model"""
+try:
+    UserAdmin = admin.site._registry[User]
+except KeyError:
+    from django.contrib.auth.admin import UserAdmin
 
-        return _get_inlines()
-
+UserAdmin.inlines.extend(_get_inlines())
 
 _register_admins()
