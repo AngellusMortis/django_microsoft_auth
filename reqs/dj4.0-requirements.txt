@@ -44,7 +44,7 @@ coverage[toml]==6.5.0
     # via
     #   django-microsoft-auth (pyproject.toml)
     #   pytest-cov
-cryptography==38.0.4
+cryptography==39.0.1
     # via pyjwt
 decorator==5.1.1
     # via ipython
