@@ -101,7 +101,7 @@ imagesize==1.4.1
     # via sphinx
 iniconfig==1.1.1
     # via pytest
-ipython==8.6.0
+ipython==8.10.0
     # via django-microsoft-auth (pyproject.toml)
 isort==5.10.1
     # via django-microsoft-auth (pyproject.toml)
