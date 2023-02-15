@@ -48,7 +48,7 @@ cryptography==38.0.4
     # via pyjwt
 decorator==5.1.1
     # via ipython
-django==3.2.16
+django==3.2.18
     # via
     #   -r django.in
     #   django-microsoft-auth (pyproject.toml)
