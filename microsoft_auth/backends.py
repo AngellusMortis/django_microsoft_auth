@@ -158,9 +158,18 @@ class MicrosoftAuthenticationBackend(ModelBackend):
                 else:
                     first_name = fullname
 
+            email = data.get("email")
+            if not email:
+                # No email available, let's generate something ourselves
+                if "@" in data["preferred_username"]:
+                    email = data["preferred_username"]
+                else:
+                    localpart = data["preferred_username"][:64]
+                    email = f"{localpart}@generated-by.django-microsoft-auth.invalid"
+
             try:
                 # create new Django user from provided data
-                user = User.objects.get(email=data["email"])
+                user = User.objects.get(email=email)
 
                 if user.first_name == "" and user.last_name == "":
                     user.first_name = first_name
@@ -171,7 +180,7 @@ class MicrosoftAuthenticationBackend(ModelBackend):
                     username=data["preferred_username"][:150],
                     first_name=first_name,
                     last_name=last_name,
-                    email=data["email"],
+                    email=email,
                 )
                 user.save()
 
